@@ -1,2 +1,336 @@
-# SPW-Pictures
-this is my first youtube website
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SPW Pictures</title>
+
+  <!-- SEO Meta -->
+  <meta name="description" content="SPW Pictures official website. Tech videos, vlogs, tutorials and creative content in Hindi.">
+  <meta name="keywords" content="SPW Pictures, YouTube Channel, Tech Hindi, Vlogs, Tutorials">
+  <meta name="author" content="Shoeb Akhtar">
+
+  <!-- Performance: Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    .profile-pic{
+  width:140px;
+  height:140px;
+  border-radius:50%;
+  object-fit:cover;
+  border:4px solid #ff0000; /* YouTube red */
+  margin-bottom:15px;
+  box-shadow:0 10px 30px rgba(0,0,0,.4);
+}
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins',sans-serif;
+    }
+
+    body{
+      background:#0b1120;
+      color:#e5e7eb;
+      line-height:1.6;
+      transition:background .3s ease,color .3s ease;
+    }
+
+    header{
+      background:linear-gradient(135deg,#ff0000,#7c3aed);
+      padding:70px 20px;
+      text-align:center;
+      color:#ffffff;
+    }
+
+    header h1{
+      font-size:3rem;
+      font-weight:600;
+    }
+
+    header p{
+      margin-top:10px;
+      font-size:1.1rem;
+      opacity:0.9;
+    }
+
+    nav{
+      background:#020617;
+      padding:15px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:25px;
+      position:sticky;
+      top:0;
+      z-index:100;
+    }
+
+    nav a{
+      color:#ffffff;
+      text-decoration:none;
+      font-weight:500;
+      transition:color .3s ease;
+    }
+    nav a:hover{color:#ff0000;}
+
+    nav a:hover{
+      color:#60a5fa;
+    }
+
+    section{
+      padding:60px 20px;
+      max-width:1100px;
+      margin:auto;
+    }
+
+    .about p{
+      max-width:800px;
+      margin-top:15px;
+      color:#cbd5f5;
+    }
+
+    .videos{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:20px;
+      margin-top:30px;
+    }
+
+    .video-card{
+      background:#020617;
+      border-radius:18px;
+      padding:15px;
+      box-shadow:0 12px 35px rgba(0,0,0,.45);
+      transition:transform .3s ease,box-shadow .3s ease;
+    }
+    .video-card:hover{
+      transform:translateY(-6px);
+      box-shadow:0 18px 45px rgba(0,0,0,.6);
+    }
+
+    .video-card iframe{
+      width:100%;
+      height:200px;
+      border-radius:12px;
+      border:none;
+    }
+
+    .video-card h3{
+      margin-top:10px;
+      font-size:1rem;
+    }
+
+    .subscribe{
+      text-align:center;
+      background:linear-gradient(135deg,#2563eb,#7c3aed);
+      border-radius:20px;
+      padding:50px 20px;
+    }
+
+    .subscribe a{
+      display:inline-block;
+      margin-top:20px;
+      padding:12px 30px;
+      background:#ff0000;
+      color:#fff;
+      border-radius:30px;
+      text-decoration:none;
+      font-weight:600;
+    }
+
+    footer{
+      text-align:center;
+      padding:20px;
+      background:#020617;
+      font-size:0.9rem;
+      color:#94a3b8;
+    }
+
+    /* ===== Contact Form ===== */
+    .contact-form{
+      max-width:500px;
+      margin-top:20px;
+    }
+    .contact-form input,.contact-form textarea{
+      width:100%;
+      padding:12px;
+      margin-bottom:15px;
+      border-radius:10px;
+      border:none;
+    }
+    .contact-form button{
+      padding:12px 30px;
+      border:none;
+      border-radius:25px;
+      background:#2563eb;
+      color:#fff;
+      font-weight:600;
+      cursor:pointer;
+    }
+
+    /* ===== WhatsApp Button ===== */
+    .whatsapp{
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      background:#0aff64;
+      color:#000000;
+      padding:14px 18px;
+      border-radius:50px;
+      text-decoration:none;
+      font-weight:600;
+    }
+
+    /* ===== Dark Mode ===== */
+    body.dark{
+      background:#4b6d91;
+      color:#020617;
+    }
+    body.dark nav, body.dark footer{
+      background:#b57575;
+      color:#020617;
+      box-shadow:0 4px 20px rgba(0,0,0,.12);
+    }
+    body.dark .video-card{
+      background:#f1f5f9;
+      box-shadow:0 10px 25px rgba(0,0,0,.18);
+    }
+
+    /* ===== Responsive: All Devices ===== */
+
+/* Small devices (phones) */
+@media (max-width: 600px){
+  header h1{font-size:2rem}
+  header p{font-size:1rem}
+  nav{flex-wrap:wrap;gap:12px}
+  section{padding:40px 15px}
+  .videos{grid-template-columns:1fr}
+  .video-card iframe{height:200px}
+}
+
+/* Medium devices (tablets) */
+@media (min-width:601px) and (max-width:992px){
+  header h1{font-size:2.4rem}
+  section{padding:50px 25px}
+  .videos{grid-template-columns:repeat(2,1fr)}
+  .video-card iframe{height:220px}
+}
+
+/* Large devices (laptops/desktops) */
+@media (min-width:993px){
+  header h1{font-size:3rem}
+  .videos{grid-template-columns:repeat(3,1fr)}
+  .video-card iframe{height:230px}
+}
+
+/* Ultra-wide screens */
+@media (min-width:1400px){
+  section{max-width:1300px}
+}
+      nav{flex-wrap:wrap;gap:15px}
+      section{padding:40px 15px}
+      .video-card iframe{height:180px}
+    
+  </style>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <!-- Google Analytics (replace G-XXXXXXX) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXX');
+  </script>
+</head>
+<body>
+
+<header>
+  <img src="dp.png" alt="Shoeb Akhtar" class="profile-pic">
+
+  <h1>SPW Pictures</h1>
+  <p>Official YouTube Channel Website | Tech • Vlogs • Creativity</p>
+
+</header>
+
+<nav>
+  <a href="#about">About</a>
+  <a href="#videos">Videos</a>
+  <a href="#contact">Contact</a>
+  <a href="#subscribe">Subscribe</a>
+  <button id="darkToggle" style="margin-left:20px;padding:6px 14px;border-radius:20px;border:none;cursor:pointer;">🌙 Dark</button>
+</nav>
+
+<section id="about" class="about">
+  <h2>About SPW Pictures</h2>
+  <p>
+    SPW Pictures ek creative YouTube channel hai jahan aapko tech videos,
+    vlogs aur informative content milta hai. Hamara goal hai quality content
+    ke through logon ko inspire karna.
+    Aur haan, hamare videos Hindi mein hote hain taaki zyada se zyada log
+    samajh sakein aur fayda utha sakein.
+    Aur ham paid video and photo editing services bhi provide karte hain.
+    Hamare channel ko subscribe karein aur naye videos ke liye bell icon dabana na bhoolein!
+  </p>
+</section>
+
+<section id="videos">
+  <h2>Latest YouTube Videos</h2>
+  <div class="videos">
+    <div class="video-card">
+      <iframe src="https://www.youtube.com/embed/DnzjlURxQVo
+" title="YouTube video" allowfullscreen></iframe>
+      <h3>My First Tech Video</h3>
+    </div>
+    <div class="video-card">
+      <iframe src="https://www.youtube.com/embed/1FoGo_63yg0
+" title="YouTube video" allowfullscreen></iframe>
+      <h3>New Vlog</h3>
+    </div>
+    <div class="video-card">
+      <iframe src="https://www.youtube.com/embed/pvDNpA2A5uY" title="YouTube video" allowfullscreen></iframe>
+      <h3>Tech Tips Hindi</h3>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <h2>Contact Me</h2>
+  <form class="contact-form" action="mailto:akhtarshoeb702@gmail.com" method="post" enctype="text/plain">
+    <input type="text" placeholder="Your Name" required>
+    <input type="email" placeholder="Your Email" required>
+    <textarea rows="5" placeholder="Your Message" required></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+</section>
+
+<section id="subscribe" class="subscribe">
+  <h2>Subscribe to SPW Pictures</h2>
+  <p>YouTube par hume support kare ❤️</p>
+  <a href="https://www.youtube.com/@spwpictures" target="_blank">Subscribe Now</a>
+</section>
+
+<footer>
+  © 2026 SPW Pictures | Designed by Shoeb Akhtar
+</footer>
+
+
+
+<script>
+  const toggle=document.getElementById('darkToggle');
+  toggle.onclick=()=>{
+    document.body.classList.toggle('dark');
+    toggle.textContent=document.body.classList.contains('dark')?'☀ Light':'🌙 Dark';
+  };
+</script>
+
+</body>
+</html>
