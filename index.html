@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,6 +20,38 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
+    nav a i{
+  font-size:1.3rem;
+  transition:color .3s ease;
+}
+
+nav a i:hover{
+  color:#e1306c;
+}
+
+    .instagram-float{
+  position:fixed;
+  bottom:80px;
+  right:20px;
+  background:#e1306c;
+  color:#fff;
+  padding:14px 18px;
+  border-radius:50px;
+  text-decoration:none;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  box-shadow:0 6px 20px rgba(0,0,0,.3);
+  transition:transform .3s ease,box-shadow .3s ease;
+  z-index:999;
+}
+
+.instagram-float:hover{
+  transform:translateY(-5px);
+  box-shadow:0 10px 30px rgba(0,0,0,.4);
+}
+
     .profile-pic{
   width:140px;
   height:140px;
@@ -251,7 +285,9 @@
     gtag('config', 'G-XXXXXXX');
   </script>
 </head>
+
 <body>
+  
 
 <header>
   <img src="dp.png" alt="Shoeb Akhtar" class="profile-pic">
@@ -267,6 +303,10 @@
   <a href="#contact">Contact</a>
   <a href="#subscribe">Subscribe</a>
   <button id="darkToggle" style="margin-left:20px;padding:6px 14px;border-radius:20px;border:none;cursor:pointer;">🌙 Dark</button>
+  <a href="https://www.instagram.com/___spw__pictures__?igshid=YmMyMTA2M2Y%3D" target="_blank" style="margin-left:20px;color:#e1306c;font-size:1.3rem;">
+  <i class="fab fa-instagram"></i>
+</a>
+
 </nav>
 
 <section id="about" class="about">
@@ -317,10 +357,25 @@
   <p>YouTube par hume support kare ❤️</p>
   <a href="https://www.youtube.com/@spwpictures" target="_blank">Subscribe Now</a>
 </section>
+<a href="https://www.instagram.com/___spw__pictures__?igshid=YmMyMTA2M2Y%3D/direct/inbox/" target="_blank" class="instagram-float" title="DM on Instagram">
+  <i class="fab fa-instagram"></i>
+</a>
+
+
 
 <footer>
   © 2026 SPW Pictures | Designed by Shoeb Akhtar
+  <div style="margin-top:10px;">
+    <a href="https://www.instagram.com/___spw__pictures__?igshid=YmMyMTA2M2Y%3D.2rem;">
+      <i class="fab fa-instagram"></i>
+    </a>
+    <a href="https://www.youtube.com/@spwpictures" target="_blank" style="margin:0 10px;color:#ff0000;font-size:1.2rem;">
+      <i class="fab fa-youtube"></i>
+    </a>
+  </div>
 </footer>
+
+
 
 
 
@@ -334,3 +389,4 @@
 
 </body>
 </html>
+
