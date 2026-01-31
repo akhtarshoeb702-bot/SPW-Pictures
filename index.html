@@ -3,49 +3,257 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>SPW Pictures</title>
+<title>SPW Pictures | Glass Edition</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#0b1120;color:#e5e7eb;line-height:1.6;transition:background .3s ease,color .3s ease;}
-header{background:linear-gradient(135deg,#ff0000,#7c3aed);padding:70px 20px;text-align:center;color:#fff;}
-header h1{font-size:3rem;font-weight:600;}
-header p{margin-top:10px;font-size:1.1rem;opacity:.9;}
-nav{background:#020617;padding:15px;display:flex;justify-content:center;align-items:center;gap:25px;position:sticky;top:0;z-index:100;}
-nav a{color:#fff;text-decoration:none;font-weight:500;transition:color .3s ease;}
-nav a:hover{color:#60a5fa;}
-section{padding:60px 20px;max-width:1100px;margin:auto;}
-.videos{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:30px;}
-.video-card{background:#020617;border-radius:18px;padding:15px;box-shadow:0 12px 35px rgba(0,0,0,.45);transition:transform .3s ease,box-shadow .3s ease;text-align:center;position:relative;}
-.video-card:hover{transform:translateY(-6px);box-shadow:0 18px 45px rgba(0,0,0,.6);}
-.video-card img{border-radius:12px;}
-.download-btn{display:inline-block;margin-top:8px;padding:8px 16px;background:#ff0000;color:#fff;border-radius:6px;text-decoration:none;font-weight:600;position:relative;}
-.download-count{background:#fff;color:#ff0000;padding:2px 6px;border-radius:12px;font-size:.8rem;position:absolute;top:-10px;right:-10px;}
-.subscribe{text-align:center;background:linear-gradient(135deg,#2563eb,#7c3aed);border-radius:20px;padding:50px 20px;}
-.subscribe a{display:inline-block;margin-top:20px;padding:12px 30px;background:#ff0000;color:#fff;border-radius:30px;text-decoration:none;font-weight:600;}
-footer{text-align:center;padding:20px;background:#020617;font-size:.9rem;color:#94a3b8;}
-.profile-pic{width:140px;height:140px;border-radius:50%;object-fit:cover;border:4px solid #ff0000;margin-bottom:15px;box-shadow:0 10px 30px rgba(0,0,0,.4);}
-.instagram-float{position:fixed;bottom:80px;right:20px;background:#e1306c;color:#fff;padding:14px 18px;border-radius:50px;text-decoration:none;font-weight:600;display:flex;align-items:center;gap:8px;box-shadow:0 6px 20px rgba(0,0,0,.3);transition:transform .3s ease,box-shadow .3s ease;z-index:999;}
-.instagram-float:hover{transform:translateY(-5px);box-shadow:0 10px 30px rgba(0,0,0,.4);}
-.contact-form{max-width:500px;margin-top:20px;}
-.contact-form input,.contact-form textarea{width:100%;padding:12px;margin-bottom:15px;border-radius:10px;border:none;}
-.contact-form button{padding:12px 30px;border:none;border-radius:25px;background:#2563eb;color:#fff;font-weight:600;cursor:pointer;}
-body.dark{background:#4b6d91;color:#020617;}
-body.dark nav,body.dark footer{background:#b57575;color:#020617;box-shadow:0 4px 20px rgba(0,0,0,.12);}
-body.dark .video-card{background:#f1f5f9;box-shadow:0 10px 25px rgba(0,0,0,.18);}
-@media(max-width:600px){header h1{font-size:2rem}header p{font-size:1rem}nav{flex-wrap:wrap;gap:12px}section{padding:40px 15px}.videos{grid-template-columns:1fr}.video-card iframe{height:200px}}
-@media(min-width:601px) and (max-width:992px){header h1{font-size:2.4rem}section{padding:50px 25px}.videos{grid-template-columns:repeat(2,1fr)}.video-card iframe{height:220px}}
-@media(min-width:993px){header h1{font-size:3rem}.videos{grid-template-columns:repeat(3,1fr)}.video-card iframe{height:230px}}
-@media(min-width:1400px){section{max-width:1300px}}
+/* --- SETUP & RESET --- */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+html { scroll-behavior: smooth; }
+
+/* --- DARK MOVING BACKGROUND --- */
+body {
+    background-color: #050505;
+    color: #ffffff;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Creating the Moving Blobs (The lights behind the glass) */
+.background-blobs {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+    overflow: hidden; background: #000;
+}
+.blob {
+    position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.6;
+    animation: floatBlob 10s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+}
+.blob-1 {
+    top: -10%; left: -10%; width: 500px; height: 500px;
+    background: #7c3aed; /* Deep Purple */
+}
+.blob-2 {
+    bottom: -10%; right: -10%; width: 600px; height: 600px;
+    background: #db2777; /* Deep Pink */
+    animation-delay: -5s;
+}
+.blob-3 {
+    top: 40%; left: 40%; width: 400px; height: 400px;
+    background: #2563eb; /* Deep Blue */
+    opacity: 0.4; animation-duration: 15s;
+}
+
+@keyframes floatBlob {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(50px, 50px) scale(1.1); }
+}
+
+/* --- THE GLASS STYLE CLASS (Reusable) --- */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.03); /* Extremely low opacity */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08); /* The subtle glass edge */
+    border-radius: 24px;
+}
+
+/* --- HEADER --- */
+header {
+    text-align: center; padding: 140px 20px 60px;
+}
+.profile-pic {
+    width: 150px; height: 150px; border-radius: 50%; object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 40px rgba(124, 58, 237, 0.3); /* Purple Glow */
+    margin-bottom: 20px;
+    animation: float 6s ease-in-out infinite;
+}
+@keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+
+header h1 {
+    font-size: 3.5rem; font-weight: 700; margin-bottom: 5px;
+    text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+header p { color: rgba(255, 255, 255, 0.7); letter-spacing: 1px; }
+
+/* --- NAVIGATION (Frosted Bar) --- */
+nav {
+    position: sticky; top: 20px; z-index: 1000;
+    display: flex; justify-content: center; align-items: center; gap: 10px;
+    padding: 12px 30px; width: fit-content; margin: 0 auto;
+    
+    /* Nav Specific Glass */
+    background: rgba(20, 20, 20, 0.6);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+}
+nav a {
+    color: rgba(255, 255, 255, 0.8); text-decoration: none;
+    font-weight: 500; padding: 8px 20px; border-radius: 30px;
+    transition: 0.3s;
+}
+nav a:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
+
+#darkToggle {
+    background: rgba(255, 255, 255, 0.1); color: #fff; border: none;
+    padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: 0.3s;
+}
+#darkToggle:hover { background: #fff; color: #000; }
+
+/* --- SECTIONS --- */
+section { max-width: 1100px; margin: 0 auto; padding: 80px 20px; }
+h2 {
+    font-size: 2.5rem; text-align: center; margin-bottom: 50px;
+    position: relative; text-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+h2::after {
+    content: ''; display: block; width: 60px; height: 4px;
+    background: linear-gradient(90deg, #7c3aed, #db2777);
+    margin: 10px auto 0; border-radius: 2px;
+}
+
+/* --- GLASS VIDEO CARDS --- */
+.videos {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.video-card {
+    /* Applying Glass Panel Style */
+    background: rgba(255, 255, 255, 0.03);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    
+    padding: 15px; position: relative; overflow: hidden;
+    transition: 0.4s ease;
+}
+
+/* Shine Effect on Hover */
+.video-card::before {
+    content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+    transform: skewX(-25deg); transition: 0.5s; pointer-events: none;
+}
+.video-card:hover::before { left: 150%; }
+
+.video-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.video-card img, .video-card iframe {
+    width: 100%; border-radius: 16px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.video-card h3 {
+    margin: 20px 0 10px; font-size: 1.2rem; font-weight: 600; text-align: center;
+}
+
+/* --- GLOWING BUTTONS --- */
+.download-btn {
+    display: block; margin-top: 10px; padding: 12px;
+    background: transparent; color: #fff;
+    border: 1px solid rgba(255,255,255,0.2); border-radius: 12px;
+    text-align: center; text-decoration: none; font-weight: 600;
+    transition: 0.3s; position: relative; overflow: hidden;
+}
+.download-btn:hover {
+    background: #fff; color: #000;
+    box-shadow: 0 0 20px rgba(255,255,255,0.4);
+}
+.download-count { font-size: 0.8rem; margin-left: 5px; opacity: 0.7; }
+
+/* --- CONTACT & SUBSCRIBE (Glass Containers) --- */
+.contact-form, .subscribe {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 30px; padding: 40px;
+    max-width: 700px; margin: 0 auto;
+}
+.subscribe { text-align: center; padding: 60px 20px; }
+
+.contact-form input, .contact-form textarea {
+    width: 100%; padding: 15px; margin-bottom: 20px;
+    background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px; color: #fff; font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+}
+.contact-form input:focus, .contact-form textarea:focus {
+    outline: none; border-color: #7c3aed; background: rgba(0,0,0,0.5);
+}
+
+.contact-form button, .subscribe a {
+    width: 100%; padding: 16px; border: none; border-radius: 50px;
+    background: linear-gradient(45deg, #7c3aed, #db2777);
+    color: #fff; font-weight: 700; font-size: 1.1rem;
+    cursor: pointer; transition: 0.3s; text-decoration: none; display: inline-block;
+}
+.subscribe a { width: auto; padding: 16px 50px; margin-top: 20px; }
+.contact-form button:hover, .subscribe a:hover {
+    transform: scale(0.98); box-shadow: 0 0 30px rgba(219, 39, 119, 0.4);
+}
+
+/* --- FLOATING INSTAGRAM --- */
+.instagram-float {
+    position: fixed; bottom: 30px; right: 30px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff; width: 60px; height: 60px; border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 1.6rem; text-decoration: none;
+    transition: 0.3s; z-index: 999;
+}
+.instagram-float:hover { background: #db2777; border-color: transparent; transform: rotate(15deg); }
+
+footer {
+    text-align: center; padding: 50px; color: rgba(255,255,255,0.5);
+    font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+/* --- RESPONSIVE --- */
+@media(max-width: 768px) {
+    header h1 { font-size: 2.8rem; }
+    nav { width: 90%; flex-wrap: wrap; background: rgba(0,0,0,0.8); }
+    .video-card iframe { height: 210px; }
+}
+
+/* Light Mode Logic (Maintains Glass but changes BG) */
+body.light-mode { background: #f0f2f5; color: #333; }
+body.light-mode .background-blobs { background: #fff; }
+body.light-mode .blob-1 { background: #a78bfa; opacity: 0.4; } 
+body.light-mode .blob-2 { background: #f472b6; opacity: 0.4; }
+body.light-mode .glass-panel, body.light-mode .video-card, body.light-mode .contact-form, body.light-mode .subscribe {
+    background: rgba(255, 255, 255, 0.4); border-color: #fff;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+body.light-mode h3, body.light-mode p, body.light-mode nav a { color: #333; }
+body.light-mode .video-card:hover { background: rgba(255,255,255,0.8); }
+body.light-mode .download-btn { color: #333; border-color: #aaa; }
+body.light-mode .download-btn:hover { background: #333; color: #fff; }
 </style>
 </head>
 <body>
 
+<div class="background-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+</div>
+
 <header>
 <img src="dp.png" alt="Shoeb Akhtar" class="profile-pic">
 <h1>SPW Pictures</h1>
-<p>Official YouTube Channel Website | Tech • Vlogs • Creativity</p>
+<p>Tech • Vlogs • Creativity</p>
 </header>
 
 <nav>
@@ -53,69 +261,66 @@ body.dark .video-card{background:#f1f5f9;box-shadow:0 10px 25px rgba(0,0,0,.18);
 <a href="#photos">Photos</a>
 <a href="#videos">Videos</a>
 <a href="#contact">Contact</a>
-<a href="#subscribe">Subscribe</a>
-<button id="darkToggle" style="margin-left:20px;padding:6px 14px;border-radius:20px;border:none;cursor:pointer;">🌙 Dark</button>
-<a href="https://www.instagram.com/___spw__pictures__" target="_blank" style="margin-left:20px;color:#e1306c;font-size:1.3rem;">
-<i class="fab fa-instagram"></i>
-</a>
+<a href="#subscribe">Sub</a>
+<button id="darkToggle">☀ Light</button>
+<a href="https://www.instagram.com/___spw__pictures__" target="_blank" style="display:none;"><i class="fab fa-instagram"></i></a>
 </nav>
 
 <section id="about">
-<h2>About SPW Pictures</h2>
-<p>
-SPW Pictures ek creative YouTube channel hai jahan aapko tech videos,
+<div class="glass-panel" style="padding: 40px; text-align: center;">
+    <h2 style="margin-bottom: 20px;">About SPW Pictures</h2>
+    <p style="font-size: 1.1rem; line-height: 1.8; opacity: 0.9;">
+    SPW Pictures ek creative YouTube channel hai jahan aapko tech videos,
     vlogs aur informative content milta hai. Hamara goal hai quality content
     ke through logon ko inspire karna.
+    <br><br>
     Aur haan, hamare videos Hindi mein hote hain taaki zyada se zyada log
-    samajh sakein aur fayda utha sakein.
-    Aur ham paid video and photo editing services bhi provide karte hain.
-    Hamare channel ko subscribe karein aur naye videos ke liye bell icon dabana na bhoolein!
-</p>
+    samajh sakein.
+    <br><strong>Subscribe karein aur bell icon dabayein!</strong>
+    </p>
+</div>
 </section>
 
 <section id="photos">
-<h2 style="text-align:center;margin-bottom:30px;">Download RAW Photos with Presets</h2>
+<h2>Download Presets</h2>
 <div class="videos">
 
-<!-- Photo 1 -->
 <div class="video-card">
-  <div style="display:flex;gap:5px;flex-wrap:wrap;">
-    <img src="previews/photo1-original.jpeg" alt="Original" style="width:49%;">
-    <img src="raw/photo1-preset.jpeg" alt="Preset" style="width:49%;">
-  </div>
-  <h3>NATURE VIBE</h3>
-  <a href="downloadraw/raw1.dng" class="download-btn" download>Download PRESET <span class="download-count">0</span></a>
+  <div style="display:flex; gap:10px; height: 230px; overflow:hidden;">
+    <img src="previews/photo1-original.jpeg" alt="Original" style="width:50%; object-fit:cover;">
+    <img src="raw/photo1-preset.jpeg" alt="Preset" style="width:50%; object-fit:cover;">
+  </div>
+  <h3>Nature Vibe</h3>
+  <a href="downloadraw/raw1.dng" class="download-btn" download>Download DNG <span class="download-count">0</span></a>
 </div>
 
-<!-- Photo 2 -->
 <div class="video-card">
-  <div style="display:flex;gap:5px;flex-wrap:wrap;">
-    <img src="previews/photo2-original.jpeg" alt="Original" style="width:49%;">
-    <img src="raw/photo2-preset.jpeg" alt="Preset" style="width:49%;">
-  </div>
-  <h3>GREEN DARK</h3>
-  <a href="downloadraw/raw2.dng" class="download-btn" download>Download PRESET <span class="download-count">0</span></a>
+  <div style="display:flex; gap:10px; height: 230px; overflow:hidden;">
+    <img src="previews/photo2-original.jpeg" alt="Original" style="width:50%; object-fit:cover;">
+    <img src="raw/photo2-preset.jpeg" alt="Preset" style="width:50%; object-fit:cover;">
+  </div>
+  <h3>Green Dark</h3>
+  <a href="downloadraw/raw2.dng" class="download-btn" download>Download DNG <span class="download-count">0</span></a>
 </div>
 
-<!-- Photo 3 -->
 <div class="video-card">
-  <div style="display:flex;gap:5px;flex-wrap:wrap;">
-    <img src="previews/photo3-original.jpeg" alt="Original" style="width:49%;">
-    <img src="raw/photo3-preset.jpeg" alt="Preset" style="width:49%;">
-  </div>
-  <h3>4K VIBE</h3>
-  <a href="downloadraw/raw3.dng" class="download-btn" download>Download PRESET <span class="download-count">0</span></a>
+  <div style="display:flex; gap:10px; height: 230px; overflow:hidden;">
+    <img src="previews/photo3-original.jpeg" alt="Original" style="width:50%; object-fit:cover;">
+    <img src="raw/photo3-preset.jpeg" alt="Preset" style="width:50%; object-fit:cover;">
+  </div>
+  <h3>4K Vibe</h3>
+  <a href="downloadraw/raw3.dng" class="download-btn" download>Download DNG <span class="download-count">0</span></a>
 </div>
 
 </div>
 </section>
 
 <section id="videos">
-<h2>Latest YouTube Videos</h2>
+<h2>Latest Videos</h2>
 <div class="videos">
-<div class="video-card"><iframe src="https://www.youtube.com/embed/DnzjlURxQVo" title="YouTube video" allowfullscreen></iframe><h3>My First Tech Video</h3></div>
-<div class="video-card"><iframe src="https://www.youtube.com/embed/1FoGo_63yg0" title="YouTube video" allowfullscreen></iframe><h3>New Vlog</h3></div>
-<div class="video-card"><iframe src="https://www.youtube.com/embed/pvDNpA2A5uY" title="YouTube video" allowfullscreen></iframe><h3>Tech Tips Hindi</h3></div>
+<div class="video-card"><iframe src="https://www.youtube.com/embed/DnzjlURxQVo" title="YouTube video" allowfullscreen style="border:none;"></iframe><h3>My First Tech Video</h3></div>
+<div class="video-card"><iframe src="https://www.youtube.com/embed/1FoGo_63yg0" title="YouTube video" allowfullscreen style="border:none;"></iframe><h3>New Vlog</h3></div>
+<div class="video-card"><iframe src="https://www.youtube.com/embed/pvDNpA2A5uY" title="YouTube video" allowfullscreen style="border:none;"></iframe><h3>Tech Tips Hindi</h3></div>
 </div>
 </section>
 
@@ -130,8 +335,8 @@ SPW Pictures ek creative YouTube channel hai jahan aapko tech videos,
 </section>
 
 <section id="subscribe" class="subscribe">
-<h2>Subscribe to SPW Pictures</h2>
-<p>YouTube par hume support kare ❤️</p>
+<h2>Join our Family</h2>
+<p style="opacity:0.8;">YouTube par hume support kare ❤️</p>
 <a href="https://www.youtube.com/@spwpictures" target="_blank">Subscribe Now</a>
 </section>
 
@@ -141,25 +346,41 @@ SPW Pictures ek creative YouTube channel hai jahan aapko tech videos,
 
 <footer>
 © 2026 SPW Pictures | Designed by Shoeb Akhtar
-<div style="margin-top:10px;">
-<a href="https://www.instagram.com/___spw__pictures__"><i class="fab fa-instagram"></i></a>
-<a href="https://www.youtube.com/@spwpictures" target="_blank" style="margin:0 10px;color:#ff0000;font-size:1.2rem;"><i class="fab fa-youtube"></i></a>
+<div style="margin-top:15px;">
+<a href="https://www.instagram.com/___spw__pictures__" style="color:#fff; margin:0 10px; font-size:1.3rem;"><i class="fab fa-instagram"></i></a>
+<a href="https://www.youtube.com/@spwpictures" target="_blank" style="color:#fff; margin:0 10px; font-size:1.3rem;"><i class="fab fa-youtube"></i></a>
 </div>
 </footer>
 
 <script>
 const downloadBtns=document.querySelectorAll('.download-btn');
 downloadBtns.forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    const countSpan=btn.querySelector('.download-count');
-    countSpan.textContent=parseInt(countSpan.textContent)+1;
-  });
+  btn.addEventListener('click',()=>{
+    const countSpan=btn.querySelector('.download-count');
+    countSpan.textContent=parseInt(countSpan.textContent)+1;
+  });
 });
 const toggle=document.getElementById('darkToggle');
 toggle.onclick=()=>{
-  document.body.classList.toggle('dark');
-  toggle.textContent=document.body.classList.contains('dark')?'☀ Light':'🌙 Dark';
+  document.body.classList.toggle('light-mode');
+  toggle.textContent=document.body.classList.contains('light-mode')?'🌙 Dark':'☀ Light';
 };
+
+// Scroll Animation
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = 1;
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+});
+document.querySelectorAll('section, .video-card').forEach((el) => {
+    el.style.opacity = 0;
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'all 0.6s ease-out';
+    observer.observe(el);
+});
 </script>
 
 </body>
