@@ -246,7 +246,7 @@
         for(let id in cart) { const p = products.find(x => x.id == id); orderData.i.push({n: p.name, r: p.price, q: cart[id]}); }
         const encoded = btoa(JSON.stringify(orderData));
         const link = window.location.href.split('?')[0] + '?order=' + encoded;
-        window.open(`https://wa.me/919876543210?text=${encodeURIComponent(`New Order from ${user.name}:\n${link}`)}`, '_blank');
+        window.open(`https://wa.me/6392728836?text=${encodeURIComponent(`New Order from ${user.name}:\n${link}`)}`, '_blank');
         document.getElementById('bill-modal').style.display = 'none'; cart = {}; render(); updateFooter();
     }
     function showBillMode() {
@@ -259,4 +259,5 @@
 </script>
 </body>
 </html>
+
 
