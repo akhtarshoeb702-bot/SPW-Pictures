@@ -100,7 +100,7 @@
         <button class="cat-btn active" onclick="filter('All', this)">All</button>
         <button class="cat-btn" onclick="filter('Rashan', this)">Rashan</button>
         <button class="cat-btn" onclick="filter('Snacks', this)">Snacks</button>
-        <button class="cat-btn" onclick="filter('Household', this)">Futkar</button>
+        <button class="cat-btn" onclick="filter('Household', this)">Offers</button>
     </div>
 
     <div class="grid" id="grid"></div>
@@ -126,7 +126,7 @@
         <input type="text" id="pName" class="inp" placeholder="Product Name (e.g. Sugar)">
         <input type="text" id="pUnit" class="inp" placeholder="Quantity/Unit (e.g. 1kg, 1 set, 500g)">
         <input type="number" id="pPrice" class="inp" placeholder="Price (₹)">
-        <select id="pCat" class="inp"><option>Rashan</option><option>Snacks</option><option>Futkar</option></select>
+        <select id="pCat" class="inp"><option>Rashan</option><option>Snacks</option><option>Offers</option></select>
         <button class="btn-main" onclick="addProductToFirebase()">Save Product ☁️</button>
         <button onclick="closeAddModal()" style="margin-top:10px; background:transparent; border:none; color:#666;">Cancel</button>
     </div>
@@ -326,3 +326,4 @@
 </script>
 </body>
 </html>
+
