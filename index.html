@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Raju Royal Store (Live)</title>
+    <title>Raju Kirana Store (Live)</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#4a00e0">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -54,18 +54,18 @@
 <div id="login-view" class="overlay" style="display: flex;">
     <div class="modal-box">
         <h1 style="margin:0; font-size:40px;">🛍️</h1>
-        <h2 style="color:var(--primary); margin: 5px 0 20px;">Raju Royal Store</h2>
+        <h2 style="color:var(--primary); margin: 5px 0 20px;">Raju Kirana Store</h2>
         <input type="text" id="loginName" class="inp" placeholder="Your Name">
         <input type="tel" id="loginPhone" class="inp" placeholder="Mobile Number">
         <button class="btn-main" onclick="handleLogin()">Login</button>
-        <p style="font-size:11px; color:#888; margin-top:15px;">Admin: Admin / 0000</p>
+        <p style="font-size:11px; color:#888; margin-top:15px;">Name/phone no</p>
     </div>
 </div>
 
 <div id="app-view" style="display:none;">
     <div class="header glass">
         <div class="top-row">
-            <div class="brand">Raju Store</div>
+            <div class="brand">Raju Kirana Store</div>
             <div class="logout-btn" onclick="handleLogout()">Logout</div>
         </div>
         <input type="text" id="search" class="search-box" placeholder="🔍 Search..." onkeyup="render()">
@@ -75,7 +75,7 @@
         <button class="cat-btn active" onclick="filter('All', this)">All</button>
         <button class="cat-btn" onclick="filter('Rashan', this)">Rashan</button>
         <button class="cat-btn" onclick="filter('Snacks', this)">Snacks</button>
-        <button class="cat-btn" onclick="filter('Household', this)">Household</button>
+        <button class="cat-btn" onclick="filter('Household', this)">Futkar</button>
     </div>
 
     <div class="grid" id="grid">
@@ -152,7 +152,7 @@
         if(new URLSearchParams(window.location.search).get('order')) { showBillMode(); }
         else if(savedUser) {
             user = JSON.parse(savedUser);
-            if(user.name === "Admin" && user.phone === "0000") isAdmin = true;
+            if(user.name === "Admin" && user.phone === "6392") isAdmin = true;
             showApp();
         } else { document.getElementById('login-view').style.display = 'flex'; }
     };
@@ -259,3 +259,4 @@
 </script>
 </body>
 </html>
+
