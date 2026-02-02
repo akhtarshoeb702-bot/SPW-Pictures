@@ -46,7 +46,7 @@
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px 20px; }
         .card { border-radius: 16px; padding: 10px; display: flex; flex-direction: column; position: relative; transition: transform 0.2s; }
         .card:active { transform: scale(0.98); }
-        .card-img { height: 120px; background: white; border-radius: 12px; display: flex; justify-content: center; align-items: center; margin-bottom: 10px; }
+        .card-img { height: 120px; background: white; border-radius: 12px; display: flex; justify-content: center; align-items: center; margin-bottom: 10px; overflow: hidden; }
         .card img { max-width: 100%; max-height: 100%; object-fit: contain; }
         .card h3 { font-size: 14px; margin: 0 0 5px; height: 40px; overflow: hidden; font-weight: 600; line-height: 1.3; }
         .price { font-size: 16px; font-weight: 800; color: var(--primary); }
@@ -70,6 +70,10 @@
         .inp { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
         .btn-main { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: bold; margin-top: 10px; cursor: pointer; }
         
+        /* Image Upload Styles */
+        .file-upload-box { border: 2px dashed var(--primary); padding: 15px; border-radius: 10px; margin-bottom: 10px; cursor: pointer; background: #f3e5f5; color: var(--primary); font-size: 13px; font-weight: 600; }
+        .preview-img { width: 100%; height: 100px; object-fit: contain; margin-top: 10px; display: none; border-radius: 8px; }
+
         /* Bill Styles */
         .bill-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #ddd; font-size: 14px; text-align: left; }
         .bill-total { display: flex; justify-content: space-between; font-weight: 800; font-size: 18px; margin-top: 15px; border-top: 2px solid #333; padding-top: 10px; }
@@ -121,12 +125,20 @@
 <div id="add-modal" class="overlay">
     <div class="modal-box">
         <h3>Add New Product</h3>
+        
+        <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="previewImage()">
+        <div class="file-upload-box" onclick="document.getElementById('fileInput').click()">
+            📸 Tap to Upload Photo
+        </div>
+        <img id="imgPreview" class="preview-img" src="">
+        
+        <input type="text" id="pImg" class="inp" placeholder="Or Image URL (Optional)">
+
         <input type="text" id="pName" class="inp" placeholder="Product Name">
         <input type="number" id="pPrice" class="inp" placeholder="Price (₹)">
-        <input type="text" id="pImg" class="inp" placeholder="Image URL">
         <select id="pCat" class="inp"><option>Rashan</option><option>Snacks</option><option>Household</option></select>
         <button class="btn-main" onclick="addProduct()">Add Product</button>
-        <button onclick="document.getElementById('add-modal').style.display='none'" style="margin-top:10px; background:transparent; border:none; color:#666;">Cancel</button>
+        <button onclick="closeAddModal()" style="margin-top:10px; background:transparent; border:none; color:#666;">Cancel</button>
     </div>
 </div>
 
@@ -164,6 +176,7 @@
     let user = null;
     let isAdmin = false;
     let activeCat = 'All';
+    let tempImgBase64 = ""; // Store uploaded image here
 
     window.onload = function() {
         const savedUser = localStorage.getItem('glitch_user');
@@ -226,16 +239,67 @@
         document.getElementById('cart-bar').style.display = count > 0 ? 'flex' : 'none';
     }
 
-    function openAddModal() { document.getElementById('add-modal').style.display = 'flex'; }
-    function addProduct() {
-        const n = document.getElementById('pName').value; const p = document.getElementById('pPrice').value; const i = document.getElementById('pImg').value; const c = document.getElementById('pCat').value;
-        if(n && p) { products.push({ id: Date.now(), name: n, price: parseInt(p), img: i, cat: c }); localStorage.setItem('glitch_products', JSON.stringify(products)); document.getElementById('add-modal').style.display = 'none'; render(); }
+    // --- NEW: Image Upload Logic ---
+    function previewImage() {
+        const file = document.getElementById('fileInput').files[0];
+        if(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Compress Image
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const maxWidth = 300; // Resize to max 300px width
+                    const scaleSize = maxWidth / img.width;
+                    canvas.width = maxWidth;
+                    canvas.height = img.height * scaleSize;
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    tempImgBase64 = canvas.toDataURL('image/jpeg', 0.7); // 70% Quality
+                    document.getElementById('imgPreview').src = tempImgBase64;
+                    document.getElementById('imgPreview').style.display = 'block';
+                }
+            }
+            reader.readAsDataURL(file);
+        }
     }
+
+    function openAddModal() { document.getElementById('add-modal').style.display = 'flex'; }
+    
+    function closeAddModal() {
+        document.getElementById('add-modal').style.display = 'none';
+        tempImgBase64 = "";
+        document.getElementById('imgPreview').style.display = 'none';
+        document.getElementById('fileInput').value = "";
+    }
+
+    function addProduct() {
+        const n = document.getElementById('pName').value; 
+        const p = document.getElementById('pPrice').value; 
+        let i = document.getElementById('pImg').value; // URL fallback
+        const c = document.getElementById('pCat').value;
+        
+        // Use uploaded image if available
+        if(tempImgBase64) i = tempImgBase64;
+        if(!i) i = "https://via.placeholder.com/150";
+
+        if(n && p) { 
+            products.push({ id: Date.now(), name: n, price: parseInt(p), img: i, cat: c }); 
+            localStorage.setItem('glitch_products', JSON.stringify(products)); 
+            closeAddModal(); 
+            render(); 
+        }
+    }
+    
     function delProd(id) { if(confirm("Delete?")) { products = products.filter(p => p.id !== id); localStorage.setItem('glitch_products', JSON.stringify(products)); render(); } }
+    
     function editProd(id) {
         const p = products.find(x => x.id === id); let np = prompt("New Price?", p.price);
-        if(np) { let ni = prompt("New Image?", p.img); p.price = parseInt(np); if(ni) p.img = ni; localStorage.setItem('glitch_products', JSON.stringify(products)); render(); }
+        if(np) { let ni = prompt("New Image URL (or leave blank)?", p.img); p.price = parseInt(np); if(ni) p.img = ni; localStorage.setItem('glitch_products', JSON.stringify(products)); render(); }
     }
+    
     function filter(cat, btn) { activeCat = cat; document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); render(); }
 
     // --- BILL PREVIEW LOGIC ---
