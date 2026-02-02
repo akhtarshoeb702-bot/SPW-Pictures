@@ -1,336 +1,285 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>SPW Pictures</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-/* --- DARK NEON VARIABLES --- */
-:root {
-    --bg-main: #050505; /* Pitch Black */
-    --text-main: #ffffff;
-    --text-muted: #a0a0a0;
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --accent-color: #7c3aed; /* Neon Purple */
-    --island-bg: rgba(10, 10, 10, 0.95);
-    --glow-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
-}
-
-/* --- RESET & BASIC --- */
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-html { scroll-behavior: smooth; }
-
-body {
-    background-color: var(--bg-main);
-    color: var(--text-main);
-    overflow-x: hidden;
-    /* Subtle Background Gradient */
-    background-image: radial-gradient(circle at 50% 0%, #1a0b2e 0%, #000 60%);
-    min-height: 100vh;
-}
-
-/* --- DYNAMIC ISLAND (TOP NAV) --- */
-nav {
-    position: fixed;
-    top: 20px; /* Start position */
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Raju Royal Store</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4a00e0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
-    /* Initial State: Wide and Transparent */
-    width: 90%;
-    max-width: 500px;
-    padding: 15px 20px;
-    background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    border: 1px solid transparent;
-    border-radius: 20px;
-    
-    display: flex; justify-content: space-around; align-items: center;
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy Physics */
-}
+    <style>
+        :root {
+            --primary: #2f0386;
+            --secondary: #a742ff;
+            --text: #1a1a1a;
+        }
 
-/* SCROLLED STATE: THE ISLAND */
-nav.dynamic-island {
-    top: 10px;
-    width: auto; /* Shrink to fit content */
-    padding: 10px 30px;
-    background: #000; /* Deep Black */
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 50px; /* Pill Shape */
-    box-shadow: var(--glow-shadow);
-    gap: 15px;
-}
+        body { 
+            font-family: 'Poppins', sans-serif; margin: 0; padding: 0; 
+            background: linear-gradient(135deg, #8e2de2, #4a00e0); 
+            color: var(--text); min-height: 100vh; padding-bottom: 120px; 
+            background-attachment: fixed; -webkit-tap-highlight-color: transparent;
+        }
 
-nav a {
-    color: #fff; text-decoration: none;
-    font-size: 0.9rem; font-weight: 500;
-    display: flex; flex-direction: column; align-items: center;
-    opacity: 0.8; transition: 0.3s;
-}
-nav a i { font-size: 1.2rem; margin-bottom: 3px; }
-nav a span { font-size: 0.7rem; }
+        /* --- GLASS EFFECT --- */
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
 
-nav a:hover { opacity: 1; color: var(--accent-color); transform: scale(1.1); }
+        /* --- HEADER --- */
+        .header { position: sticky; top: 0; z-index: 1000; padding: 15px 20px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
+        .top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .brand { font-size: 22px; font-weight: 800; color: #000000; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .logout-btn { background: rgba(255,255,255,0.2); color: rgb(20, 19, 19); border: 1px solid rgb(247, 0, 0); padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; }
+        .search-box { width: 100%; padding: 12px; border: none; border-radius: 12px; background: rgba(255,255,255,0.9); font-size: 15px; outline: none; }
 
-/* Hide text labels inside Island mode on mobile to save space */
-nav.dynamic-island a span { display: none; }
-nav.dynamic-island a i { font-size: 1.3rem; margin: 0; }
+        /* --- CATEGORIES --- */
+        .cat-row { display: flex; gap: 10px; overflow-x: auto; padding: 10px 20px; scrollbar-width: none; }
+        .cat-btn { background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255,255,255,0.3); padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; white-space: nowrap; color: white; transition: 0.2s; }
+        .cat-btn.active { background: white; color: var(--primary); font-weight: 800; }
 
-/* --- HEADER --- */
-header {
-    text-align: center;
-    padding: 140px 20px 60px; /* Top padding ensures content is below Nav */
-}
-.profile-pic {
-    width: 140px; height: 140px; border-radius: 50%; object-fit: cover;
-    border: 2px solid var(--glass-border);
-    box-shadow: 0 0 30px rgba(124, 58, 237, 0.3);
-    margin-bottom: 20px; animation: float 6s ease-in-out infinite;
-}
-@keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+        /* --- GRID --- */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px 20px; }
+        .card { border-radius: 16px; padding: 10px; display: flex; flex-direction: column; position: relative; transition: transform 0.2s; }
+        .card:active { transform: scale(0.98); }
+        .card-img { height: 120px; background: white; border-radius: 12px; display: flex; justify-content: center; align-items: center; margin-bottom: 10px; }
+        .card img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .card h3 { font-size: 14px; margin: 0 0 5px; height: 40px; overflow: hidden; font-weight: 600; line-height: 1.3; }
+        .price { font-size: 16px; font-weight: 800; color: var(--primary); }
+        
+        .add-btn { background: var(--primary); color: white; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; }
+        .qty-ctrl { display: flex; align-items: center; background: var(--primary); color: white; border-radius: 8px; height: 30px; overflow: hidden; }
+        .qty-btn { background: none; border: none; color: white; width: 25px; height: 100%; font-size: 16px; }
+        .qty-val { font-size: 13px; font-weight: 700; padding: 0 5px; }
 
-header h1 {
-    font-size: 3rem; font-weight: 700; margin-bottom: 5px;
-    background: linear-gradient(to right, #fff, #a78bfa);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-header p { color: var(--text-muted); font-size: 1.1rem; }
+        /* --- ADMIN --- */
+        .admin-tools { position: absolute; top: 5px; right: 5px; display: flex; gap: 5px; z-index: 10; }
+        .icon-btn { width: 28px; height: 28px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); font-size: 14px; cursor: pointer; }
+        .fab { position: fixed; bottom: 100px; right: 20px; background: white; color: var(--primary); width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); z-index: 2000; cursor: pointer; }
 
-/* --- SECTIONS --- */
-section { max-width: 1100px; margin: 0 auto; padding: 60px 20px; }
-h2 {
-    font-size: 2.2rem; text-align: center; margin-bottom: 40px; color: #fff;
-}
-h2::after {
-    content: ''; display: block; width: 60px; height: 4px;
-    background: var(--accent-color);
-    margin: 10px auto 0; border-radius: 10px;
-    box-shadow: 0 0 10px var(--accent-color);
-}
+        /* --- CART BAR --- */
+        .cart-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: #1e1e1e; color: white; padding: 15px 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.4); z-index: 3000; }
 
-/* --- DARK GLASS CARDS --- */
-.videos {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-}
-
-.video-card {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(10px);
-    border-radius: 24px; padding: 15px;
-    transition: 0.4s ease;
-}
-.video-card:hover {
-    transform: translateY(-8px);
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--accent-color);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-}
-.video-card img, .video-card iframe {
-    width: 100%; border-radius: 18px; display: block;
-}
-.video-card h3 {
-    margin: 15px 0 10px; font-size: 1.1rem; font-weight: 600; text-align: center;
-}
-
-/* --- BUTTONS --- */
-.download-btn {
-    display: block; margin-top: 10px; padding: 14px;
-    background: transparent; color: #fff;
-    border: 1px solid var(--glass-border); border-radius: 14px;
-    text-align: center; text-decoration: none; font-weight: 600;
-    transition: 0.3s;
-}
-.download-btn:active { transform: scale(0.96); background: rgba(255,255,255,0.1); }
-.download-btn:hover { border-color: var(--accent-color); box-shadow: 0 0 15px rgba(124, 58, 237, 0.3); }
-
-/* --- CONTACT & SUBSCRIBE --- */
-.contact-form, .subscribe {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    padding: 30px; border-radius: 24px;
-    max-width: 600px; margin: 0 auto;
-}
-.contact-form input, .contact-form textarea {
-    width: 100%; padding: 16px; margin-bottom: 15px;
-    background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border);
-    border-radius: 12px; font-size: 1rem; color: #fff;
-    outline: none; transition: 0.3s;
-}
-.contact-form input:focus, .contact-form textarea:focus {
-    border-color: var(--accent-color); box-shadow: 0 0 10px rgba(124, 58, 237, 0.2);
-}
-.contact-form button, .subscribe a {
-    width: 100%; padding: 16px; border: none; border-radius: 12px;
-    background: linear-gradient(135deg, var(--accent-color), #db2777);
-    color: #fff; font-weight: 600; font-size: 1.1rem; cursor: pointer;
-    text-decoration: none; display: inline-block; text-align: center;
-}
-
-.subscribe { text-align: center; margin-top: 50px; }
-.subscribe a { width: auto; padding: 15px 40px; margin-top: 20px; }
-
-/* --- FLOATING INSTAGRAM --- */
-.instagram-float {
-    position: fixed; bottom: 30px; right: 20px;
-    background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
-    color: #fff; width: 55px; height: 55px; border-radius: 50%;
-    display: flex; justify-content: center; align-items: center;
-    font-size: 1.5rem; text-decoration: none;
-    border: 1px solid var(--glass-border);
-    z-index: 999;
-}
-.instagram-float:hover { background: #db2777; border-color: #db2777; }
-
-footer {
-    text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.9rem;
-    border-top: 1px solid var(--glass-border);
-}
-
-/* Mobile Tweaks */
-@media(max-width: 600px) {
-    header h1 { font-size: 2.5rem; }
-    /* Ensure Island doesn't get too wide on small phones */
-    nav.dynamic-island { max-width: 90%; }
-}
-</style>
+        /* --- MODALS --- */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
+        .modal-box { background: rgba(255,255,255,0.98); padding: 25px; width: 85%; max-width: 350px; border-radius: 20px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; max-height: 80vh; overflow-y: auto; }
+        .inp { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
+        .btn-main { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        
+        /* Bill Styles */
+        .bill-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #ddd; font-size: 14px; text-align: left; }
+        .bill-total { display: flex; justify-content: space-between; font-weight: 800; font-size: 18px; margin-top: 15px; border-top: 2px solid #333; padding-top: 10px; }
+    </style>
 </head>
 <body>
 
-<nav id="navbar">
-    <a href="#about">
-        <i class="fas fa-user"></i>
-        <span>About</span>
-    </a>
-    <a href="#photos">
-        <i class="fas fa-image"></i>
-        <span>Photos</span>
-    </a>
-    <a href="#videos">
-        <i class="fas fa-play-circle"></i>
-        <span>Videos</span>
-    </a>
-    <a href="#contact">
-        <i class="fas fa-envelope"></i>
-        <span>Contact</span>
-    </a>
-</nav>
-
-<header>
-<img src="dp.png" alt="Shoeb Akhtar" class="profile-pic">
-<h1>SPW Pictures</h1>
-<p>Tech • Vlogs • Editing</p>
-</header>
-
-<section id="about">
-    <div style="background:var(--glass-bg); padding:30px; border-radius:20px; border:1px solid var(--glass-border); text-align:center;">
-        <h2 style="margin-bottom:15px; font-size:1.8rem;">About Us</h2>
-        <p style="color:#ccc; line-height:1.7;">
-        SPW Pictures ek creative platform hai jahan aapko 
-        <strong>High Quality Tech Videos</strong> aur <strong>Premium Lightroom Presets</strong> milte hain.
-        </p>
+<div id="login-view" class="overlay" style="display: flex;">
+    <div class="modal-box">
+        <h1 style="margin:0; font-size:40px;">🛍️</h1>
+        <h2 style="color:var(--primary); margin: 5px 0 20px;">Raju Kirana Store</h2>
+        <input type="text" id="loginName" class="inp" placeholder="Your Name">
+        <input type="tel" id="loginPhone" class="inp" placeholder="Mobile Number">
+        <button class="btn-main" onclick="handleLogin()">Login</button>
+        <p style="font-size:11px; color:#888; margin-top:15px;">name / phone no</p>
     </div>
-</section>
+</div>
 
-<section id="photos">
-    <h2>Premium Presets</h2>
-    <div class="videos">
-        <div class="video-card">
-            <div style="display:flex; gap:5px; height: 200px; overflow:hidden; border-radius:12px;">
-                <img src="previews/photo1-original.jpeg" alt="Original" style="width:50%; object-fit:cover;">
-                <img src="raw/photo1-preset.jpeg" alt="Preset" style="width:50%; object-fit:cover;">
-            </div>
-            <h3>Nature Vibe</h3>
-            <a href="downloadraw/raw1.dng" class="download-btn" download>Download DNG</a>
+<div id="app-view" style="display:none;">
+    <div class="header glass">
+        <div class="top-row">
+            <div class="brand">Raju Kirana Store</div>
+            <div class="logout-btn" onclick="handleLogout()">Logout ➔</div>
         </div>
-        <div class="video-card">
-            <div style="display:flex; gap:5px; height: 200px; overflow:hidden; border-radius:12px;">
-                <img src="previews/photo2-original.jpeg" alt="Original" style="width:50%; object-fit:cover;">
-                <img src="raw/photo2-preset.jpeg" alt="Preset" style="width:50%; object-fit:cover;">
-            </div>
-            <h3>Green Dark</h3>
-            <a href="downloadraw/raw2.dng" class="download-btn" download>Download DNG</a>
+        <input type="text" id="search" class="search-box" placeholder="🔍 Search items..." onkeyup="render()">
+    </div>
+
+    <div class="cat-row">
+        <button class="cat-btn active" onclick="filter('All', this)">All</button>
+        <button class="cat-btn" onclick="filter('Rashan', this)">Rashan</button>
+        <button class="cat-btn" onclick="filter('Snacks', this)">Snacks</button>
+        <button class="cat-btn" onclick="filter('Household', this)">Household</button>
+    </div>
+
+    <div class="grid" id="grid"></div>
+    <div class="fab" id="admin-fab" style="display:none;" onclick="openAddModal()">+</div>
+
+    <div class="cart-bar" id="cart-bar" style="display: none;">
+        <div>
+            <div style="font-size:12px; color:#aaa;"><span id="count">0</span> Items</div>
+            <div style="font-size:18px; font-weight:bold;">₹<span id="total">0</span></div>
         </div>
-        <div class="video-card">
-            <div style="display:flex; gap:5px; height: 200px; overflow:hidden; border-radius:12px;">
-                <img src="previews/photo3-original.jpeg" alt="Original" style="width:50%; object-fit:cover;">
-                <img src="raw/photo3-preset.jpeg" alt="Preset" style="width:50%; object-fit:cover;">
-            </div>
-            <h3>4K Vibe</h3>
-            <a href="downloadraw/raw1.dng" class="download-btn" download>Download DNG</a>
+        <div onclick="openBillPreview()" style="cursor:pointer; font-weight:bold; background:rgb(249, 249, 249); color:black; padding:8px 15px; border-radius:20px;">
+            Check Bill 📄
         </div>
     </div>
-</section>
+</div>
 
-<section id="videos">
-    <h2>Latest Videos</h2>
-    <div class="videos">
-        <div class="video-card"><iframe src="https://www.youtube.com/embed/DnzjlURxQVo" title="YouTube video" allowfullscreen style="border:none;"></iframe><h3>My First Tech Video</h3></div>
-        <div class="video-card"><iframe src="https://www.youtube.com/embed/1FoGo_63yg0" title="YouTube video" allowfullscreen style="border:none;"></iframe><h3>New Vlog</h3></div>
-        <div class="video-card"><iframe src="https://www.youtube.com/embed/pvDNpA2A5uY" title="YouTube video" allowfullscreen style="border:none;"></iframe><h3>Tech Tips Hindi</h3></div>
+<div id="add-modal" class="overlay">
+    <div class="modal-box">
+        <h3>Add New Product</h3>
+        <input type="text" id="pName" class="inp" placeholder="Product Name">
+        <input type="number" id="pPrice" class="inp" placeholder="Price (₹)">
+        <input type="text" id="pImg" class="inp" placeholder="Image URL">
+        <select id="pCat" class="inp"><option>Rashan</option><option>Snacks</option><option>Household</option></select>
+        <button class="btn-main" onclick="addProduct()">Add Product</button>
+        <button onclick="document.getElementById('add-modal').style.display='none'" style="margin-top:10px; background:transparent; border:none; color:#666;">Cancel</button>
     </div>
-</section>
+</div>
 
-<section id="contact">
-    <h2>Contact</h2>
-    <form class="contact-form" action="mailto:akhtarshoeb702@gmail.com" method="post" enctype="text/plain">
-        <input type="text" placeholder="Your Name" required>
-        <input type="email" placeholder="Your Email" required>
-        <textarea rows="4" placeholder="How can we help?" required></textarea>
-        <button type="submit">Send Message</button>
-    </form>
-</section>
+<div id="bill-modal" class="overlay">
+    <div class="modal-box">
+        <h2 style="color:var(--primary); margin-top:0;">🧾 Confirm Order</h2>
+        <div style="text-align:left; background:#f9f9f9; padding:10px; border-radius:10px; margin-bottom:10px;">
+            <small>Customer:</small><br>
+            <strong id="bill-cust-name">User</strong> <br>
+            <small id="bill-cust-phone">9999999999</small>
+        </div>
+        
+        <div id="bill-list" style="max-height: 200px; overflow-y: auto;">
+            </div>
 
-<section id="subscribe" class="subscribe">
-    <h2>Join SPW Family</h2>
-    <p style="color:#aaa; margin-bottom:10px;">Daily Tech Updates & Creativity</p>
-    <a href="https://www.youtube.com/@spwpictures" target="_blank"><i class="fab fa-youtube"></i> Subscribe Now</a>
-</section>
+        <div class="bill-total">
+            <span>Total Pay:</span>
+            <span>₹<span id="bill-grand-total">0</span></span>
+        </div>
 
-<a href="https://www.instagram.com/___spw__pictures__" target="_blank" class="instagram-float">
-    <i class="fab fa-instagram"></i>
-</a>
-
-<footer>
-    © 2026 SPW Pictures | Designed by Shoeb Akhtar
-</footer>
+        <button class="btn-main" onclick="finalOrderWhatsApp()">✅ Confirm & Order</button>
+        <button onclick="document.getElementById('bill-modal').style.display='none'" style="margin-top:10px; width:100%; padding:10px; background:#eee; border:none; border-radius:10px; font-weight:bold;">⬅ Edit Cart</button>
+    </div>
+</div>
 
 <script>
-// TOP DYNAMIC ISLAND LOGIC
-const navbar = document.getElementById('navbar');
+    const defaultData = [
+        {id: 1, name: "Atta (5kg)", price: 240, cat: "Rashan", img: "https://via.placeholder.com/150?text=Atta"},
+        {id: 2, name: "Maggi", price: 14, cat: "Snacks", img: "https://via.placeholder.com/150?text=Maggi"},
+        {id: 3, name: "Salt (1kg)", price: 28, cat: "Rashan", img: "https://via.placeholder.com/150?text=Salt"}
+    ];
 
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-        // Scroll karne par: Island mode (Black Pill, Small, No Text)
-        navbar.classList.add('dynamic-island');
-    } else {
-        // Upar hone par: Normal mode (Wide, Transparent, With Text)
-        navbar.classList.remove('dynamic-island');
+    let products = JSON.parse(localStorage.getItem('glitch_products')) || defaultData;
+    let cart = {};
+    let user = null;
+    let isAdmin = false;
+    let activeCat = 'All';
+
+    window.onload = function() {
+        const savedUser = localStorage.getItem('glitch_user');
+        if(new URLSearchParams(window.location.search).get('order')) { showBillMode(); } 
+        else if(savedUser) {
+            user = JSON.parse(savedUser);
+            if(user.name === "Admin" && user.phone === "6392") isAdmin = true;
+            showApp();
+        } else { document.getElementById('login-view').style.display = 'flex'; }
+    };
+
+    function handleLogin() {
+        const name = document.getElementById('loginName').value;
+        const phone = document.getElementById('loginPhone').value;
+        if(!name || !phone) { alert("Details bharein!"); return; }
+        user = { name, phone };
+        localStorage.setItem('glitch_user', JSON.stringify(user));
+        location.reload(); 
     }
-});
 
-// Scroll Reveal Animation
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = 1;
-            entry.target.style.transform = 'translateY(0)';
+    function handleLogout() { if(confirm("Logout?")) { localStorage.removeItem('glitch_user'); location.reload(); } }
+
+    function showApp() {
+        document.getElementById('login-view').style.display = 'none';
+        document.getElementById('app-view').style.display = 'block';
+        if(isAdmin) document.getElementById('admin-fab').style.display = 'flex';
+        render();
+    }
+
+    function render() {
+        const grid = document.getElementById('grid');
+        const term = document.getElementById('search').value.toLowerCase();
+        grid.innerHTML = '';
+
+        products.filter(p => (activeCat === 'All' || p.cat === activeCat) && p.name.toLowerCase().includes(term))
+        .forEach(p => {
+            const qty = cart[p.id] || 0;
+            let btnHTML = qty === 0 
+                ? `<button class="add-btn" onclick="updateQty(${p.id}, 1)">ADD</button>`
+                : `<div class="qty-ctrl"><button class="qty-btn" onclick="updateQty(${p.id}, -1)">−</button><span class="qty-val">${qty}</span><button class="qty-btn" onclick="updateQty(${p.id}, 1)">+</button></div>`;
+
+            let adminHTML = isAdmin ? `<div class="admin-tools"><div class="icon-btn" onclick="editProd(${p.id})" style="color:orange">✏️</div><div class="icon-btn" onclick="delProd(${p.id})" style="color:red">🗑️</div></div>` : '';
+
+            const card = document.createElement('div'); card.className = 'card glass';
+            card.innerHTML = `${adminHTML}<div class="card-img"><img src="${p.img}" onerror="this.src='https://via.placeholder.com/150'"></div><h3>${p.name}</h3><div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto;"><div class="price">₹${p.price}</div>${btnHTML}</div>`;
+            grid.appendChild(card);
+        });
+    }
+
+    function updateQty(id, change) {
+        if(!cart[id]) cart[id] = 0; cart[id] += change;
+        if(cart[id] <= 0) delete cart[id];
+        render(); updateCartBar();
+    }
+
+    function updateCartBar() {
+        let total = 0, count = 0;
+        for(let id in cart) { const p = products.find(x => x.id == id); total += p.price * cart[id]; count += cart[id]; }
+        document.getElementById('total').innerText = total; document.getElementById('count').innerText = count;
+        document.getElementById('cart-bar').style.display = count > 0 ? 'flex' : 'none';
+    }
+
+    function openAddModal() { document.getElementById('add-modal').style.display = 'flex'; }
+    function addProduct() {
+        const n = document.getElementById('pName').value; const p = document.getElementById('pPrice').value; const i = document.getElementById('pImg').value; const c = document.getElementById('pCat').value;
+        if(n && p) { products.push({ id: Date.now(), name: n, price: parseInt(p), img: i, cat: c }); localStorage.setItem('glitch_products', JSON.stringify(products)); document.getElementById('add-modal').style.display = 'none'; render(); }
+    }
+    function delProd(id) { if(confirm("Delete?")) { products = products.filter(p => p.id !== id); localStorage.setItem('glitch_products', JSON.stringify(products)); render(); } }
+    function editProd(id) {
+        const p = products.find(x => x.id === id); let np = prompt("New Price?", p.price);
+        if(np) { let ni = prompt("New Image?", p.img); p.price = parseInt(np); if(ni) p.img = ni; localStorage.setItem('glitch_products', JSON.stringify(products)); render(); }
+    }
+    function filter(cat, btn) { activeCat = cat; document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); render(); }
+
+    // --- BILL PREVIEW LOGIC ---
+    function openBillPreview() {
+        const list = document.getElementById('bill-list');
+        list.innerHTML = '';
+        let total = 0;
+
+        document.getElementById('bill-cust-name').innerText = user.name;
+        document.getElementById('bill-cust-phone').innerText = user.phone;
+
+        for(let id in cart) {
+            const p = products.find(x => x.id == id);
+            let itemTotal = p.price * cart[id];
+            total += itemTotal;
+            list.innerHTML += `
+                <div class="bill-row">
+                    <span>${p.name} <small>x${cart[id]}</small></span>
+                    <span>₹${itemTotal}</span>
+                </div>`;
         }
-    });
-});
-document.querySelectorAll('section, .video-card').forEach((el) => {
-    el.style.opacity = 0;
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'all 0.6s ease-out';
-    observer.observe(el);
-});
-</script>
+        document.getElementById('bill-grand-total').innerText = total;
+        document.getElementById('bill-modal').style.display = 'flex';
+    }
 
+    function finalOrderWhatsApp() {
+        const orderData = { c: user.name, p: user.phone, i: [] };
+        for(let id in cart) { const p = products.find(x => x.id == id); orderData.i.push({n: p.name, r: p.price, q: cart[id]}); }
+        const encoded = btoa(JSON.stringify(orderData));
+        const link = window.location.href.split('?')[0] + '?order=' + encoded;
+        const msg = `🛒 *New Order*\nCustomer: ${user.name}\nView Invoice: ${link}`;
+        window.open(`https://wa.me/6392728836?text=${encodeURIComponent(msg)}`, '_blank');
+        document.getElementById('bill-modal').style.display = 'none';
+        cart = {}; render(); updateCartBar(); // Reset Cart
+    }
+
+    // --- SECURE INVOICE PAGE ---
+    function showBillMode() {
+        try {
+            const data = JSON.parse(atob(new URLSearchParams(window.location.search).get('order')));
+            let h = '', t = 0; data.i.forEach(x => { t += x.r*x.q; h += `<div class="bill-row"><span>${x.n} x${x.q}</span><span>₹${x.r*x.q}</span></div>`});
+            document.body.innerHTML = `<div style="padding:20px;background:#f5f7fa;min-height:100vh;"><div style="background:white;padding:25px;border-radius:15px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.1);"><h2 style="color:#4a00e0;">Raju Invoice</h2><p>${data.c} (${data.p})</p><hr>${h}<hr><div class="bill-total"><span>Total</span><span>₹${t}</span></div></div><button onclick="window.location.href=window.location.href.split('?')[0]" style="width:100%;padding:15px;background:#333;color:white;border:none;border-radius:10px;margin-top:20px;">🏠 Back to Store</button></div>`;
+        } catch(e) { window.location.href = window.location.href.split('?')[0]; }
+    }
+</script>
 </body>
 </html>
-
