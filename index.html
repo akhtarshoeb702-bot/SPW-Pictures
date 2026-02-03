@@ -69,7 +69,8 @@
         .btn-main { width: 100%; padding: 15px; background: linear-gradient(135deg, #8e2de2, #4a00e0); color: white; border: none; border-radius: 12px; font-weight: bold; margin-top: 15px; cursor: pointer; }
         
         /* Order Cards Style */
-        .order-card { background: rgba(255,255,255,0.6); border: 1px solid rgba(0,0,0,0.1); border-radius: 15px; padding: 15px; margin-bottom: 15px; text-align: left; }
+        .order-card { background: rgba(255,255,255,0.6); border: 1px solid rgba(0,0,0,0.1); border-radius: 15px; padding: 15px; margin-bottom: 15px; text-align: left; transition: transform 0.2s; cursor: pointer; }
+        .order-card:active { transform: scale(0.98); background: rgba(255,255,255,0.8); }
         .dark-mode .order-card { background: rgba(255,255,255,0.05); }
         .status-badge { display: inline-block; padding: 5px 12px; border-radius: 15px; font-size: 11px; font-weight: bold; color:white; margin-top: 5px; }
         
@@ -165,14 +166,15 @@
 <div id="my-orders-modal" class="overlay">
     <div class="modal-box" style="max-width: 90%; width: 90%;">
         <h3>My Orders 📦</h3>
-        <div id="my-orders-list" style="text-align:left; max-height:60vh; overflow-y:auto; margin-top:15px;"></div>
+        <p style="font-size:12px; color:#888;">(Tap on an order to view invoice)</p>
+        <div id="my-orders-list" style="text-align:left; max-height:60vh; overflow-y:auto; margin-top:10px;"></div>
         <button class="btn-main" onclick="document.getElementById('my-orders-modal').style.display='none'">Close</button>
     </div>
 </div>
 
 <div id="bill-modal" class="overlay">
     <div class="modal-box">
-        <h2 style="color:var(--primary); margin-top:0;">🧾 Confirm Order</h2>
+        <h2 style="color:var(--primary); margin-top:0;" id="bill-title">🧾 Confirm Order</h2>
         <div style="background:white; color:black; padding:15px; border-radius:10px; margin-bottom:20px; text-align:left;">
             <div id="bill-list" style="max-height:30vh; overflow-y:auto; border-bottom:1px solid #eee; margin-bottom:10px;"></div>
             <div style="display:flex; justify-content:space-between; font-weight:800; font-size:18px;">
@@ -207,6 +209,7 @@
     let isAdmin = false;
     let activeCat = 'All';
     let tempImgBase64 = "";
+    let myHistoryData = []; // Store fetched orders here
 
     window.onload = function() {
         if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
@@ -324,24 +327,21 @@
         const list = document.getElementById('admin-orders-list');
         list.innerHTML = '<div style="margin-top:20px; color:#666;">Loading Orders...</div>';
 
-        // Fix for "Admin buttons hidden" - Using client side sort for safety
         db.collection("orders").get().then(snap => {
             if(snap.empty) { list.innerHTML = '<div style="margin-top:20px; color:#666;">No orders found.</div>'; return; }
             
             let allOrders = [];
             snap.forEach(doc => { allOrders.push({id: doc.id, ...doc.data()}); });
             
-            // Sort by time descending (Newest first)
             allOrders.sort((a,b) => (b.timestamp ? b.timestamp.seconds : 0) - (a.timestamp ? a.timestamp.seconds : 0));
 
             list.innerHTML = '';
             allOrders.forEach(d => {
-                const status = d.status || 'Pending'; // Default to pending if missing
+                const status = d.status || 'Pending';
                 const statusClass = status === 'Confirmed' ? 'st-confirmed' : (status === 'Cancelled' ? 'st-cancelled' : 'st-pending');
                 let itemsHtml = d.i.map(x => `${x.n} (${x.u}) x${x.q}`).join(', ');
 
                 let actionButtons = '';
-                // SHOW BUTTONS IF PENDING
                 if(status === 'Pending') {
                     actionButtons = `
                     <div class="admin-actions">
@@ -371,50 +371,75 @@
     function changeStatus(id, newStatus) {
         if(confirm(`Mark order as ${newStatus}?`)) {
             db.collection("orders").doc(id).update({ status: newStatus }).then(() => {
-                openAdminOrders(); // Refresh list manually
+                openAdminOrders(); 
             });
         }
     }
 
-    // --- CUSTOMER MY ORDERS (FIXED LOADING ISSUE) ---
+    // --- CUSTOMER MY ORDERS (FIXED LOADING & CLICK TO VIEW INVOICE) ---
     function openMyOrders() {
         document.getElementById('my-orders-modal').style.display = 'flex';
         const list = document.getElementById('my-orders-list');
         list.innerHTML = '<div style="margin-top:20px; color:#666;">Loading...</div>';
 
-        // FIX: Removed orderBy from query to prevent Index error. Sorting in JS instead.
         db.collection("orders").where("p", "==", user.phone).get().then(snap => {
             if(snap.empty) { list.innerHTML = '<div style="padding:20px; color:#888;">No orders placed yet.</div>'; return; }
 
-            let myOrders = [];
-            snap.forEach(doc => { myOrders.push(doc.data()); });
+            myHistoryData = []; // Clear previous data
+            snap.forEach(doc => { myHistoryData.push(doc.data()); });
 
-            // Javascript Sort (Newest First)
-            myOrders.sort((a,b) => (b.timestamp ? b.timestamp.seconds : 0) - (a.timestamp ? a.timestamp.seconds : 0));
+            // Sort newest first
+            myHistoryData.sort((a,b) => (b.timestamp ? b.timestamp.seconds : 0) - (a.timestamp ? a.timestamp.seconds : 0));
 
             list.innerHTML = '';
-            myOrders.forEach(d => {
+            myHistoryData.forEach((d, index) => {
                 const status = d.status || 'Pending';
                 const statusClass = status === 'Confirmed' ? 'st-confirmed' : (status === 'Cancelled' ? 'st-cancelled' : 'st-pending');
-                let itemsHtml = d.i.map(x => `${x.n} x${x.q}`).join(', ');
+                let itemsSummary = d.i.length + ' Items';
                 
-                let statusMsg = status === 'Pending' ? '🕒 Waiting for shop confirmation...' : (status === 'Confirmed' ? '✅ Order Accepted! Preparing...' : '❌ Order was cancelled.');
-
                 list.innerHTML += `
-                <div class="order-card">
-                    <div style="display:flex; justify-content:space-between;">
-                        <span style="font-weight:bold;">₹${d.t}</span>
-                        <span style="font-size:12px; color:#666;">${d.date}</span>
+                <div class="order-card" onclick="showHistoryInvoice(${index})">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <span style="font-weight:bold; font-size:16px;">₹${d.t}</span>
+                            <div style="font-size:11px; color:#666;">${d.date.split(',')[0]}</div>
+                        </div>
+                        <div style="text-align:right;">
+                             <div class="status-badge ${statusClass}">${status}</div>
+                             <div style="font-size:10px; color:var(--primary); margin-top:2px;">View Invoice 📄</div>
+                        </div>
                     </div>
-                    <p style="font-size:12px; color:#444; margin:5px 0;">${itemsHtml}</p>
-                    <div class="status-badge ${statusClass}">${status}</div>
-                    <div style="font-size:11px; margin-top:5px; color:#555;">${statusMsg}</div>
                 </div>`;
             });
         }).catch(error => {
             console.error(error);
-            list.innerHTML = '<div style="color:red; padding:20px;">Error loading orders. Try again later.</div>';
+            list.innerHTML = '<div style="color:red; padding:20px;">Error loading orders.</div>';
         });
+    }
+
+    // Function to show invoice of past order
+    function showHistoryInvoice(index) {
+        const d = myHistoryData[index];
+        const list = document.getElementById('bill-list');
+        list.innerHTML = '';
+        
+        // Populate items
+        d.i.forEach(x => {
+            list.innerHTML += `<div style="display:flex;justify-content:space-between;padding:8px 0; border-bottom:1px solid #eee;">
+                <span>${x.n} (${x.u}) x${x.q}</span>
+                <span>₹${x.p * x.q}</span>
+            </div>`;
+        });
+
+        // Update Total
+        document.getElementById('bill-grand-total').innerText = d.t;
+        
+        // Update Title & Hide Slider
+        document.getElementById('bill-title').innerText = "🧾 Order Invoice";
+        document.getElementById('sliderContainer').style.display = 'none'; // Hide slider for history
+        
+        // Show Modal
+        document.getElementById('bill-modal').style.display = 'flex';
     }
 
     // --- UTILS (Slider, Images, etc) ---
@@ -460,6 +485,10 @@
     }
 
     function openBillPreview() {
+        // Reset Title and Show Slider (for New Orders)
+        document.getElementById('bill-title').innerText = "🧾 Confirm Order";
+        document.getElementById('sliderContainer').style.display = 'block';
+
         const list = document.getElementById('bill-list'); list.innerHTML = ''; let itemsT = 0;
         for(let id in cart) { const p = products.find(x => x.id == id); let it = p.price * cart[id]; itemsT += it; list.innerHTML += `<div style="display:flex;justify-content:space-between;padding:5px 0;"><span>${p.name} x${cart[id]}</span><span>₹${it}</span></div>`; }
         document.getElementById('bill-grand-total').innerText = itemsT; resetSlider(); document.getElementById('bill-modal').style.display = 'flex';
