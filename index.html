@@ -7,7 +7,7 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#4a00e0">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
+     
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
@@ -133,7 +133,7 @@
     </div>
 
     <div class="grid" id="grid"></div>
-    
+     
     <div class="fab" id="admin-fab" style="display:none;" onclick="openAddModal()">+</div>
     <div class="fab history-fab" id="history-fab" style="display:none;" onclick="showOrders()">📋</div>
 
@@ -311,7 +311,7 @@
     }
 
     function handleLogout() { localStorage.removeItem('raju_user'); location.reload(); }
-    
+     
     function showApp() {
         document.getElementById('login-view').style.display = 'none'; 
         document.getElementById('app-view').style.display = 'block';
@@ -523,7 +523,10 @@
         db.collection("orders").add(orderObj).then(() => {
             const encoded = btoa(JSON.stringify(orderObj));
             const link = window.location.href.split('?')[0] + '?order=' + encoded;
-            window.open(`https://wa.me/6392728836?text=${encodeURIComponent(`New Order from ${user.name}:\nTotal: ₹${grandTotal}\nBill: ${link}`)}`, '_blank');
+            
+            // FIX: Use window.location.href instead of window.open to avoid popup blocking
+            window.location.href = `https://wa.me/6392728836?text=${encodeURIComponent(`New Order from ${user.name}:\nTotal: ₹${grandTotal}\nBill: ${link}`)}`;
+            
             cart = {}; render(); updateFooter();
             document.getElementById('bill-modal').style.display = 'none';
         });
@@ -551,4 +554,3 @@
 </script>
 </body>
 </html>
-
