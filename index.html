@@ -1,573 +1,468 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Raju Kirana Store (Live)</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#4a00e0">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Raju Kirana Store</title>
+    <meta name="theme-color" content="#4a00e0">
+    <link rel="manifest" href="manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
-    <style>
-        :root { --primary: #4a00e0; --bg: #f3e5f5; --text: #1a1a1a; --card-bg: rgba(255, 255, 255, 0.95); --shadow: 0 8px 32px 0 rgba(0,0,0,0.15); --success: #00b894; }
-        body.dark-mode { --bg: #121212; --text: #f1f1f1; --card-bg: rgba(30, 30, 30, 0.95); --shadow: 0 8px 32px 0 rgba(0,0,0,0.5); }
-        
-        body { font-family: 'Poppins', sans-serif; margin: 0; padding: 0; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 120px; transition: background 0.4s ease, color 0.4s ease; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
-        
-        /* --- ANIMATIONS --- */
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes popIn { 0% { opacity: 0; transform: scale(0.8); } 70% { transform: scale(1.05); } 100% { opacity: 1; transform: scale(1); } }
-        @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes cartBump { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        
-        .glass { background: var(--card-bg); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); box-shadow: var(--shadow); }
-        
-        .header { position: sticky; top: 0; z-index: 1000; padding: 15px 20px; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; background: linear-gradient(135deg, #8e2de2, #4a00e0); color: white; box-shadow: 0 5px 20px rgba(74, 0, 224, 0.4); }
-        .top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .brand { font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 5px; }
-        
-        .action-icons { display: flex; gap: 10px; align-items: center; }
-        
-        /* Language Toggle Switch */
-        .lang-switch { position: relative; width: 60px; height: 30px; background: rgba(0,0,0,0.2); border-radius: 30px; cursor: pointer; display: flex; align-items: center; padding: 0 5px; justify-content: space-between; box-sizing: border-box; font-size: 10px; font-weight: bold; border: 1px solid rgba(255,255,255,0.3); }
-        .lang-switch span { z-index: 1; color: rgba(255,255,255,0.7); transition: 0.3s; }
-        .lang-knob { position: absolute; top: 2px; left: 2px; width: 24px; height: 24px; background: white; border-radius: 50%; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        .lang-switch.active .lang-knob { left: 32px; }
-        .lang-switch.active .txt-hi { color: var(--primary); }
-        .lang-switch:not(.active) .txt-en { color: var(--primary); }
-        
-        .logout-btn { background: rgba(255,255,255,0.25); padding: 5px 12px; border-radius: 20px; font-size: 11px; cursor: pointer; color: white; font-weight: 600; }
+    <style>
+        /* --- CSS START --- */
+        :root { --primary: #4a00e0; --bg: #f3e5f5; --text: #1a1a1a; --card-bg: rgba(255, 255, 255, 0.95); --shadow: 0 8px 32px 0 rgba(0,0,0,0.15); --success: #00b894; --warning: #fdcb6e; --danger: #ff7675; }
+        body.dark-mode { --bg: #121212; --text: #f1f1f1; --card-bg: rgba(30, 30, 30, 0.95); --shadow: 0 8px 32px 0 rgba(0,0,0,0.5); }
+        
+        body { font-family: 'Poppins', sans-serif; margin: 0; padding: 0; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 120px; -webkit-tap-highlight-color: transparent; }
+        
+        @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes popIn { 0% { transform: scale(0.8); } 70% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
 
-        .search-box { width: 100%; padding: 14px; border: none; border-radius: 15px; background: rgba(255,255,255,0.95); font-size: 15px; outline: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: #333; }
-        .dark-mode .search-box { background: #2c2c2c; color: white; }
+        .header { position: sticky; top: 0; z-index: 1000; padding: 15px 20px; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; background: linear-gradient(135deg, #8e2de2, #4a00e0); color: white; box-shadow: 0 5px 20px rgba(74, 0, 224, 0.4); }
+        .top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .brand { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 5px; }
+        .action-icons { display: flex; gap: 10px; align-items: center; }
+        
+        .search-box { width: 100%; padding: 14px; border: none; border-radius: 15px; background: rgba(255,255,255,0.95); font-size: 15px; outline: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: #333; }
+        .dark-mode .search-box { background: #2c2c2c; color: white; }
 
-        .cat-row { display: flex; gap: 10px; overflow-x: auto; padding: 15px 20px; scrollbar-width: none; }
-        .cat-btn { background: rgba(74, 0, 224, 0.1); border: none; padding: 8px 16px; border-radius: 25px; font-size: 13px; font-weight: 600; white-space: nowrap; color: var(--text); transition: 0.3s; cursor: pointer; }
-        .dark-mode .cat-btn { background: rgba(255,255,255,0.1); color: #ddd; }
-        .cat-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(74, 0, 224, 0.4); }
+        .cat-row { display: flex; gap: 10px; overflow-x: auto; padding: 15px 20px; scrollbar-width: none; }
+        .cat-btn { background: rgba(74, 0, 224, 0.1); border: none; padding: 8px 16px; border-radius: 25px; font-size: 13px; font-weight: 600; white-space: nowrap; color: var(--text); transition: 0.3s; cursor: pointer; }
+        .cat-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(74, 0, 224, 0.4); }
 
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 10px 20px; }
-        .card { border-radius: 20px; padding: 12px; display: flex; flex-direction: column; position: relative; animation: fadeIn 0.6s ease; }
-        .card-img { height: 130px; background: white; border-radius: 15px; display: flex; justify-content: center; align-items: center; margin-bottom: 12px; overflow: hidden; }
-        .card img { max-width: 90%; max-height: 90%; object-fit: contain; }
-        .card h3 { font-size: 15px; margin: 0 0 4px; height: 40px; overflow: hidden; font-weight: 600; line-height: 1.3; }
-        .unit-info { font-size: 11px; color: #888; margin-bottom: 10px; font-weight: bold; background: rgba(0,0,0,0.05); padding: 2px 8px; border-radius: 8px; width: fit-content; }
-        .dark-mode .unit-info { color: #bbb; background: rgba(255,255,255,0.1); }
-        .price { font-size: 17px; font-weight: 800; color: var(--primary); }
-        
-        .qty-ctrl { display: flex; align-items: center; background: var(--primary); color: white; border-radius: 10px; height: 34px; box-shadow: 0 4px 10px rgba(74,0,224,0.3); overflow: hidden; }
-        .qty-btn { background: rgba(255,255,255,0.1); border: none; color: white; width: 30px; height: 100%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .qty-val { font-size: 14px; font-weight: 700; padding: 0 8px; }
-        .add-btn { background: var(--primary); color: white; padding: 8px 18px; border-radius: 10px; font-size: 12px; font-weight: 700; border: none; cursor: pointer; box-shadow: 0 4px 10px rgba(74,0,224,0.3); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 10px 20px; }
+        .card { border-radius: 20px; padding: 12px; display: flex; flex-direction: column; animation: fadeIn 0.6s ease; background: var(--card-bg); box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,0.1); }
+        .card-img { height: 130px; background: white; border-radius: 15px; display: flex; justify-content: center; align-items: center; margin-bottom: 12px; overflow: hidden; }
+        .card img { max-width: 90%; max-height: 90%; object-fit: contain; }
+        .price { font-size: 17px; font-weight: 800; color: var(--primary); }
+        
+        .qty-ctrl { display: flex; align-items: center; background: var(--primary); color: white; border-radius: 10px; height: 34px; box-shadow: 0 4px 10px rgba(74,0,224,0.3); overflow: hidden; }
+        .qty-btn { background: rgba(255,255,255,0.1); border: none; color: white; width: 30px; height: 100%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .qty-val { font-size: 14px; font-weight: 700; padding: 0 8px; }
+        .add-btn { background: var(--primary); color: white; padding: 8px 18px; border-radius: 10px; font-size: 12px; font-weight: 700; border: none; cursor: pointer; box-shadow: 0 4px 10px rgba(74,0,224,0.3); }
 
-        .fab { position: fixed; bottom: 100px; right: 20px; background: white; color: var(--primary); width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 2000; cursor: pointer; transition: 0.3s; }
-        .history-fab { bottom: 170px; font-size: 22px; }
+        /* TOAST NOTIFICATION STYLE */
+        #toast-box { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; width: 90%; max-width: 350px; pointer-events: none; }
+        .toast { background: rgba(0,0,0,0.85); color: white; padding: 12px 20px; border-radius: 50px; font-size: 13px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); animation: slideUp 0.3s ease; backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
 
-        .cart-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: #1e1e1e; color: white; padding: 15px 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 15px 40px rgba(0,0,0,0.6); z-index: 3000; animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-origin: center; }
-        .cart-bar.bump { animation: cartBump 0.3s ease; }
+        /* FAB Buttons (Fixed & Stacked) */
+        .fab-btn { position: fixed; right: 20px; width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 2000; cursor: pointer; transition: 0.3s; background: white; color: var(--primary); }
+        #admin-fab { bottom: 100px; }
+        #history-fab { bottom: 170px; background: #fff; color: #333; }
+        
+        .notif-dot { position: absolute; top: -2px; right: -2px; width: 20px; height: 20px; background: red; border-radius: 50%; border: 2px solid white; color: white; font-size: 10px; font-weight: bold; display: none; justify-content: center; align-items: center; animation: pulse 1.5s infinite; }
 
-        /* FLYING IMAGE STYLE */
-        .fly-item { position: fixed; z-index: 9999; width: 60px; height: 60px; border-radius: 50%; object-fit: cover; pointer-events: none; transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1); border: 2px solid var(--primary); background: white; opacity: 1; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(8px); animation: fadeIn 0.3s; }
-        .modal-box { background: var(--card-bg); color: var(--text); padding: 25px; width: 90%; max-width: 340px; border-radius: 25px; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.5); position: relative; max-height: 85vh; overflow-y: auto; animation: popIn 0.3s; }
-        
-        .invoice-paper { background: white; color: black; padding: 15px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; position: relative; }
-        .invoice-paper::before { content: ""; position: absolute; top: -5px; left: 0; width: 100%; height: 5px; background: radial-gradient(circle, transparent 2px, white 2px); background-size: 10px 10px; }
-        .invoice-paper::after { content: ""; position: absolute; bottom: -5px; left: 0; width: 100%; height: 5px; background: radial-gradient(circle, transparent 2px, white 2px); background-size: 10px 10px; transform: rotate(180deg); }
-        
-        .slider-container { width: 100%; height: 55px; background: #e0e0e0; border-radius: 30px; position: relative; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); transition: 0.3s; }
-        .slider-container.active { background: var(--success); }
-        .slider-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold; color: #666; font-size: 14px; pointer-events: none; transition: 0.3s; white-space: nowrap; }
-        .slider-thumb { width: 45px; height: 45px; background: var(--primary); border-radius: 50%; position: absolute; top: 5px; left: 5px; display: flex; justify-content: center; align-items: center; color: white; font-size: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); cursor: grab; z-index: 2; transition: transform 0.1s; }
-        .slider-thumb.unlocked { background: white; color: var(--success); }
+        .cart-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: #1e1e1e; color: white; padding: 15px 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 15px 40px rgba(0,0,0,0.6); z-index: 3000; animation: slideUp 0.4s; }
 
-        .inp { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; background: rgba(255,255,255,0.8); color: black; font-size: 14px; }
-        .btn-main { width: 100%; padding: 15px; background: linear-gradient(135deg, #8e2de2, #4a00e0); color: white; border: none; border-radius: 12px; font-weight: bold; margin-top: 15px; cursor: pointer; font-size: 16px; }
-        .file-upload-box { border: 2px dashed var(--primary); padding: 20px; border-radius: 15px; margin-bottom: 10px; cursor: pointer; background: rgba(74, 0, 224, 0.05); color: var(--primary); font-size: 13px; font-weight: 600; }
-        
-        #loader { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 6000; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); font-weight: bold; color: var(--primary); }
-        .admin-tools { position: absolute; top: 8px; right: 8px; display: flex; gap: 5px; z-index: 10; }
-        .icon-btn { width: 32px; height: 32px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-size: 14px; cursor: pointer; }
-    </style>
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(8px); animation: fadeIn 0.3s; }
+        .modal-box { background: var(--card-bg); color: var(--text); padding: 25px; width: 90%; max-width: 340px; border-radius: 25px; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.5); position: relative; max-height: 85vh; overflow-y: auto; animation: popIn 0.3s; }
+
+        .slider-container { width: 100%; height: 55px; background: #e0e0e0; border-radius: 30px; position: relative; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); transition: 0.3s; }
+        .slider-container.active { background: var(--success); }
+        .slider-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold; color: #666; font-size: 14px; pointer-events: none; transition: 0.3s; white-space: nowrap; }
+        .slider-thumb { width: 45px; height: 45px; background: var(--primary); border-radius: 50%; position: absolute; top: 5px; left: 5px; display: flex; justify-content: center; align-items: center; color: white; font-size: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); cursor: grab; z-index: 2; transition: transform 0.1s; }
+        .slider-thumb.unlocked { background: white; color: var(--success); }
+
+        .inp { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; background: rgba(255,255,255,0.8); color: black; }
+        .btn-main { width: 100%; padding: 15px; background: linear-gradient(135deg, #8e2de2, #4a00e0); color: white; border: none; border-radius: 12px; font-weight: bold; margin-top: 15px; cursor: pointer; }
+
+        .order-card { background: rgba(255,255,255,0.6); border: 1px solid rgba(0,0,0,0.1); border-radius: 15px; padding: 15px; margin-bottom: 15px; text-align: left; transition: transform 0.2s; cursor: pointer; }
+        .dark-mode .order-card { background: rgba(255,255,255,0.05); }
+        .status-badge { display: inline-block; padding: 5px 12px; border-radius: 15px; font-size: 11px; font-weight: bold; color:white; margin-top: 5px; }
+        .st-pending { background: var(--warning); color: #444; }
+        .st-confirmed { background: var(--success); }
+        .st-cancelled { background: var(--danger); }
+
+        .icon-btn { width: 32px; height: 32px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-size: 14px; cursor: pointer; }
+        
+        #install-btn { display:none; background: #00b894; padding: 5px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; color: white; cursor: pointer; border: 1px solid white; animation: popIn 0.5s; }
+        
+        /* Loading Screen Fix */
+        #loader { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 6000; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); font-weight: bold; color: var(--primary); }
+    </style>
 </head>
 <body>
 
-<div id="loader">🔄 <span data-key="loading">Loading...</span></div>
+<div id="toast-box"></div>
+<div id="loader">🔄 Loading...</div>
 
 <div id="login-view" class="overlay" style="display: flex;">
-    <div class="modal-box">
-        <h1 style="margin:0; font-size:50px;">🛍️</h1>
-        <h2 style="color:var(--primary); margin: 5px 0 20px;" data-key="appTitle">Raju Kirana Store</h2>
-        <input type="text" id="loginName" class="inp" placeholder="Name">
-        <input type="tel" id="loginPhone" class="inp" placeholder="Mobile">
-        <button class="btn-main" onclick="handleLogin()" data-key="loginBtn">Login</button>
-    </div>
+    <div class="modal-box">
+        <h1 style="margin:0; font-size:50px;">🛍️</h1>
+        <h2 style="color:var(--primary); margin: 5px 0 20px;">Raju Kirana Store</h2>
+        <input type="text" id="loginName" class="inp" placeholder="Name / नाम">
+        <input type="tel" id="loginPhone" class="inp" placeholder="Mobile / मोबाइल">
+        <button class="btn-main" onclick="handleLogin()">Login</button>
+    </div>
 </div>
 
 <div id="app-view" style="display:none;">
-    <div class="header">
-        <div class="top-row">
-            <div class="brand">🛍️ <span data-key="appTitle">Raju Kirana Store</span></div>
-            <div class="action-icons">
-                <div class="lang-switch" id="langToggle" onclick="toggleLanguage()">
-                    <span class="txt-en" style="margin-left:5px;">EN</span>
-                    <span class="txt-hi" style="margin-right:5px;">HI</span>
-                    <div class="lang-knob"></div>
-                </div>
-                <div class="icon-btn" style="background:rgba(255,255,255,0.2); color:white;" onclick="toggleTheme()">🌓</div>
-                <div class="logout-btn" onclick="handleLogout()" data-key="logout">Logout</div>
-            </div>
-        </div>
-        <input type="text" id="search" class="search-box" placeholder="🔍 Search..." onkeyup="render()">
-    </div>
+    <div class="header">
+        <div class="top-row">
+            <div class="brand">🛍️ Raju Kirana</div>
+            <div class="action-icons">
+                <div id="install-btn" onclick="installApp()">⬇ Install App</div>
+                <div class="icon-btn" onclick="openMyOrders()" style="background:rgba(255,255,255,0.2); color:white;">📦</div>
+                <div class="icon-btn" onclick="toggleTheme()" style="background:rgba(255,255,255,0.2); color:white;">🌓</div>
+                <div onclick="handleLogout()" style="font-size:11px; color:white; font-weight:bold; cursor:pointer;">LOGOUT</div>
+            </div>
+        </div>
+        <input type="text" id="search" class="search-box" placeholder="🔍 Search..." onkeyup="render()">
+    </div>
 
-    <div class="cat-row">
-        <button class="cat-btn active" onclick="filter('All', this)" data-key="catAll">All</button>
-        <button class="cat-btn" onclick="filter('Rashan', this)" data-key="catRashan">Rashan</button>
-        <button class="cat-btn" onclick="filter('Snacks', this)" data-key="catSnacks">Snacks</button>
-        <button class="cat-btn" onclick="filter('Offers', this)" data-key="catOffers">Offers</button>
-    </div>
+    <div class="cat-row">
+        <button class="cat-btn active" onclick="filter('All', this)">All</button>
+        <button class="cat-btn" onclick="filter('Rashan', this)">Rashan</button>
+        <button class="cat-btn" onclick="filter('Snacks', this)">Snacks</button>
+        <button class="cat-btn" onclick="filter('Offers', this)">Offers</button>
+    </div>
 
-    <div class="grid" id="grid"></div>
-    
-    <div class="fab" id="admin-fab" style="display:none;" onclick="openAddModal()">+</div>
-    <div class="fab history-fab" id="history-fab" style="display:none;" onclick="showOrders()">📋</div>
-
-    <div class="cart-bar" id="cart-bar" style="display: none;">
-        <div>
-            <div style="font-size:12px; color:#ccc;"><span id="count">0</span> <span data-key="items">Items</span></div>
-            <div style="font-size:20px; font-weight:bold;">₹<span id="total">0</span></div>
-        </div>
-        <div onclick="openBillPreview()" style="cursor:pointer; font-weight:bold; background:white; color:var(--primary); padding:10px 20px; border-radius:25px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);" data-key="checkBill">Check Bill 📄</div>
-    </div>
+    <div class="grid" id="grid"></div>
+    
+    <div class="fab-btn" id="history-fab" style="display:none;" onclick="openAdminOrders()">
+        📋
+        <div class="notif-dot" id="admin-notif"></div>
+    </div>
+    <div class="fab-btn" id="admin-fab" style="display:none;" onclick="openAddModal()">+</div>
+    
+    <div class="cart-bar" id="cart-bar" style="display: none;">
+        <div>
+            <div style="font-size:12px; color:#ccc;"><span id="count">0</span> Items</div>
+            <div style="font-size:20px; font-weight:bold;">₹<span id="total">0</span></div>
+        </div>
+        <div onclick="openBillPreview()" style="cursor:pointer; font-weight:bold; background:white; color:var(--primary); padding:10px 20px; border-radius:25px;">Check Bill 📄</div>
+    </div>
 </div>
 
 <div id="add-modal" class="overlay">
-    <div class="modal-box">
-        <h3 data-key="addProduct">Add New Product</h3>
-        <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="previewImage()">
-        <div class="file-upload-box" onclick="document.getElementById('fileInput').click()" data-key="uploadPhoto">📸 Upload Photo</div>
-        <img id="imgPreview" class="preview-img" src="" style="width:100%; height:120px; object-fit:contain; display:none; border-radius:10px; margin-bottom:10px;">
-        <input type="text" id="pName" class="inp" placeholder="Name">
-        <input type="text" id="pUnit" class="inp" placeholder="Unit">
-        <input type="number" id="pPrice" class="inp" placeholder="Price">
-        <select id="pCat" class="inp"><option>Rashan</option><option>Snacks</option><option>Offers</option></select>
-        <button class="btn-main" onclick="addProductToFirebase()" data-key="saveBtn">Save</button>
-        <button onclick="closeAddModal()" style="margin-top:15px; background:transparent; border:none; color:#666;" data-key="cancel">Cancel</button>
-    </div>
+    <div class="modal-box">
+        <h3>Add Product</h3>
+        <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="previewImage()">
+        <div style="border:2px dashed var(--primary); padding:15px; border-radius:10px; margin-bottom:10px; cursor:pointer;" onclick="document.getElementById('fileInput').click()">📸 Upload Photo</div>
+        <img id="imgPreview" src="" style="width:100%; height:100px; object-fit:contain; display:none; margin-bottom:10px;">
+        <input type="text" id="pName" class="inp" placeholder="Name">
+        <input type="text" id="pUnit" class="inp" placeholder="Unit">
+        <input type="number" id="pPrice" class="inp" placeholder="Price">
+        <select id="pCat" class="inp"><option>Rashan</option><option>Snacks</option><option>Offers</option></select>
+        <button class="btn-main" onclick="addProductToFirebase()">Save</button>
+        <button onclick="document.getElementById('add-modal').style.display='none'" style="margin-top:10px; background:none; border:none;">Cancel</button>
+    </div>
 </div>
 
-<div id="history-modal" class="overlay">
-    <div class="modal-box" style="max-width: 90%; width: 90%;">
-        <h3>History</h3>
-        <div id="order-history-list" style="text-align:left; max-height:60vh; overflow-y:auto;"></div>
-        <button class="btn-main" onclick="document.getElementById('history-modal').style.display='none'" data-key="close">Close</button>
-    </div>
+<div id="admin-orders-modal" class="overlay">
+    <div class="modal-box" style="max-width: 95%; width: 95%; height: 80vh;">
+        <h3>Admin Orders</h3>
+        <div id="admin-orders-list" style="text-align:left; overflow-y:auto; height: 65vh; padding-bottom: 20px;"></div>
+        <button class="btn-main" onclick="document.getElementById('admin-orders-modal').style.display='none'">Close</button>
+    </div>
+</div>
+
+<div id="my-orders-modal" class="overlay">
+    <div class="modal-box" style="max-width: 90%; width: 90%;">
+        <h3>My Orders 📦</h3>
+        <p style="font-size:12px; color:#888;">(Tap on an order to view invoice)</p>
+        <div id="my-orders-list" style="text-align:left; max-height:60vh; overflow-y:auto; margin-top:10px;"></div>
+        <button class="btn-main" onclick="document.getElementById('my-orders-modal').style.display='none'">Close</button>
+    </div>
 </div>
 
 <div id="bill-modal" class="overlay">
-    <div class="modal-box">
-        <h2 style="color:var(--primary); margin-top:0;">🧾 <span data-key="confirmOrder">Invoice</span></h2>
-        <div class="invoice-paper">
-            <div style="font-size:12px; color:#555; margin-bottom:10px; border-bottom:1px dashed #ccc; padding-bottom:5px;">Raju Kirana Store</div>
-            <div id="bill-list" style="text-align:left; max-height:30vh; overflow-y:auto; margin-bottom:15px;"></div>
-            <div style="display:flex; justify-content:space-between; font-weight:800; font-size:18px; margin-top:10px; border-top:2px solid #333; padding-top:10px;">
-                <span data-key="grandTotal">Total:</span><span>₹<span id="bill-grand-total">0</span></span>
-            </div>
-        </div>
-        <div class="slider-container" id="sliderContainer">
-            <div class="slider-text" id="sliderText" data-key="slideToOrder">Slide to Order >></div>
-            <div class="slider-thumb" id="sliderThumb">➤</div>
-        </div>
-        <button onclick="document.getElementById('bill-modal').style.display='none'" style="margin-top:15px; width:100%; padding:12px; background:#eee; border:none; border-radius:12px; font-weight:600;" data-key="close">Close</button>
-    </div>
+    <div class="modal-box">
+        <h2 style="color:var(--primary); margin-top:0;" id="bill-title">🧾 Confirm Order</h2>
+        <div style="background:white; color:black; padding:15px; border-radius:10px; margin-bottom:20px; text-align:left;">
+            <div id="bill-list" style="max-height:30vh; overflow-y:auto; border-bottom:1px solid #eee; margin-bottom:10px;"></div>
+            <div style="display:flex; justify-content:space-between; font-weight:800; font-size:18px;">
+                <span>Total:</span><span>₹<span id="bill-grand-total">0</span></span>
+            </div>
+        </div>
+        <div class="slider-container" id="sliderContainer">
+            <div class="slider-text" id="sliderText">Slide to Order >></div>
+            <div class="slider-thumb" id="sliderThumb">➤</div>
+        </div>
+        <button onclick="document.getElementById('bill-modal').style.display='none'" style="margin-top:15px; width:100%; padding:10px; background:#eee; border:none; border-radius:10px;">Close</button>
+    </div>
 </div>
 
 <script>
-    const translations = {
-        en: {
-            appTitle: "Raju Kirana Store",
-            searchPlaceholder: "🔍 Search products...",
-            catAll: "All",
-            catRashan: "Rashan",
-            catSnacks: "Snacks",
-            catOffers: "Offers",
-            logout: "Logout",
-            items: "Items",
-            checkBill: "Check Bill 📄",
-            addProduct: "Add New Product",
-            uploadPhoto: "📸 Upload Photo",
-            saveBtn: "Save Product",
-            cancel: "Cancel",
-            confirmOrder: "Invoice",
-            grandTotal: "Total Pay:",
-            slideToOrder: "Slide to Order >>",
-            close: "Close",
-            loading: "Loading...",
-            loginBtn: "Login",
-            addBtn: "ADD"
-        },
-        hi: {
-            appTitle: "राजू किराना स्टोर",
-            searchPlaceholder: "🔍 सामान खोजें...",
-            catAll: "सभी",
-            catRashan: "राशन",
-            catSnacks: "स्नैक्स",
-            catOffers: "ऑफर",
-            logout: "लॉगआउट",
-            items: "सामान",
-            checkBill: "बिल देखें 📄",
-            addProduct: "नया सामान जोड़ें",
-            uploadPhoto: "📸 फोटो डालें",
-            saveBtn: "सेव करें",
-            cancel: "रद्द करें",
-            confirmOrder: "आपका बिल",
-            grandTotal: "कुल राशि:",
-            slideToOrder: "ऑर्डर करने के लिए स्लाइड करें >>",
-            close: "बंद करें",
-            loading: "लोड हो रहा है...",
-            loginBtn: "लॉग इन",
-            addBtn: "जोड़ें"
-        }
-    };
-
-    let curLang = localStorage.getItem('raju_lang') || 'en';
-
-    function toggleLanguage() {
-        curLang = curLang === 'en' ? 'hi' : 'en';
-        localStorage.setItem('raju_lang', curLang);
-        applyLanguage();
-        render(); 
-    }
-
-    function applyLanguage() {
-        const t = translations[curLang];
-        const toggle = document.getElementById('langToggle');
-        if (curLang === 'hi') toggle.classList.add('active');
-        else toggle.classList.remove('active');
-
-        document.querySelectorAll('[data-key]').forEach(el => {
-            el.innerText = t[el.getAttribute('data-key')];
-        });
-        document.getElementById('search').placeholder = t.searchPlaceholder;
-        document.getElementById('loginName').placeholder = curLang === 'en' ? "Your Name" : "आपका नाम";
-        document.getElementById('loginPhone').placeholder = curLang === 'en' ? "Mobile Number" : "मोबाइल नंबर";
-    }
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyAYKEYZZVtq9e8k9LemxxSBEDU9oie7vjI",
-        authDomain: "raju-kirana.firebaseapp.com",
-        projectId: "raju-kirana",
-        storageBucket: "raju-kirana.firebasestorage.app",
-        messagingSenderId: "9931410245",
-        appId: "1:9931410245:web:97e3237c29a85c06e84c2c"
-    };
-
-    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
-    const db = firebase.firestore();
-
-    let products = [];
-    let cart = {};
-    let user = null;
-    let isAdmin = false;
-    let activeCat = 'All';
-    let tempImgBase64 = "";
-
-    window.onload = function() {
-        if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
-        const savedUser = localStorage.getItem('raju_user');
-        applyLanguage(); 
-
-        if(new URLSearchParams(window.location.search).get('order')) { showBillMode(); }
-        else if(savedUser) {
-            user = JSON.parse(savedUser);
-            if(user.name === "Admin" && user.phone === "6392") isAdmin = true;
-            showApp();
-        }
-        initSlider();
-    };
-
-    function toggleTheme() {
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-    }
-
-    function listenToProducts() {
-        db.collection("products").onSnapshot((snapshot) => {
-            products = [];
-            snapshot.forEach((doc) => { products.push({ id: doc.id, ...doc.data() }); });
-            render(); document.getElementById('loader').style.display = 'none';
-        });
-    }
-
-    function handleLogin() {
-        const n = document.getElementById('loginName').value; const p = document.getElementById('loginPhone').value;
-        if(n && p) { user = { name: n, phone: p }; localStorage.setItem('raju_user', JSON.stringify(user)); location.reload(); }
-        else { alert("Fill all details"); }
-    }
-
-    function handleLogout() { localStorage.removeItem('raju_user'); location.reload(); }
-    
-    function showApp() {
-        document.getElementById('login-view').style.display = 'none'; 
-        document.getElementById('app-view').style.display = 'block';
-        if(isAdmin) {
-            document.getElementById('admin-fab').style.display = 'flex';
-            document.getElementById('history-fab').style.display = 'flex';
-        }
-        document.getElementById('loader').style.display = 'block';
-        listenToProducts();
-    }
-
-    function render() {
-        const grid = document.getElementById('grid'); 
-        const term = document.getElementById('search').value.toLowerCase(); 
-        grid.innerHTML = '';
-        const filtered = products.filter(p => (activeCat === 'All' || p.cat === activeCat) && p.name.toLowerCase().includes(term));
-        const t = translations[curLang]; 
-
-        filtered.forEach((p, index) => {
-            const qty = cart[p.id] || 0;
-            const unit = p.unit || "1 pc";
-            let btnHTML = qty === 0 
-                ? `<button class="add-btn" onclick="updateQty('${p.id}', 1)">${t.addBtn}</button>` 
-                : `<div class="qty-ctrl"><button class="qty-btn" onclick="updateQty('${p.id}', -1)">−</button><span class="qty-val">${qty}</span><button class="qty-btn" onclick="updateQty('${p.id}', 1)">+</button></div>`;
-            
-            let adminHTML = isAdmin ? `<div class="admin-tools"><div class="icon-btn" onclick="editProd('${p.id}', '${p.name}', ${p.price})" style="color:orange">✏️</div><div class="icon-btn" onclick="delProd('${p.id}')" style="color:red">🗑️</div></div>` : '';
-            const card = document.createElement('div'); 
-            card.className = 'card glass';
-            card.style.animationDelay = `${index * 0.05}s`;
-            // Note: Added ID to img tag for animation
-            card.innerHTML = `${adminHTML}<div class="card-img"><img id="img-${p.id}" src="${p.img}" onerror="this.src='https://via.placeholder.com/150'"></div><h3>${p.name}</h3><div class="unit-info">${unit}</div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto;"><div class="price">₹${p.price}</div>${btnHTML}</div>`;
-            grid.appendChild(card);
-        });
-    }
-
-    // --- ANIMATION LOGIC ---
-    function flyToCart(id) {
-        const img = document.getElementById(`img-${id}`);
-        const cart = document.getElementById('cart-bar');
-        
-        if (img && cart) {
-            const imgRect = img.getBoundingClientRect();
-            // If cart is hidden (first item), aim for bottom center
-            const cartRect = cart.style.display === 'none' 
-                ? { left: window.innerWidth/2 - 20, top: window.innerHeight - 80, width: 40, height: 40 } 
-                : cart.getBoundingClientRect();
-
-            const clone = img.cloneNode();
-            clone.classList.add('fly-item');
-            clone.style.top = `${imgRect.top}px`;
-            clone.style.left = `${imgRect.left}px`;
-            clone.style.width = `${imgRect.width}px`;
-            clone.style.height = `${imgRect.height}px`;
-            document.body.appendChild(clone);
-
-            setTimeout(() => {
-                clone.style.top = `${cartRect.top + 10}px`;
-                clone.style.left = `${cartRect.left + 20}px`;
-                clone.style.width = '30px';
-                clone.style.height = '30px';
-                clone.style.opacity = '0.5';
-            }, 50);
-
-            setTimeout(() => {
-                clone.remove();
-                cart.classList.add('bump');
-                setTimeout(() => cart.classList.remove('bump'), 300);
-            }, 750);
-        }
-    }
-
-    function updateQty(id, change) { 
-        if(!cart[id]) cart[id] = 0; 
-        
-        // Trigger animation if adding
-        if(change > 0) flyToCart(id);
-
-        cart[id] += change; 
-        if(cart[id] <= 0) delete cart[id]; 
-        
-        // Small delay for render to not glitch animation
-        setTimeout(() => {
-            render(); 
-            updateFooter(); 
-        }, 100);
-    }
-
-    function updateFooter() { 
-        let t = 0, c = 0; for(let id in cart) { const p = products.find(x => x.id == id); t += p.price * cart[id]; c += cart[id]; } 
-        document.getElementById('total').innerText = t; document.getElementById('count').innerText = c; 
-        document.getElementById('cart-bar').style.display = c > 0 ? 'flex' : 'none'; 
-    }
-
-    function openAddModal() { document.getElementById('add-modal').style.display = 'flex'; }
-    function closeAddModal() { document.getElementById('add-modal').style.display = 'none'; }
-
-    function addProductToFirebase() {
-        const n = document.getElementById('pName').value; const u = document.getElementById('pUnit').value; const p = document.getElementById('pPrice').value; const c = document.getElementById('pCat').value; const i = tempImgBase64 || "https://via.placeholder.com/150";
-        if(n && p) { db.collection("products").add({ name: n, unit: u, price: parseInt(p), cat: c, img: i, createdAt: firebase.firestore.FieldValue.serverTimestamp() }).then(() => { closeAddModal(); alert("Saved!"); }); }
-    }
-
-    function delProd(id) { if(confirm("Delete?")) db.collection("products").doc(id).delete(); }
-    function editProd(id, oldName, oldPrice) { let nPrice = prompt(`New Price for ${oldName}?`, oldPrice); if(nPrice) db.collection("products").doc(id).update({ price: parseInt(nPrice) }); }
-
-    function previewImage() {
-        const file = document.getElementById('fileInput').files[0]; const reader = new FileReader(); 
-        reader.onload = function(e) { tempImgBase64 = e.target.result; document.getElementById('imgPreview').src = tempImgBase64; document.getElementById('imgPreview').style.display = 'block'; }; 
-        reader.readAsDataURL(file);
-    }
-
-    function filter(cat, btn) { activeCat = cat; document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); render(); }
-
-    function openBillPreview() {
-        const list = document.getElementById('bill-list'); list.innerHTML = ''; let itemsT = 0;
-        for(let id in cart) { 
-            const p = products.find(x => x.id == id); let it = p.price * cart[id]; itemsT += it; 
-            list.innerHTML += `<div style="display:flex;justify-content:space-between;padding:5px 0; border-bottom:1px solid #eee;"><span>${p.name} (${p.unit || '1pc'}) x${cart[id]}</span><span>₹${it}</span></div>`; 
-        }
-        document.getElementById('bill-grand-total').innerText = itemsT;
-        resetSlider();
-        document.getElementById('bill-modal').style.display = 'flex';
-    }
-
-    function initSlider() {
-        const thumb = document.getElementById('sliderThumb');
-        const container = document.getElementById('sliderContainer');
-        const text = document.getElementById('sliderText');
-        let isDragging = false;
-        let startX;
-
-        function startDrag(e) {
-            if(thumb.classList.contains('unlocked')) return;
-            isDragging = true;
-            startX = (e.touches ? e.touches[0].clientX : e.clientX);
-            thumb.style.transition = 'none';
-        }
-
-        function onDrag(e) {
-            if (!isDragging) return;
-            const clientX = (e.touches ? e.touches[0].clientX : e.clientX);
-            let moveX = clientX - startX;
-            let maxMove = container.offsetWidth - thumb.offsetWidth - 10; 
-
-            if (moveX < 0) moveX = 0;
-            if (moveX > maxMove) moveX = maxMove;
-
-            thumb.style.transform = `translateX(${moveX}px)`;
-            text.style.opacity = 1 - (moveX / maxMove);
-
-            if (moveX >= maxMove * 0.95) {
-                isDragging = false;
-                unlockSlider();
-            }
-        }
-
-        function endDrag() {
-            if (!isDragging) return;
-            isDragging = false;
-            thumb.style.transition = 'transform 0.3s';
-            thumb.style.transform = `translateX(0px)`;
-            text.style.opacity = 1;
-        }
-
-        thumb.addEventListener('mousedown', startDrag);
-        thumb.addEventListener('touchstart', startDrag);
-        document.addEventListener('mousemove', onDrag);
-        document.addEventListener('touchmove', onDrag);
-        document.addEventListener('mouseup', endDrag);
-        document.addEventListener('touchend', endDrag);
-    }
-
-    function unlockSlider() {
-        const thumb = document.getElementById('sliderThumb');
-        const container = document.getElementById('sliderContainer');
-        const text = document.getElementById('sliderText');
-        
-        thumb.classList.add('unlocked');
-        thumb.innerHTML = '✔';
-        container.classList.add('active');
-        text.innerText = "Order Confirmed!";
-        text.style.color = "white";
-        text.style.opacity = 1;
-        thumb.style.transform = `translateX(${container.offsetWidth - thumb.offsetWidth - 10}px)`;
-        
-        setTimeout(() => { finalOrderWhatsApp(); }, 600);
-    }
-
-    function resetSlider() {
-        const thumb = document.getElementById('sliderThumb');
-        const container = document.getElementById('sliderContainer');
-        const text = document.getElementById('sliderText');
-        const t = translations[curLang];
-
-        thumb.classList.remove('unlocked');
-        thumb.innerHTML = '➤';
-        container.classList.remove('active');
-        thumb.style.transform = 'translateX(0px)';
-        text.innerText = t.slideToOrder;
-        text.style.color = "#666";
-        text.style.opacity = 1;
-    }
-
-    function finalOrderWhatsApp() {
-        const grandTotal = parseInt(document.getElementById('bill-grand-total').innerText);
-        const orderItems = [];
-        for(let id in cart) { const p = products.find(x => x.id == id); orderItems.push({ n: p.name, q: cart[id], p: p.price, u: p.unit || '1pc' }); }
-        const orderObj = { c: user.name, p: user.phone, i: orderItems, t: grandTotal, date: new Date().toLocaleString() };
-        
-        db.collection("orders").add(orderObj).then(() => {
-            const encoded = btoa(JSON.stringify(orderObj));
-            const link = window.location.href.split('?')[0] + '?order=' + encoded;
-            window.open(`https://wa.me/6392728836?text=${encodeURIComponent(`New Order from ${user.name}:\nTotal: ₹${grandTotal}\nBill: ${link}`)}`, '_blank');
-            cart = {}; render(); updateFooter();
-            document.getElementById('bill-modal').style.display = 'none';
-        });
-    }
-
-    function showOrders() {
-        document.getElementById('history-modal').style.display = 'flex';
-        const list = document.getElementById('order-history-list'); list.innerHTML = 'Loading...';
-        db.collection("orders").orderBy("date", "desc").limit(15).get().then(snap => {
-            list.innerHTML = '';
-            snap.forEach(doc => {
-                const d = doc.data();
-                list.innerHTML += `<div style="border-bottom:1px solid #ccc; padding:10px 0; font-size:13px;"><b>${d.c}</b> (${d.date})<br>Total: <b>₹${d.t}</b> | Items: ${d.i.length}</div>`;
-            });
-        });
-    }
-
-    function showBillMode() {
-        try {
-            const d = JSON.parse(atob(new URLSearchParams(window.location.search).get('order')));
-            let h = ''; d.i.forEach(x => { h += `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee;"><span>${x.n} (${x.u}) x${x.q}</span><span>₹${x.p*x.q}</span></div>`});
-            document.body.innerHTML = `<div style="padding:20px;background:white;min-height:100vh;color:black;"><div style="border:1px solid #ddd;padding:20px;border-radius:10px;"><h2 style="text-align:center;color:#4a00e0;">Raju Kirana Invoice</h2><p style="text-align:center;">Customer: ${d.c}<br>${d.date}</p><hr>${h}<hr><div style="display:flex;justify-content:space-between;font-weight:bold;font-size:20px;"><span>Total</span><span>₹${d.t}</span></div></div><button onclick="window.location.href=window.location.href.split('?')[0]" style="width:100%;padding:15px;background:#333;color:white;border:none;border-radius:10px;margin-top:20px;">🏠 Home</button></div>`;
-        } catch(e) { location.href = location.href.split('?')[0]; }
-    }
-</script>
-  <script>
-    // --- FORCE UPDATE CODE ---
-    // यह कोड पुराने Service Worker और Cache को डिलीट कर देगा
+    // --- FORCE CACHE CLEAR (SERVICE WORKER UNREGISTER) ---
+    // This fixes the "Old website showing" issue
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
             for(let registration of registrations) {
-                registration.unregister();
-                console.log("Service Worker Unregistered");
+                registration.unregister().then(function(boolean) {
+                    // console.log('Service Worker Unregistered');
+                });
             }
         });
-        
-        // पुरानी Cache फाइलें भी डिलीट करें
+        // Clear caches
         caches.keys().then(function(names) {
             for (let name of names) {
                 caches.delete(name);
             }
         });
     }
+
+    // --- APP INSTALL LOGIC (PWA) ---
+    let deferredPrompt;
+    // Note: Re-registering SW properly for PWA after clearing old one
+    if('serviceWorker' in navigator) { 
+        setTimeout(() => {
+             navigator.serviceWorker.register('sw.js').catch(err => console.log('SW Error:', err));
+        }, 3000); 
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('install-btn').style.display = 'block';
+    });
+
+    function installApp() {
+        if(deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if(choiceResult.outcome === 'accepted') { document.getElementById('install-btn').style.display = 'none'; }
+                deferredPrompt = null;
+            });
+        }
+    }
+
+    // --- GLOBAL TOAST NOTIFICATION ---
+    function showToast(msg, type='success') {
+        const box = document.getElementById('toast-box');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = type === 'success' ? '✅ '+msg : (type === 'error' ? '❌ '+msg : 'ℹ️ '+msg);
+        box.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '0'; setTimeout(()=> toast.remove(), 300); }, 3000);
+    }
+
+    // --- FIREBASE CONFIG ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyAYKEYZZVtq9e8k9LemxxSBEDU9oie7vjI",
+        authDomain: "raju-kirana.firebaseapp.com",
+        projectId: "raju-kirana",
+        storageBucket: "raju-kirana.firebasestorage.app",
+        messagingSenderId: "9931410245",
+        appId: "1:9931410245:web:97e3237c29a85c06e84c2c"
+    };
+
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+    const db = firebase.firestore();
+
+    let products = [], cart = {}, user = null, isAdmin = false, activeCat = 'All', tempImgBase64 = "", myHistoryData = [];
+    const notifSound = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+
+    window.onload = function() {
+        if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+        const savedUser = localStorage.getItem('raju_user');
+        if(savedUser) {
+            user = JSON.parse(savedUser);
+            if(user.name === "Admin" && user.phone === "6392") isAdmin = true;
+            showApp();
+        }
+        initSlider();
+    };
+
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    }
+
+    function handleLogin() {
+        const n = document.getElementById('loginName').value; const p = document.getElementById('loginPhone').value;
+        if(n && p) { 
+            user = { name: n, phone: p }; localStorage.setItem('raju_user', JSON.stringify(user)); 
+            showToast("Welcome back, " + n);
+            setTimeout(() => location.reload(), 1000); 
+        } else { showToast("Please fill all details", 'error'); }
+    }
+    
+    function handleLogout() { localStorage.removeItem('raju_user'); location.reload(); }
+    
+    function showApp() {
+        document.getElementById('login-view').style.display = 'none'; 
+        document.getElementById('app-view').style.display = 'block';
+        
+        if(isAdmin) {
+            document.getElementById('admin-fab').style.display = 'flex';
+            document.getElementById('history-fab').style.display = 'flex';
+            listenToAdminOrders(); 
+        } else {
+            monitorUserOrders();
+        }
+
+        db.collection("products").onSnapshot((snapshot) => {
+            products = [];
+            snapshot.forEach((doc) => { products.push({ id: doc.id, ...doc.data() }); });
+            render();
+            document.getElementById('loader').style.display = 'none';
+        });
+    }
+
+    // --- LIVE NOTIFICATIONS FOR CUSTOMER ---
+    let initialLoad = true;
+    function monitorUserOrders() {
+        db.collection("orders").where("p", "==", user.phone).onSnapshot(snap => {
+            if(initialLoad) { initialLoad = false; return; }
+            
+            snap.docChanges().forEach(change => {
+                if (change.type === "modified") {
+                    const data = change.doc.data();
+                    if(data.status === 'Confirmed') {
+                        notifSound.play();
+                        showToast(`Your order of ₹${data.t} is Confirmed! 🎉`, 'success');
+                    } else if(data.status === 'Cancelled') {
+                        showToast(`Order of ₹${data.t} was Cancelled.`, 'error');
+                    }
+                }
+            });
+        });
+    }
+
+    function render() {
+        const grid = document.getElementById('grid'); 
+        const term = document.getElementById('search').value.toLowerCase(); 
+        grid.innerHTML = '';
+        const filtered = products.filter(p => (activeCat === 'All' || p.cat === activeCat) && p.name.toLowerCase().includes(term));
+
+        filtered.forEach((p, index) => {
+            const qty = cart[p.id] || 0;
+            let btnHTML = qty === 0 
+                ? `<button class="add-btn" onclick="updateQty('${p.id}', 1)">ADD</button>` 
+                : `<div class="qty-ctrl"><button class="qty-btn" onclick="updateQty('${p.id}', -1)">−</button><span class="qty-val">${qty}</span><button class="qty-btn" onclick="updateQty('${p.id}', 1)">+</button></div>`;
+            
+            let adminHTML = isAdmin ? `<div style="position:absolute; top:5px; right:5px; z-index:10;"><span onclick="delProd('${p.id}')">🗑️</span></div>` : '';
+            const card = document.createElement('div'); 
+            card.className = 'card';
+            card.style.animationDelay = `${index * 0.05}s`;
+            card.innerHTML = `${adminHTML}<div class="card-img"><img src="${p.img}" onerror="this.src='https://via.placeholder.com/150'"></div><div style="padding:0 5px;"><h3 style="font-size:15px; margin:5px 0; height:40px; overflow:hidden;">${p.name}</h3><div style="font-size:11px; color:#888; margin-bottom:10px;">${p.unit || '1 pc'}</div><div style="display:flex; justify-content:space-between; align-items:center;"><div class="price">₹${p.price}</div>${btnHTML}</div></div>`;
+            grid.appendChild(card);
+        });
+    }
+
+    function updateQty(id, change) { 
+        if(!cart[id]) cart[id] = 0; 
+        cart[id] += change; 
+        if(cart[id] <= 0) delete cart[id]; 
+        render(); updateFooter(); 
+        if(change > 0) showToast("Added to Cart", 'success');
+    }
+
+    function updateFooter() { 
+        let t = 0, c = 0; for(let id in cart) { const p = products.find(x => x.id == id); t += p.price * cart[id]; c += cart[id]; } 
+        document.getElementById('total').innerText = t; document.getElementById('count').innerText = c; 
+        document.getElementById('cart-bar').style.display = c > 0 ? 'flex' : 'none'; 
+    }
+
+    // --- ORDER PLACING ---
+    function placeOrder() {
+        const grandTotal = parseInt(document.getElementById('bill-grand-total').innerText);
+        const orderItems = [];
+        for(let id in cart) { const p = products.find(x => x.id == id); orderItems.push({ n: p.name, q: cart[id], p: p.price, u: p.unit || '1pc' }); }
+        
+        const orderObj = { c: user.name, p: user.phone, i: orderItems, t: grandTotal, date: new Date().toLocaleString(), status: 'Pending', timestamp: firebase.firestore.FieldValue.serverTimestamp() };
+        
+        db.collection("orders").add(orderObj).then(() => {
+            showToast("Order Sent Successfully! ✅", 'success');
+            cart = {}; render(); updateFooter();
+            document.getElementById('bill-modal').style.display = 'none';
+        });
+    }
+
+    // --- ADMIN LOGIC ---
+    let lastOrderCount = 0;
+    function listenToAdminOrders() {
+        db.collection("orders").where("status", "==", "Pending").onSnapshot(snap => {
+            const dot = document.getElementById('admin-notif');
+            const count = snap.size;
+            if(count > 0) {
+                dot.style.display = 'flex'; dot.innerText = count;
+                if(count > lastOrderCount) { notifSound.play().catch(e=>{}); showToast(`New Order Received! (${count})`, 'success'); }
+            } else { dot.style.display = 'none'; }
+            lastOrderCount = count;
+        });
+    }
+
+    function openAdminOrders() {
+        document.getElementById('admin-orders-modal').style.display = 'flex';
+        const list = document.getElementById('admin-orders-list');
+        list.innerHTML = '<div style="margin-top:20px; color:#666;">Loading Orders...</div>';
+        db.collection("orders").get().then(snap => {
+            if(snap.empty) { list.innerHTML = '<div style="margin-top:20px; color:#666;">No orders found.</div>'; return; }
+            let allOrders = []; snap.forEach(doc => { allOrders.push({id: doc.id, ...doc.data()}); });
+            allOrders.sort((a,b) => (b.timestamp ? b.timestamp.seconds : 0) - (a.timestamp ? a.timestamp.seconds : 0));
+            list.innerHTML = '';
+            allOrders.forEach(d => {
+                const status = d.status || 'Pending';
+                let itemsHtml = d.i.map(x => `${x.n} (${x.u}) x${x.q}`).join(', ');
+                let btns = status === 'Pending' ? `<div style="display:flex; gap:10px; margin-top:10px;"><button style="flex:1; background:#00b894; color:white; border:none; padding:8px; border-radius:5px;" onclick="changeStatus('${d.id}', 'Confirmed')">Accept</button><button style="flex:1; background:#ff7675; color:white; border:none; padding:8px; border-radius:5px;" onclick="changeStatus('${d.id}', 'Cancelled')">Reject</button></div>` : '';
+                list.innerHTML += `<div class="order-card"><b>${d.c}</b> <span style="font-size:12px">${d.date.split(',')[0]}</span><br><span style="color:#555; font-size:12px;">${itemsHtml}</span><div style="display:flex; justify-content:space-between; margin-top:5px;"><b>₹${d.t}</b> <span class="status-badge ${status === 'Confirmed' ? 'st-confirmed' : (status === 'Cancelled' ? 'st-cancelled' : 'st-pending')}">${status}</span></div>${btns}</div>`;
+            });
+        });
+    }
+
+    function changeStatus(id, newStatus) {
+        if(confirm(`Mark as ${newStatus}?`)) {
+            db.collection("orders").doc(id).update({ status: newStatus }).then(() => {
+                showToast(`Order ${newStatus}!`, newStatus === 'Confirmed' ? 'success' : 'error');
+                openAdminOrders();
+            });
+        }
+    }
+
+    // --- MY ORDERS ---
+    function openMyOrders() {
+        document.getElementById('my-orders-modal').style.display = 'flex';
+        const list = document.getElementById('my-orders-list');
+        list.innerHTML = 'Loading...';
+        db.collection("orders").where("p", "==", user.phone).get().then(snap => {
+            if(snap.empty) { list.innerHTML = 'No orders.'; return; }
+            myHistoryData = []; snap.forEach(doc => myHistoryData.push(doc.data()));
+            myHistoryData.sort((a,b) => (b.timestamp ? b.timestamp.seconds : 0) - (a.timestamp ? a.timestamp.seconds : 0));
+            list.innerHTML = '';
+            myHistoryData.forEach((d, i) => {
+                list.innerHTML += `<div class="order-card" onclick="showHistoryInvoice(${i})"><div style="display:flex; justify-content:space-between;"><b>₹${d.t}</b> <span>${d.status}</span></div><div style="font-size:11px; color:#666;">${d.date}</div></div>`;
+            });
+        });
+    }
+
+    function showHistoryInvoice(index) {
+        const d = myHistoryData[index];
+        const list = document.getElementById('bill-list'); list.innerHTML = '';
+        d.i.forEach(x => { list.innerHTML += `<div style="display:flex;justify-content:space-between;padding:8px 0; border-bottom:1px solid #eee;"><span>${x.n} x${x.q}</span><span>₹${x.p * x.q}</span></div>`; });
+        document.getElementById('bill-grand-total').innerText = d.t;
+        document.getElementById('bill-title').innerText = "🧾 Invoice";
+        document.getElementById('sliderContainer').style.display = 'none';
+        document.getElementById('bill-modal').style.display = 'flex';
+    }
+
+    // --- UTILS ---
+    function initSlider() {
+        const thumb = document.getElementById('sliderThumb'), container = document.getElementById('sliderContainer'), text = document.getElementById('sliderText');
+        let isDragging = false, startX;
+        thumb.addEventListener('touchstart', (e)=>{ if(thumb.classList.contains('unlocked'))return; isDragging=true; startX=e.touches[0].clientX; thumb.style.transition='none'; });
+        thumb.addEventListener('mousedown', (e)=>{ if(thumb.classList.contains('unlocked'))return; isDragging=true; startX=e.clientX; thumb.style.transition='none'; });
+        const move = (clientX) => { if(!isDragging)return; let moveX = clientX - startX; let max = container.offsetWidth - thumb.offsetWidth - 10; if(moveX<0)moveX=0; if(moveX>max)moveX=max; thumb.style.transform=`translateX(${moveX}px)`; text.style.opacity = 1-(moveX/max); if(moveX >= max*0.95) { isDragging=false; unlock(); } };
+        document.addEventListener('touchmove', (e)=>move(e.touches[0].clientX)); document.addEventListener('mousemove', (e)=>move(e.clientX));
+        const end = () => { if(!isDragging)return; isDragging=false; thumb.style.transition='0.3s'; thumb.style.transform='translateX(0)'; text.style.opacity=1; };
+        document.addEventListener('touchend', end); document.addEventListener('mouseup', end);
+        function unlock() { thumb.classList.add('unlocked'); thumb.innerHTML='✔'; container.classList.add('active'); text.innerText="Processing..."; thumb.style.transform=`translateX(${container.offsetWidth - thumb.offsetWidth - 10}px)`; setTimeout(placeOrder, 600); }
+    }
+    function resetSlider() { const thumb=document.getElementById('sliderThumb'), cont=document.getElementById('sliderContainer'), txt=document.getElementById('sliderText'); thumb.classList.remove('unlocked'); thumb.innerHTML='➤'; cont.classList.remove('active'); thumb.style.transform='translateX(0)'; txt.innerText='Slide to Order >>'; txt.style.opacity=1; }
+    function openBillPreview() { document.getElementById('bill-title').innerText="🧾 Confirm Order"; document.getElementById('sliderContainer').style.display='block'; const list=document.getElementById('bill-list'); list.innerHTML=''; let t=0; for(let id in cart){const p=products.find(x=>x.id==id);let it=p.price*cart[id];t+=it;list.innerHTML+=`<div style="display:flex;justify-content:space-between;padding:5px 0;"><span>${p.name} x${cart[id]}</span><span>₹${it}</span></div>`;} document.getElementById('bill-grand-total').innerText=t; resetSlider(); document.getElementById('bill-modal').style.display='flex'; }
+    function openAddModal() { document.getElementById('add-modal').style.display = 'flex'; }
+    function addProductToFirebase() { const n=document.getElementById('pName').value, u=document.getElementById('pUnit').value, p=document.getElementById('pPrice').value, c=document.getElementById('pCat').value; if(n&&p){ db.collection("products").add({name:n, unit:u, price:parseInt(p), cat:c, img:tempImgBase64||"https://via.placeholder.com/150"}).then(()=>{ document.getElementById('add-modal').style.display='none'; showToast("Product Saved!"); }); } }
+    function previewImage() { const f=document.getElementById('fileInput').files[0], r=new FileReader(); r.onload=(e)=>{tempImgBase64=e.target.result;document.getElementById('imgPreview').src=tempImgBase64;document.getElementById('imgPreview').style.display='block';}; r.readAsDataURL(f); }
+    function delProd(id) { if(confirm("Delete?")) db.collection("products").doc(id).delete(); }
+    function filter(c, b) { activeCat=c; document.querySelectorAll('.cat-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); render(); }
 </script>
 </body>
 </html>
-
