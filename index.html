@@ -52,7 +52,6 @@
         .fab { position: fixed; bottom: 100px; right: 20px; background: white; color: var(--primary); width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 2000; cursor: pointer; transition: 0.3s; }
         .history-fab { bottom: 170px; font-size: 22px; position: relative; }
         
-        /* New Notification Dot */
         .notif-dot { position: absolute; top: 0; right: 0; width: 18px; height: 18px; background: red; border-radius: 50%; border: 2px solid white; animation: pulse 1s infinite; display: none; }
 
         .cart-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: #1e1e1e; color: white; padding: 15px 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 15px 40px rgba(0,0,0,0.6); z-index: 3000; animation: slideUp 0.4s; }
@@ -80,9 +79,9 @@
         .st-cancelled { background: var(--danger); }
 
         .admin-actions { display: flex; gap: 10px; margin-top: 10px; }
-        .btn-act { flex: 1; padding: 8px; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; font-size: 12px; }
-        .btn-accept { background: var(--success); }
-        .btn-reject { background: var(--danger); }
+        .btn-act { flex: 1; padding: 10px; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .btn-accept { background: var(--success); box-shadow: 0 4px 10px rgba(0,184,148,0.3); }
+        .btn-reject { background: var(--danger); box-shadow: 0 4px 10px rgba(255,118,117,0.3); }
 
         .icon-btn { width: 32px; height: 32px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-size: 14px; cursor: pointer; }
         #loader { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 6000; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); font-weight: bold; color: var(--primary); }
@@ -158,7 +157,7 @@
 <div id="admin-orders-modal" class="overlay">
     <div class="modal-box" style="max-width: 95%; width: 95%; height: 80vh;">
         <h3>Admin Orders Panel</h3>
-        <div id="admin-orders-list" style="text-align:left; overflow-y:auto; height: 65vh;"></div>
+        <div id="admin-orders-list" style="text-align:left; overflow-y:auto; height: 65vh; padding-bottom: 20px;"></div>
         <button class="btn-main" onclick="document.getElementById('admin-orders-modal').style.display='none'">Close</button>
     </div>
 </div>
@@ -214,6 +213,7 @@
         const savedUser = localStorage.getItem('raju_user');
         if(savedUser) {
             user = JSON.parse(savedUser);
+            // Admin Check: Phone must be 6392
             if(user.name === "Admin" && user.phone === "6392") isAdmin = true;
             showApp();
         }
@@ -238,7 +238,7 @@
         if(isAdmin) {
             document.getElementById('admin-fab').style.display = 'flex';
             document.getElementById('history-fab').style.display = 'flex';
-            listenToAdminOrders(); // Start listening for new orders
+            listenToAdminOrders(); 
         }
         db.collection("products").onSnapshot((snapshot) => {
             products = [];
@@ -281,7 +281,7 @@
         document.getElementById('cart-bar').style.display = c > 0 ? 'flex' : 'none'; 
     }
 
-    // --- ORDER PLACING LOGIC (UPDATED: NO WHATSAPP) ---
+    // --- ORDER PLACING LOGIC ---
     function placeOrder() {
         const grandTotal = parseInt(document.getElementById('bill-grand-total').innerText);
         const orderItems = [];
@@ -293,12 +293,12 @@
             i: orderItems, 
             t: grandTotal, 
             date: new Date().toLocaleString(),
-            status: 'Pending', // New Field
+            status: 'Pending', 
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         };
         
         db.collection("orders").add(orderObj).then(() => {
-            alert("Order Sent Successfully! ✅\nCheck status in 'My Orders'.");
+            alert("Order Sent Successfully! ✅");
             cart = {}; render(); updateFooter();
             document.getElementById('bill-modal').style.display = 'none';
         });
@@ -306,17 +306,13 @@
 
     // --- ADMIN PANEL LOGIC ---
     function listenToAdminOrders() {
-        // Real-time listener for notification dot
         db.collection("orders").where("status", "==", "Pending").onSnapshot(snap => {
             const dot = document.getElementById('admin-notif');
-            if(snap.size > 0) {
-                dot.style.display = 'block';
-                dot.innerText = snap.size > 9 ? '9+' : snap.size; // Optional: Show count
-                dot.style.color = 'white';
-                dot.style.fontSize = '10px';
+            if(snap && snap.size > 0) {
                 dot.style.display = 'flex';
                 dot.style.justifyContent='center';
                 dot.style.alignItems='center';
+                dot.innerText = snap.size;
             } else {
                 dot.style.display = 'none';
             }
@@ -326,23 +322,31 @@
     function openAdminOrders() {
         document.getElementById('admin-orders-modal').style.display = 'flex';
         const list = document.getElementById('admin-orders-list');
-        list.innerHTML = 'Loading...';
+        list.innerHTML = '<div style="margin-top:20px; color:#666;">Loading Orders...</div>';
 
-        db.collection("orders").orderBy("timestamp", "desc").limit(20).onSnapshot(snap => {
+        // Fix for "Admin buttons hidden" - Using client side sort for safety
+        db.collection("orders").get().then(snap => {
+            if(snap.empty) { list.innerHTML = '<div style="margin-top:20px; color:#666;">No orders found.</div>'; return; }
+            
+            let allOrders = [];
+            snap.forEach(doc => { allOrders.push({id: doc.id, ...doc.data()}); });
+            
+            // Sort by time descending (Newest first)
+            allOrders.sort((a,b) => (b.timestamp ? b.timestamp.seconds : 0) - (a.timestamp ? a.timestamp.seconds : 0));
+
             list.innerHTML = '';
-            if(snap.empty) { list.innerHTML = 'No orders found.'; return; }
-
-            snap.forEach(doc => {
-                const d = doc.data();
-                const statusClass = d.status === 'Confirmed' ? 'st-confirmed' : (d.status === 'Cancelled' ? 'st-cancelled' : 'st-pending');
+            allOrders.forEach(d => {
+                const status = d.status || 'Pending'; // Default to pending if missing
+                const statusClass = status === 'Confirmed' ? 'st-confirmed' : (status === 'Cancelled' ? 'st-cancelled' : 'st-pending');
                 let itemsHtml = d.i.map(x => `${x.n} (${x.u}) x${x.q}`).join(', ');
 
                 let actionButtons = '';
-                if(d.status === 'Pending') {
+                // SHOW BUTTONS IF PENDING
+                if(status === 'Pending') {
                     actionButtons = `
                     <div class="admin-actions">
-                        <button class="btn-act btn-accept" onclick="changeStatus('${doc.id}', 'Confirmed')">✔ Accept</button>
-                        <button class="btn-act btn-reject" onclick="changeStatus('${doc.id}', 'Cancelled')">✖ Reject</button>
+                        <button class="btn-act btn-accept" onclick="changeStatus('${d.id}', 'Confirmed')">✔ Confirm Order</button>
+                        <button class="btn-act btn-reject" onclick="changeStatus('${d.id}', 'Cancelled')">✖ Reject</button>
                     </div>`;
                 }
 
@@ -351,11 +355,11 @@
                         <div style="display:flex; justify-content:space-between;">
                             <b>${d.c}</b> <span style="font-size:12px">${d.date.split(',')[0]}</span>
                         </div>
-                        <div style="font-size:12px; color:#555;">📞 ${d.p}</div>
-                        <div style="font-size:12px; margin:5px 0;">${itemsHtml}</div>
+                        <div style="font-size:13px; color:#333; margin-top:2px;">📞 ${d.p}</div>
+                        <div style="font-size:12px; margin:8px 0; color:#555; background:rgba(0,0,0,0.03); padding:5px; border-radius:5px;">${itemsHtml}</div>
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-weight:bold;">₹${d.t}</span>
-                            <span class="status-badge ${statusClass}">${d.status}</span>
+                            <span style="font-weight:bold; font-size:16px;">₹${d.t}</span>
+                            <span class="status-badge ${statusClass}">${status}</span>
                         </div>
                         ${actionButtons}
                     </div>
@@ -366,26 +370,35 @@
 
     function changeStatus(id, newStatus) {
         if(confirm(`Mark order as ${newStatus}?`)) {
-            db.collection("orders").doc(id).update({ status: newStatus });
+            db.collection("orders").doc(id).update({ status: newStatus }).then(() => {
+                openAdminOrders(); // Refresh list manually
+            });
         }
     }
 
-    // --- CUSTOMER MY ORDERS (TRACKING) ---
+    // --- CUSTOMER MY ORDERS (FIXED LOADING ISSUE) ---
     function openMyOrders() {
         document.getElementById('my-orders-modal').style.display = 'flex';
         const list = document.getElementById('my-orders-list');
-        list.innerHTML = 'Loading...';
+        list.innerHTML = '<div style="margin-top:20px; color:#666;">Loading...</div>';
 
-        db.collection("orders").where("p", "==", user.phone).orderBy("timestamp", "desc").limit(10).onSnapshot(snap => {
+        // FIX: Removed orderBy from query to prevent Index error. Sorting in JS instead.
+        db.collection("orders").where("p", "==", user.phone).get().then(snap => {
+            if(snap.empty) { list.innerHTML = '<div style="padding:20px; color:#888;">No orders placed yet.</div>'; return; }
+
+            let myOrders = [];
+            snap.forEach(doc => { myOrders.push(doc.data()); });
+
+            // Javascript Sort (Newest First)
+            myOrders.sort((a,b) => (b.timestamp ? b.timestamp.seconds : 0) - (a.timestamp ? a.timestamp.seconds : 0));
+
             list.innerHTML = '';
-            if(snap.empty) { list.innerHTML = '<div style="padding:20px; color:#888;">No orders yet.</div>'; return; }
-
-            snap.forEach(doc => {
-                const d = doc.data();
-                const statusClass = d.status === 'Confirmed' ? 'st-confirmed' : (d.status === 'Cancelled' ? 'st-cancelled' : 'st-pending');
+            myOrders.forEach(d => {
+                const status = d.status || 'Pending';
+                const statusClass = status === 'Confirmed' ? 'st-confirmed' : (status === 'Cancelled' ? 'st-cancelled' : 'st-pending');
                 let itemsHtml = d.i.map(x => `${x.n} x${x.q}`).join(', ');
                 
-                let statusMsg = d.status === 'Pending' ? '🕒 Waiting for confirmation...' : (d.status === 'Confirmed' ? '✅ Order Confirmed! Packing started.' : '❌ Order Cancelled.');
+                let statusMsg = status === 'Pending' ? '🕒 Waiting for shop confirmation...' : (status === 'Confirmed' ? '✅ Order Accepted! Preparing...' : '❌ Order was cancelled.');
 
                 list.innerHTML += `
                 <div class="order-card">
@@ -394,10 +407,13 @@
                         <span style="font-size:12px; color:#666;">${d.date}</span>
                     </div>
                     <p style="font-size:12px; color:#444; margin:5px 0;">${itemsHtml}</p>
-                    <div class="status-badge ${statusClass}">${d.status}</div>
+                    <div class="status-badge ${statusClass}">${status}</div>
                     <div style="font-size:11px; margin-top:5px; color:#555;">${statusMsg}</div>
                 </div>`;
             });
+        }).catch(error => {
+            console.error(error);
+            list.innerHTML = '<div style="color:red; padding:20px;">Error loading orders. Try again later.</div>';
         });
     }
 
