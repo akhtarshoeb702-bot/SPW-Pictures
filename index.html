@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Raju Kirana Store (Live)</title>
+    <title>Raju Kirana Store</title>
     <meta name="theme-color" content="#4a00e0">
+    <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -16,16 +17,13 @@
         
         body { font-family: 'Poppins', sans-serif; margin: 0; padding: 0; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 120px; -webkit-tap-highlight-color: transparent; }
         
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes popIn { 0% { opacity: 0; transform: scale(0.8); } 70% { transform: scale(1.05); } 100% { opacity: 1; transform: scale(1); } }
         @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
-        
-        .glass { background: var(--card-bg); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); box-shadow: var(--shadow); }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes popIn { 0% { transform: scale(0.8); } 70% { transform: scale(1.05); } 100% { transform: scale(1); } }
         
         .header { position: sticky; top: 0; z-index: 1000; padding: 15px 20px; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; background: linear-gradient(135deg, #8e2de2, #4a00e0); color: white; box-shadow: 0 5px 20px rgba(74, 0, 224, 0.4); }
         .top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .brand { font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 5px; }
+        .brand { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 5px; }
         .action-icons { display: flex; gap: 10px; align-items: center; }
         
         .search-box { width: 100%; padding: 14px; border: none; border-radius: 15px; background: rgba(255,255,255,0.95); font-size: 15px; outline: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: #333; }
@@ -36,11 +34,9 @@
         .cat-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(74, 0, 224, 0.4); }
 
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 10px 20px; }
-        .card { border-radius: 20px; padding: 12px; display: flex; flex-direction: column; animation: fadeIn 0.6s ease; }
+        .card { border-radius: 20px; padding: 12px; display: flex; flex-direction: column; animation: fadeIn 0.6s ease; background: var(--card-bg); box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,0.1); }
         .card-img { height: 130px; background: white; border-radius: 15px; display: flex; justify-content: center; align-items: center; margin-bottom: 12px; overflow: hidden; }
         .card img { max-width: 90%; max-height: 90%; object-fit: contain; }
-        .card h3 { font-size: 15px; margin: 0 0 4px; height: 40px; overflow: hidden; font-weight: 600; line-height: 1.3; }
-        .unit-info { font-size: 11px; color: #888; margin-bottom: 10px; font-weight: bold; background: rgba(0,0,0,0.05); padding: 2px 8px; border-radius: 8px; width: fit-content; }
         .price { font-size: 17px; font-weight: 800; color: var(--primary); }
         
         .qty-ctrl { display: flex; align-items: center; background: var(--primary); color: white; border-radius: 10px; height: 34px; box-shadow: 0 4px 10px rgba(74,0,224,0.3); overflow: hidden; }
@@ -48,46 +44,24 @@
         .qty-val { font-size: 14px; font-weight: 700; padding: 0 8px; }
         .add-btn { background: var(--primary); color: white; padding: 8px 18px; border-radius: 10px; font-size: 12px; font-weight: 700; border: none; cursor: pointer; box-shadow: 0 4px 10px rgba(74,0,224,0.3); }
 
-        /* FIXED FAB BUTTONS */
-        .fab-btn {
-            position: fixed; 
-            right: 20px; 
-            width: 55px; height: 55px; 
-            border-radius: 50%; 
-            display: flex; justify-content: center; align-items: center; 
-            font-size: 28px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
-            z-index: 2000; 
-            cursor: pointer; 
-            transition: 0.3s;
-            background: white;
-            color: var(--primary);
-        }
-        
-        /* Plus Button (Bottom) */
+        /* TOAST NOTIFICATION STYLE */
+        #toast-box { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; width: 90%; max-width: 350px; pointer-events: none; }
+        .toast { background: rgba(0,0,0,0.85); color: white; padding: 12px 20px; border-radius: 50px; font-size: 13px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); animation: slideUp 0.3s ease; backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
+
+        /* FAB Buttons */
+        .fab-btn { position: fixed; right: 20px; width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 2000; cursor: pointer; transition: 0.3s; background: white; color: var(--primary); }
         #admin-fab { bottom: 100px; }
-        
-        /* Order Button (Top of Plus) */
         #history-fab { bottom: 170px; background: #fff; color: #333; }
         
-        /* Notification Dot */
-        .notif-dot { 
-            position: absolute; top: -2px; right: -2px; 
-            width: 20px; height: 20px; 
-            background: red; 
-            border-radius: 50%; 
-            border: 2px solid white; 
-            color: white; font-size: 10px; font-weight: bold;
-            display: none; 
-            justify-content: center; align-items: center;
-            animation: pulse 1.5s infinite; 
-        }
+        .notif-dot { position: absolute; top: -2px; right: -2px; width: 20px; height: 20px; background: red; border-radius: 50%; border: 2px solid white; color: white; font-size: 10px; font-weight: bold; display: none; justify-content: center; align-items: center; }
 
         .cart-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: #1e1e1e; color: white; padding: 15px 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 15px 40px rgba(0,0,0,0.6); z-index: 3000; animation: slideUp 0.4s; }
 
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(8px); animation: fadeIn 0.3s; }
         .modal-box { background: var(--card-bg); color: var(--text); padding: 25px; width: 90%; max-width: 340px; border-radius: 25px; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.5); position: relative; max-height: 85vh; overflow-y: auto; animation: popIn 0.3s; }
-        
+
         .slider-container { width: 100%; height: 55px; background: #e0e0e0; border-radius: 30px; position: relative; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); transition: 0.3s; }
         .slider-container.active { background: var(--success); }
         .slider-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold; color: #666; font-size: 14px; pointer-events: none; transition: 0.3s; white-space: nowrap; }
@@ -96,28 +70,22 @@
 
         .inp { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; background: rgba(255,255,255,0.8); color: black; }
         .btn-main { width: 100%; padding: 15px; background: linear-gradient(135deg, #8e2de2, #4a00e0); color: white; border: none; border-radius: 12px; font-weight: bold; margin-top: 15px; cursor: pointer; }
-        
+
         .order-card { background: rgba(255,255,255,0.6); border: 1px solid rgba(0,0,0,0.1); border-radius: 15px; padding: 15px; margin-bottom: 15px; text-align: left; transition: transform 0.2s; cursor: pointer; }
-        .order-card:active { transform: scale(0.98); background: rgba(255,255,255,0.8); }
         .dark-mode .order-card { background: rgba(255,255,255,0.05); }
         .status-badge { display: inline-block; padding: 5px 12px; border-radius: 15px; font-size: 11px; font-weight: bold; color:white; margin-top: 5px; }
-        
         .st-pending { background: var(--warning); color: #444; }
         .st-confirmed { background: var(--success); }
         .st-cancelled { background: var(--danger); }
 
-        .admin-actions { display: flex; gap: 10px; margin-top: 10px; }
-        .btn-act { flex: 1; padding: 10px; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; font-size: 14px; }
-        .btn-accept { background: var(--success); box-shadow: 0 4px 10px rgba(0,184,148,0.3); }
-        .btn-reject { background: var(--danger); box-shadow: 0 4px 10px rgba(255,118,117,0.3); }
-
         .icon-btn { width: 32px; height: 32px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-size: 14px; cursor: pointer; }
-        #loader { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 6000; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); font-weight: bold; color: var(--primary); }
+        
+        #install-btn { display:none; background: #00b894; padding: 5px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; color: white; cursor: pointer; border: 1px solid white; animation: popIn 0.5s; }
     </style>
 </head>
 <body>
 
-<div id="loader">🔄 Loading...</div>
+<div id="toast-box"></div>
 
 <div id="login-view" class="overlay" style="display: flex;">
     <div class="modal-box">
@@ -134,6 +102,7 @@
         <div class="top-row">
             <div class="brand">🛍️ Raju Kirana</div>
             <div class="action-icons">
+                <div id="install-btn" onclick="installApp()">⬇ Install App</div>
                 <div class="icon-btn" onclick="openMyOrders()" style="background:rgba(255,255,255,0.2); color:white;">📦</div>
                 <div class="icon-btn" onclick="toggleTheme()" style="background:rgba(255,255,255,0.2); color:white;">🌓</div>
                 <div onclick="handleLogout()" style="font-size:11px; color:white; font-weight:bold; cursor:pointer;">LOGOUT</div>
@@ -155,7 +124,6 @@
         📋
         <div class="notif-dot" id="admin-notif"></div>
     </div>
-
     <div class="fab-btn" id="admin-fab" style="display:none;" onclick="openAddModal()">+</div>
     
     <div class="cart-bar" id="cart-bar" style="display: none;">
@@ -174,7 +142,7 @@
         <div style="border:2px dashed var(--primary); padding:15px; border-radius:10px; margin-bottom:10px; cursor:pointer;" onclick="document.getElementById('fileInput').click()">📸 Upload Photo</div>
         <img id="imgPreview" src="" style="width:100%; height:100px; object-fit:contain; display:none; margin-bottom:10px;">
         <input type="text" id="pName" class="inp" placeholder="Name">
-        <input type="text" id="pUnit" class="inp" placeholder="Unit (e.g. 1kg)">
+        <input type="text" id="pUnit" class="inp" placeholder="Unit">
         <input type="number" id="pPrice" class="inp" placeholder="Price">
         <select id="pCat" class="inp"><option>Rashan</option><option>Snacks</option><option>Offers</option></select>
         <button class="btn-main" onclick="addProductToFirebase()">Save</button>
@@ -184,7 +152,7 @@
 
 <div id="admin-orders-modal" class="overlay">
     <div class="modal-box" style="max-width: 95%; width: 95%; height: 80vh;">
-        <h3>Admin Orders Panel</h3>
+        <h3>Admin Orders</h3>
         <div id="admin-orders-list" style="text-align:left; overflow-y:auto; height: 65vh; padding-bottom: 20px;"></div>
         <button class="btn-main" onclick="document.getElementById('admin-orders-modal').style.display='none'">Close</button>
     </div>
@@ -217,6 +185,36 @@
 </div>
 
 <script>
+    // --- APP INSTALL LOGIC (PWA) ---
+    let deferredPrompt;
+    if('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('install-btn').style.display = 'block';
+    });
+
+    function installApp() {
+        if(deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if(choiceResult.outcome === 'accepted') { document.getElementById('install-btn').style.display = 'none'; }
+                deferredPrompt = null;
+            });
+        }
+    }
+
+    // --- GLOBAL TOAST NOTIFICATION ---
+    function showToast(msg, type='success') {
+        const box = document.getElementById('toast-box');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = type === 'success' ? '✅ '+msg : (type === 'error' ? '❌ '+msg : 'ℹ️ '+msg);
+        box.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '0'; setTimeout(()=> toast.remove(), 300); }, 3000);
+    }
+
     // --- FIREBASE CONFIG ---
     const firebaseConfig = {
         apiKey: "AIzaSyAYKEYZZVtq9e8k9LemxxSBEDU9oie7vjI",
@@ -230,15 +228,7 @@
     if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
     const db = firebase.firestore();
 
-    let products = [];
-    let cart = {};
-    let user = null;
-    let isAdmin = false;
-    let activeCat = 'All';
-    let tempImgBase64 = "";
-    let myHistoryData = []; 
-
-    // Sound file
+    let products = [], cart = {}, user = null, isAdmin = false, activeCat = 'All', tempImgBase64 = "", myHistoryData = [];
     const notifSound = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
 
     window.onload = function() {
@@ -246,7 +236,6 @@
         const savedUser = localStorage.getItem('raju_user');
         if(savedUser) {
             user = JSON.parse(savedUser);
-            // Admin Check: Phone must be 6392
             if(user.name === "Admin" && user.phone === "6392") isAdmin = true;
             showApp();
         }
@@ -260,23 +249,52 @@
 
     function handleLogin() {
         const n = document.getElementById('loginName').value; const p = document.getElementById('loginPhone').value;
-        if(n && p) { user = { name: n, phone: p }; localStorage.setItem('raju_user', JSON.stringify(user)); location.reload(); }
-        else { alert("Fill all details"); }
+        if(n && p) { 
+            user = { name: n, phone: p }; localStorage.setItem('raju_user', JSON.stringify(user)); 
+            showToast("Welcome back, " + n);
+            setTimeout(() => location.reload(), 1000); 
+        } else { showToast("Please fill all details", 'error'); }
     }
+    
     function handleLogout() { localStorage.removeItem('raju_user'); location.reload(); }
     
     function showApp() {
         document.getElementById('login-view').style.display = 'none'; 
         document.getElementById('app-view').style.display = 'block';
+        
         if(isAdmin) {
             document.getElementById('admin-fab').style.display = 'flex';
             document.getElementById('history-fab').style.display = 'flex';
             listenToAdminOrders(); 
+        } else {
+            // Monitor user orders for changes (Notifications)
+            monitorUserOrders();
         }
+
         db.collection("products").onSnapshot((snapshot) => {
             products = [];
             snapshot.forEach((doc) => { products.push({ id: doc.id, ...doc.data() }); });
             render();
+        });
+    }
+
+    // --- LIVE NOTIFICATIONS FOR CUSTOMER ---
+    let initialLoad = true;
+    function monitorUserOrders() {
+        db.collection("orders").where("p", "==", user.phone).onSnapshot(snap => {
+            if(initialLoad) { initialLoad = false; return; }
+            
+            snap.docChanges().forEach(change => {
+                if (change.type === "modified") {
+                    const data = change.doc.data();
+                    if(data.status === 'Confirmed') {
+                        notifSound.play();
+                        showToast(`Your order of ₹${data.t} is Confirmed! 🎉`, 'success');
+                    } else if(data.status === 'Cancelled') {
+                        showToast(`Order of ₹${data.t} was Cancelled.`, 'error');
+                    }
+                }
+            });
         });
     }
 
@@ -292,11 +310,11 @@
                 ? `<button class="add-btn" onclick="updateQty('${p.id}', 1)">ADD</button>` 
                 : `<div class="qty-ctrl"><button class="qty-btn" onclick="updateQty('${p.id}', -1)">−</button><span class="qty-val">${qty}</span><button class="qty-btn" onclick="updateQty('${p.id}', 1)">+</button></div>`;
             
-            let adminHTML = isAdmin ? `<div style="position:absolute; top:5px; right:5px;"><span onclick="delProd('${p.id}')">🗑️</span></div>` : '';
+            let adminHTML = isAdmin ? `<div style="position:absolute; top:5px; right:5px; z-index:10;"><span onclick="delProd('${p.id}')">🗑️</span></div>` : '';
             const card = document.createElement('div'); 
-            card.className = 'card glass';
+            card.className = 'card';
             card.style.animationDelay = `${index * 0.05}s`;
-            card.innerHTML = `${adminHTML}<div class="card-img"><img src="${p.img}" onerror="this.src='https://via.placeholder.com/150'"></div><h3>${p.name}</h3><div class="unit-info">${p.unit || '1 pc'}</div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto;"><div class="price">₹${p.price}</div>${btnHTML}</div>`;
+            card.innerHTML = `${adminHTML}<div class="card-img"><img src="${p.img}" onerror="this.src='https://via.placeholder.com/150'"></div><div style="padding:0 5px;"><h3 style="font-size:15px; margin:5px 0; height:40px; overflow:hidden;">${p.name}</h3><div style="font-size:11px; color:#888; margin-bottom:10px;">${p.unit || '1 pc'}</div><div style="display:flex; justify-content:space-between; align-items:center;"><div class="price">₹${p.price}</div>${btnHTML}</div></div>`;
             grid.appendChild(card);
         });
     }
@@ -306,6 +324,7 @@
         cart[id] += change; 
         if(cart[id] <= 0) delete cart[id]; 
         render(); updateFooter(); 
+        if(change > 0) showToast("Added to Cart", 'success');
     }
 
     function updateFooter() { 
@@ -314,48 +333,31 @@
         document.getElementById('cart-bar').style.display = c > 0 ? 'flex' : 'none'; 
     }
 
-    // --- ORDER PLACING LOGIC ---
+    // --- ORDER PLACING ---
     function placeOrder() {
         const grandTotal = parseInt(document.getElementById('bill-grand-total').innerText);
         const orderItems = [];
         for(let id in cart) { const p = products.find(x => x.id == id); orderItems.push({ n: p.name, q: cart[id], p: p.price, u: p.unit || '1pc' }); }
         
-        const orderObj = { 
-            c: user.name, 
-            p: user.phone, 
-            i: orderItems, 
-            t: grandTotal, 
-            date: new Date().toLocaleString(),
-            status: 'Pending', 
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        };
+        const orderObj = { c: user.name, p: user.phone, i: orderItems, t: grandTotal, date: new Date().toLocaleString(), status: 'Pending', timestamp: firebase.firestore.FieldValue.serverTimestamp() };
         
         db.collection("orders").add(orderObj).then(() => {
-            alert("Order Sent Successfully! ✅");
+            showToast("Order Sent Successfully! ✅", 'success');
             cart = {}; render(); updateFooter();
             document.getElementById('bill-modal').style.display = 'none';
         });
     }
 
-    // --- ADMIN PANEL LOGIC ---
+    // --- ADMIN LOGIC ---
     let lastOrderCount = 0;
-    
     function listenToAdminOrders() {
         db.collection("orders").where("status", "==", "Pending").onSnapshot(snap => {
             const dot = document.getElementById('admin-notif');
             const count = snap.size;
-
             if(count > 0) {
-                dot.style.display = 'flex';
-                dot.innerText = count;
-                
-                // Play sound if new order comes (count increased)
-                if(count > lastOrderCount) {
-                    notifSound.play().catch(e => console.log("Audio play failed, user interaction needed."));
-                }
-            } else {
-                dot.style.display = 'none';
-            }
+                dot.style.display = 'flex'; dot.innerText = count;
+                if(count > lastOrderCount) { notifSound.play().catch(e=>{}); showToast(`New Order Received! (${count})`, 'success'); }
+            } else { dot.style.display = 'none'; }
             lastOrderCount = count;
         });
     }
@@ -364,169 +366,74 @@
         document.getElementById('admin-orders-modal').style.display = 'flex';
         const list = document.getElementById('admin-orders-list');
         list.innerHTML = '<div style="margin-top:20px; color:#666;">Loading Orders...</div>';
-
         db.collection("orders").get().then(snap => {
             if(snap.empty) { list.innerHTML = '<div style="margin-top:20px; color:#666;">No orders found.</div>'; return; }
-            
-            let allOrders = [];
-            snap.forEach(doc => { allOrders.push({id: doc.id, ...doc.data()}); });
-            
+            let allOrders = []; snap.forEach(doc => { allOrders.push({id: doc.id, ...doc.data()}); });
             allOrders.sort((a,b) => (b.timestamp ? b.timestamp.seconds : 0) - (a.timestamp ? a.timestamp.seconds : 0));
-
             list.innerHTML = '';
             allOrders.forEach(d => {
                 const status = d.status || 'Pending';
-                const statusClass = status === 'Confirmed' ? 'st-confirmed' : (status === 'Cancelled' ? 'st-cancelled' : 'st-pending');
                 let itemsHtml = d.i.map(x => `${x.n} (${x.u}) x${x.q}`).join(', ');
-
-                let actionButtons = '';
-                if(status === 'Pending') {
-                    actionButtons = `
-                    <div class="admin-actions">
-                        <button class="btn-act btn-accept" onclick="changeStatus('${d.id}', 'Confirmed')">✔ Confirm Order</button>
-                        <button class="btn-act btn-reject" onclick="changeStatus('${d.id}', 'Cancelled')">✖ Reject</button>
-                    </div>`;
-                }
-
-                list.innerHTML += `
-                    <div class="order-card">
-                        <div style="display:flex; justify-content:space-between;">
-                            <b>${d.c}</b> <span style="font-size:12px">${d.date.split(',')[0]}</span>
-                        </div>
-                        <div style="font-size:13px; color:#333; margin-top:2px;">📞 ${d.p}</div>
-                        <div style="font-size:12px; margin:8px 0; color:#555; background:rgba(0,0,0,0.03); padding:5px; border-radius:5px;">${itemsHtml}</div>
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-weight:bold; font-size:16px;">₹${d.t}</span>
-                            <span class="status-badge ${statusClass}">${status}</span>
-                        </div>
-                        ${actionButtons}
-                    </div>
-                `;
+                let btns = status === 'Pending' ? `<div style="display:flex; gap:10px; margin-top:10px;"><button style="flex:1; background:#00b894; color:white; border:none; padding:8px; border-radius:5px;" onclick="changeStatus('${d.id}', 'Confirmed')">Accept</button><button style="flex:1; background:#ff7675; color:white; border:none; padding:8px; border-radius:5px;" onclick="changeStatus('${d.id}', 'Cancelled')">Reject</button></div>` : '';
+                list.innerHTML += `<div class="order-card"><b>${d.c}</b> <span style="font-size:12px">${d.date.split(',')[0]}</span><br><span style="color:#555; font-size:12px;">${itemsHtml}</span><div style="display:flex; justify-content:space-between; margin-top:5px;"><b>₹${d.t}</b> <span class="status-badge ${status === 'Confirmed' ? 'st-confirmed' : (status === 'Cancelled' ? 'st-cancelled' : 'st-pending')}">${status}</span></div>${btns}</div>`;
             });
         });
     }
 
     function changeStatus(id, newStatus) {
-        if(confirm(`Mark order as ${newStatus}?`)) {
+        if(confirm(`Mark as ${newStatus}?`)) {
             db.collection("orders").doc(id).update({ status: newStatus }).then(() => {
-                openAdminOrders(); 
+                showToast(`Order ${newStatus}!`, newStatus === 'Confirmed' ? 'success' : 'error');
+                openAdminOrders();
             });
         }
     }
 
-    // --- CUSTOMER MY ORDERS ---
+    // --- MY ORDERS ---
     function openMyOrders() {
         document.getElementById('my-orders-modal').style.display = 'flex';
         const list = document.getElementById('my-orders-list');
-        list.innerHTML = '<div style="margin-top:20px; color:#666;">Loading...</div>';
-
+        list.innerHTML = 'Loading...';
         db.collection("orders").where("p", "==", user.phone).get().then(snap => {
-            if(snap.empty) { list.innerHTML = '<div style="padding:20px; color:#888;">No orders placed yet.</div>'; return; }
-
-            myHistoryData = []; 
-            snap.forEach(doc => { myHistoryData.push(doc.data()); });
+            if(snap.empty) { list.innerHTML = 'No orders.'; return; }
+            myHistoryData = []; snap.forEach(doc => myHistoryData.push(doc.data()));
             myHistoryData.sort((a,b) => (b.timestamp ? b.timestamp.seconds : 0) - (a.timestamp ? a.timestamp.seconds : 0));
-
             list.innerHTML = '';
-            myHistoryData.forEach((d, index) => {
-                const status = d.status || 'Pending';
-                const statusClass = status === 'Confirmed' ? 'st-confirmed' : (status === 'Cancelled' ? 'st-cancelled' : 'st-pending');
-                
-                list.innerHTML += `
-                <div class="order-card" onclick="showHistoryInvoice(${index})">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <div>
-                            <span style="font-weight:bold; font-size:16px;">₹${d.t}</span>
-                            <div style="font-size:11px; color:#666;">${d.date.split(',')[0]}</div>
-                        </div>
-                        <div style="text-align:right;">
-                             <div class="status-badge ${statusClass}">${status}</div>
-                             <div style="font-size:10px; color:var(--primary); margin-top:2px;">View Invoice 📄</div>
-                        </div>
-                    </div>
-                </div>`;
+            myHistoryData.forEach((d, i) => {
+                list.innerHTML += `<div class="order-card" onclick="showHistoryInvoice(${i})"><div style="display:flex; justify-content:space-between;"><b>₹${d.t}</b> <span>${d.status}</span></div><div style="font-size:11px; color:#666;">${d.date}</div></div>`;
             });
-        }).catch(error => {
-            console.error(error);
-            list.innerHTML = '<div style="color:red; padding:20px;">Error loading orders.</div>';
         });
     }
 
     function showHistoryInvoice(index) {
         const d = myHistoryData[index];
-        const list = document.getElementById('bill-list');
-        list.innerHTML = '';
-        d.i.forEach(x => {
-            list.innerHTML += `<div style="display:flex;justify-content:space-between;padding:8px 0; border-bottom:1px solid #eee;">
-                <span>${x.n} (${x.u}) x${x.q}</span>
-                <span>₹${x.p * x.q}</span>
-            </div>`;
-        });
+        const list = document.getElementById('bill-list'); list.innerHTML = '';
+        d.i.forEach(x => { list.innerHTML += `<div style="display:flex;justify-content:space-between;padding:8px 0; border-bottom:1px solid #eee;"><span>${x.n} x${x.q}</span><span>₹${x.p * x.q}</span></div>`; });
         document.getElementById('bill-grand-total').innerText = d.t;
-        document.getElementById('bill-title').innerText = "🧾 Order Invoice";
-        document.getElementById('sliderContainer').style.display = 'none'; 
+        document.getElementById('bill-title').innerText = "🧾 Invoice";
+        document.getElementById('sliderContainer').style.display = 'none';
         document.getElementById('bill-modal').style.display = 'flex';
     }
 
     // --- UTILS ---
     function initSlider() {
-        const thumb = document.getElementById('sliderThumb');
-        const container = document.getElementById('sliderContainer');
-        const text = document.getElementById('sliderText');
+        const thumb = document.getElementById('sliderThumb'), container = document.getElementById('sliderContainer'), text = document.getElementById('sliderText');
         let isDragging = false, startX;
-
-        function startDrag(e) { if(thumb.classList.contains('unlocked')) return; isDragging = true; startX = (e.touches ? e.touches[0].clientX : e.clientX); thumb.style.transition = 'none'; }
-        function onDrag(e) {
-            if (!isDragging) return;
-            const clientX = (e.touches ? e.touches[0].clientX : e.clientX);
-            let moveX = clientX - startX;
-            let maxMove = container.offsetWidth - thumb.offsetWidth - 10; 
-            if (moveX < 0) moveX = 0; if (moveX > maxMove) moveX = maxMove;
-            thumb.style.transform = `translateX(${moveX}px)`; text.style.opacity = 1 - (moveX / maxMove);
-            if (moveX >= maxMove * 0.95) { isDragging = false; unlockSlider(); }
-        }
-        function endDrag() { if (!isDragging) return; isDragging = false; thumb.style.transition = 'transform 0.3s'; thumb.style.transform = `translateX(0px)`; text.style.opacity = 1; }
-        
-        thumb.addEventListener('mousedown', startDrag); thumb.addEventListener('touchstart', startDrag);
-        document.addEventListener('mousemove', onDrag); document.addEventListener('touchmove', onDrag);
-        document.addEventListener('mouseup', endDrag); document.addEventListener('touchend', endDrag);
+        thumb.addEventListener('touchstart', (e)=>{ if(thumb.classList.contains('unlocked'))return; isDragging=true; startX=e.touches[0].clientX; thumb.style.transition='none'; });
+        thumb.addEventListener('mousedown', (e)=>{ if(thumb.classList.contains('unlocked'))return; isDragging=true; startX=e.clientX; thumb.style.transition='none'; });
+        const move = (clientX) => { if(!isDragging)return; let moveX = clientX - startX; let max = container.offsetWidth - thumb.offsetWidth - 10; if(moveX<0)moveX=0; if(moveX>max)moveX=max; thumb.style.transform=`translateX(${moveX}px)`; text.style.opacity = 1-(moveX/max); if(moveX >= max*0.95) { isDragging=false; unlock(); } };
+        document.addEventListener('touchmove', (e)=>move(e.touches[0].clientX)); document.addEventListener('mousemove', (e)=>move(e.clientX));
+        const end = () => { if(!isDragging)return; isDragging=false; thumb.style.transition='0.3s'; thumb.style.transform='translateX(0)'; text.style.opacity=1; };
+        document.addEventListener('touchend', end); document.addEventListener('mouseup', end);
+        function unlock() { thumb.classList.add('unlocked'); thumb.innerHTML='✔'; container.classList.add('active'); text.innerText="Processing..."; thumb.style.transform=`translateX(${container.offsetWidth - thumb.offsetWidth - 10}px)`; setTimeout(placeOrder, 600); }
     }
-
-    function unlockSlider() {
-        const thumb = document.getElementById('sliderThumb');
-        const container = document.getElementById('sliderContainer');
-        const text = document.getElementById('sliderText');
-        thumb.classList.add('unlocked'); thumb.innerHTML = '✔'; container.classList.add('active');
-        text.innerText = "Processing..."; text.style.color = "white"; text.style.opacity = 1;
-        thumb.style.transform = `translateX(${container.offsetWidth - thumb.offsetWidth - 10}px)`;
-        setTimeout(() => { placeOrder(); }, 600);
-    }
-    
-    function resetSlider() {
-         const thumb = document.getElementById('sliderThumb');
-         const container = document.getElementById('sliderContainer');
-         const text = document.getElementById('sliderText');
-         thumb.classList.remove('unlocked'); thumb.innerHTML = '➤'; container.classList.remove('active');
-         thumb.style.transform = 'translateX(0px)'; text.innerText = 'Slide to Order >>'; text.style.color = '#666'; text.style.opacity = 1;
-    }
-
-    function openBillPreview() {
-        document.getElementById('bill-title').innerText = "🧾 Confirm Order";
-        document.getElementById('sliderContainer').style.display = 'block';
-
-        const list = document.getElementById('bill-list'); list.innerHTML = ''; let itemsT = 0;
-        for(let id in cart) { const p = products.find(x => x.id == id); let it = p.price * cart[id]; itemsT += it; list.innerHTML += `<div style="display:flex;justify-content:space-between;padding:5px 0;"><span>${p.name} x${cart[id]}</span><span>₹${it}</span></div>`; }
-        document.getElementById('bill-grand-total').innerText = itemsT; resetSlider(); document.getElementById('bill-modal').style.display = 'flex';
-    }
-
+    function resetSlider() { const thumb=document.getElementById('sliderThumb'), cont=document.getElementById('sliderContainer'), txt=document.getElementById('sliderText'); thumb.classList.remove('unlocked'); thumb.innerHTML='➤'; cont.classList.remove('active'); thumb.style.transform='translateX(0)'; txt.innerText='Slide to Order >>'; txt.style.opacity=1; }
+    function openBillPreview() { document.getElementById('bill-title').innerText="🧾 Confirm Order"; document.getElementById('sliderContainer').style.display='block'; const list=document.getElementById('bill-list'); list.innerHTML=''; let t=0; for(let id in cart){const p=products.find(x=>x.id==id);let it=p.price*cart[id];t+=it;list.innerHTML+=`<div style="display:flex;justify-content:space-between;padding:5px 0;"><span>${p.name} x${cart[id]}</span><span>₹${it}</span></div>`;} document.getElementById('bill-grand-total').innerText=t; resetSlider(); document.getElementById('bill-modal').style.display='flex'; }
     function openAddModal() { document.getElementById('add-modal').style.display = 'flex'; }
-    function addProductToFirebase() {
-        const n = document.getElementById('pName').value; const u = document.getElementById('pUnit').value; const p = document.getElementById('pPrice').value; const c = document.getElementById('pCat').value;
-        if(n && p) { db.collection("products").add({ name: n, unit: u, price: parseInt(p), cat: c, img: tempImgBase64 || "https://via.placeholder.com/150" }).then(() => { document.getElementById('add-modal').style.display='none'; alert("Saved!"); }); }
-    }
-    function previewImage() { const file = document.getElementById('fileInput').files[0]; const reader = new FileReader(); reader.onload = function(e) { tempImgBase64 = e.target.result; document.getElementById('imgPreview').src = tempImgBase64; document.getElementById('imgPreview').style.display = 'block'; }; reader.readAsDataURL(file); }
+    function addProductToFirebase() { const n=document.getElementById('pName').value, u=document.getElementById('pUnit').value, p=document.getElementById('pPrice').value, c=document.getElementById('pCat').value; if(n&&p){ db.collection("products").add({name:n, unit:u, price:parseInt(p), cat:c, img:tempImgBase64||"https://via.placeholder.com/150"}).then(()=>{ document.getElementById('add-modal').style.display='none'; showToast("Product Saved!"); }); } }
+    function previewImage() { const f=document.getElementById('fileInput').files[0], r=new FileReader(); r.onload=(e)=>{tempImgBase64=e.target.result;document.getElementById('imgPreview').src=tempImgBase64;document.getElementById('imgPreview').style.display='block';}; r.readAsDataURL(f); }
     function delProd(id) { if(confirm("Delete?")) db.collection("products").doc(id).delete(); }
-    function filter(cat, btn) { activeCat = cat; document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); render(); }
+    function filter(c, b) { activeCat=c; document.querySelectorAll('.cat-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); render(); }
 </script>
 </body>
 </html>
