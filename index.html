@@ -549,5 +549,25 @@
         } catch(e) { location.href = location.href.split('?')[0]; }
     }
 </script>
+  <script>
+    // --- FORCE UPDATE CODE ---
+    // यह कोड पुराने Service Worker और Cache को डिलीट कर देगा
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister();
+                console.log("Service Worker Unregistered");
+            }
+        });
+        
+        // पुरानी Cache फाइलें भी डिलीट करें
+        caches.keys().then(function(names) {
+            for (let name of names) {
+                caches.delete(name);
+            }
+        });
+    }
+</script>
 </body>
 </html>
+
