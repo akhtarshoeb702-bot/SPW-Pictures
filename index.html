@@ -16,11 +16,10 @@
         
         body { font-family: 'Poppins', sans-serif; margin: 0; padding: 0; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 120px; -webkit-tap-highlight-color: transparent; }
         
-        /* --- ANIMATIONS --- */
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes popIn { 0% { opacity: 0; transform: scale(0.8); } 70% { transform: scale(1.05); } 100% { opacity: 1; transform: scale(1); } }
         @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
         
         .glass { background: var(--card-bg); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); box-shadow: var(--shadow); }
         
@@ -49,10 +48,40 @@
         .qty-val { font-size: 14px; font-weight: 700; padding: 0 8px; }
         .add-btn { background: var(--primary); color: white; padding: 8px 18px; border-radius: 10px; font-size: 12px; font-weight: 700; border: none; cursor: pointer; box-shadow: 0 4px 10px rgba(74,0,224,0.3); }
 
-        .fab { position: fixed; bottom: 100px; right: 20px; background: white; color: var(--primary); width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 2000; cursor: pointer; transition: 0.3s; }
-        .history-fab { bottom: 170px; font-size: 22px; position: relative; }
+        /* FIXED FAB BUTTONS */
+        .fab-btn {
+            position: fixed; 
+            right: 20px; 
+            width: 55px; height: 55px; 
+            border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center; 
+            font-size: 28px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+            z-index: 2000; 
+            cursor: pointer; 
+            transition: 0.3s;
+            background: white;
+            color: var(--primary);
+        }
         
-        .notif-dot { position: absolute; top: 0; right: 0; width: 18px; height: 18px; background: red; border-radius: 50%; border: 2px solid white; animation: pulse 1s infinite; display: none; }
+        /* Plus Button (Bottom) */
+        #admin-fab { bottom: 100px; }
+        
+        /* Order Button (Top of Plus) */
+        #history-fab { bottom: 170px; background: #fff; color: #333; }
+        
+        /* Notification Dot */
+        .notif-dot { 
+            position: absolute; top: -2px; right: -2px; 
+            width: 20px; height: 20px; 
+            background: red; 
+            border-radius: 50%; 
+            border: 2px solid white; 
+            color: white; font-size: 10px; font-weight: bold;
+            display: none; 
+            justify-content: center; align-items: center;
+            animation: pulse 1.5s infinite; 
+        }
 
         .cart-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: #1e1e1e; color: white; padding: 15px 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 15px 40px rgba(0,0,0,0.6); z-index: 3000; animation: slideUp 0.4s; }
 
@@ -68,13 +97,11 @@
         .inp { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; background: rgba(255,255,255,0.8); color: black; }
         .btn-main { width: 100%; padding: 15px; background: linear-gradient(135deg, #8e2de2, #4a00e0); color: white; border: none; border-radius: 12px; font-weight: bold; margin-top: 15px; cursor: pointer; }
         
-        /* Order Cards Style */
         .order-card { background: rgba(255,255,255,0.6); border: 1px solid rgba(0,0,0,0.1); border-radius: 15px; padding: 15px; margin-bottom: 15px; text-align: left; transition: transform 0.2s; cursor: pointer; }
         .order-card:active { transform: scale(0.98); background: rgba(255,255,255,0.8); }
         .dark-mode .order-card { background: rgba(255,255,255,0.05); }
         .status-badge { display: inline-block; padding: 5px 12px; border-radius: 15px; font-size: 11px; font-weight: bold; color:white; margin-top: 5px; }
         
-        /* Status Colors */
         .st-pending { background: var(--warning); color: #444; }
         .st-confirmed { background: var(--success); }
         .st-cancelled { background: var(--danger); }
@@ -124,13 +151,13 @@
 
     <div class="grid" id="grid"></div>
     
-    <div class="fab" id="admin-fab" style="display:none;" onclick="openAddModal()">+</div>
-    
-    <div class="fab history-fab" id="history-fab" style="display:none;" onclick="openAdminOrders()">
+    <div class="fab-btn" id="history-fab" style="display:none;" onclick="openAdminOrders()">
         📋
         <div class="notif-dot" id="admin-notif"></div>
     </div>
 
+    <div class="fab-btn" id="admin-fab" style="display:none;" onclick="openAddModal()">+</div>
+    
     <div class="cart-bar" id="cart-bar" style="display: none;">
         <div>
             <div style="font-size:12px; color:#ccc;"><span id="count">0</span> Items</div>
@@ -209,7 +236,10 @@
     let isAdmin = false;
     let activeCat = 'All';
     let tempImgBase64 = "";
-    let myHistoryData = []; // Store fetched orders here
+    let myHistoryData = []; 
+
+    // Sound file
+    const notifSound = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
 
     window.onload = function() {
         if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
@@ -308,17 +338,25 @@
     }
 
     // --- ADMIN PANEL LOGIC ---
+    let lastOrderCount = 0;
+    
     function listenToAdminOrders() {
         db.collection("orders").where("status", "==", "Pending").onSnapshot(snap => {
             const dot = document.getElementById('admin-notif');
-            if(snap && snap.size > 0) {
+            const count = snap.size;
+
+            if(count > 0) {
                 dot.style.display = 'flex';
-                dot.style.justifyContent='center';
-                dot.style.alignItems='center';
-                dot.innerText = snap.size;
+                dot.innerText = count;
+                
+                // Play sound if new order comes (count increased)
+                if(count > lastOrderCount) {
+                    notifSound.play().catch(e => console.log("Audio play failed, user interaction needed."));
+                }
             } else {
                 dot.style.display = 'none';
             }
+            lastOrderCount = count;
         });
     }
 
@@ -376,7 +414,7 @@
         }
     }
 
-    // --- CUSTOMER MY ORDERS (FIXED LOADING & CLICK TO VIEW INVOICE) ---
+    // --- CUSTOMER MY ORDERS ---
     function openMyOrders() {
         document.getElementById('my-orders-modal').style.display = 'flex';
         const list = document.getElementById('my-orders-list');
@@ -385,17 +423,14 @@
         db.collection("orders").where("p", "==", user.phone).get().then(snap => {
             if(snap.empty) { list.innerHTML = '<div style="padding:20px; color:#888;">No orders placed yet.</div>'; return; }
 
-            myHistoryData = []; // Clear previous data
+            myHistoryData = []; 
             snap.forEach(doc => { myHistoryData.push(doc.data()); });
-
-            // Sort newest first
             myHistoryData.sort((a,b) => (b.timestamp ? b.timestamp.seconds : 0) - (a.timestamp ? a.timestamp.seconds : 0));
 
             list.innerHTML = '';
             myHistoryData.forEach((d, index) => {
                 const status = d.status || 'Pending';
                 const statusClass = status === 'Confirmed' ? 'st-confirmed' : (status === 'Cancelled' ? 'st-cancelled' : 'st-pending');
-                let itemsSummary = d.i.length + ' Items';
                 
                 list.innerHTML += `
                 <div class="order-card" onclick="showHistoryInvoice(${index})">
@@ -417,32 +452,23 @@
         });
     }
 
-    // Function to show invoice of past order
     function showHistoryInvoice(index) {
         const d = myHistoryData[index];
         const list = document.getElementById('bill-list');
         list.innerHTML = '';
-        
-        // Populate items
         d.i.forEach(x => {
             list.innerHTML += `<div style="display:flex;justify-content:space-between;padding:8px 0; border-bottom:1px solid #eee;">
                 <span>${x.n} (${x.u}) x${x.q}</span>
                 <span>₹${x.p * x.q}</span>
             </div>`;
         });
-
-        // Update Total
         document.getElementById('bill-grand-total').innerText = d.t;
-        
-        // Update Title & Hide Slider
         document.getElementById('bill-title').innerText = "🧾 Order Invoice";
-        document.getElementById('sliderContainer').style.display = 'none'; // Hide slider for history
-        
-        // Show Modal
+        document.getElementById('sliderContainer').style.display = 'none'; 
         document.getElementById('bill-modal').style.display = 'flex';
     }
 
-    // --- UTILS (Slider, Images, etc) ---
+    // --- UTILS ---
     function initSlider() {
         const thumb = document.getElementById('sliderThumb');
         const container = document.getElementById('sliderContainer');
@@ -485,7 +511,6 @@
     }
 
     function openBillPreview() {
-        // Reset Title and Show Slider (for New Orders)
         document.getElementById('bill-title').innerText = "🧾 Confirm Order";
         document.getElementById('sliderContainer').style.display = 'block';
 
