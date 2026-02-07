@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Raju Kirana (Animated Pro)</title>
+    <title>Raju Kirana (Camera Fixed)</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6c5ce7">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -43,7 +43,6 @@
             position: relative; overflow: hidden;
         }
         .icon-btn:active { transform: scale(0.8); }
-        .icon-btn:hover { background: rgba(108, 92, 231, 0.1); transform: rotate(10deg); }
         
         .cart-icon-box { position: relative; margin: 0 10px; cursor: pointer; padding: 5px; transition: 0.3s; }
         .cart-icon-box.bump { animation: cartBounce 0.5s ease; }
@@ -55,7 +54,7 @@
             animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
-        /* BUTTONS WITH RIPPLE */
+        /* BUTTONS */
         .btn-small { 
             background: var(--text); color: var(--bg); border: none; padding: 8px 16px; 
             border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; 
@@ -69,7 +68,6 @@
             animation: popIn 0.3s backwards;
         }
         .qty-btn-c { width: 28px; height: 100%; background: transparent; border: none; color: white; font-weight: bold; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .qty-btn-c:active { opacity: 0.5; }
 
         /* PARCHI FAB (Pulse) */
         .parchi-fab { 
@@ -93,9 +91,8 @@
         .card-img { 
             height: 125px; background: rgba(0,0,0,0.03); border-radius: 16px; display: flex; 
             align-items: center; justify-content: center; overflow: hidden; margin-bottom: 10px; 
-            transition: 0.3s;
         }
-        .card img { max-width: 90%; max-height: 90%; object-fit: contain; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .card img { max-width: 90%; max-height: 90%; object-fit: contain; transition: 0.5s; }
         .card:hover img { transform: scale(1.1) rotate(2deg); }
         
         /* CATEGORIES */
@@ -103,7 +100,7 @@
         .cat-btn { 
             background: var(--card-bg); padding: 8px 18px; border-radius: 25px; font-weight: 600; 
             font-size: 13px; color: var(--text); border: 1px solid rgba(0,0,0,0.05); opacity: 0.7; 
-            white-space: nowrap; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            white-space: nowrap; transition: 0.3s;
         }
         .cat-btn.active { 
             background: var(--primary); color: white; opacity: 1; border-color: transparent; 
@@ -137,17 +134,16 @@
             animation: modalSpring 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
-        /* SEARCH & INPUTS */
+        /* UI HELPERS */
         .search-box { 
             width: 100%; padding: 14px 18px; border-radius: 14px; background: rgba(0,0,0,0.05); 
             border: 2px solid transparent; outline: none; color: var(--text); margin-bottom: 10px; 
             font-family: inherit; font-size: 15px; transition: 0.3s;
         }
-        .search-box:focus { background: white; border-color: var(--primary); box-shadow: 0 5px 15px rgba(108, 92, 231, 0.1); }
+        .search-box:focus { background: white; border-color: var(--primary); }
         .inp { width: 100%; padding: 15px; margin: 8px 0; border: none; border-radius: 14px; background: rgba(0,0,0,0.05); color: var(--text); font-family: inherit; font-weight: 600; transition:0.3s; }
-        .inp:focus { background: rgba(255,255,255,0.8); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-
-        /* ANIMATIONS KEYFRAMES */
+        
+        /* KEYFRAMES */
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes slideUpBounce { 0% { transform: translateY(100%); opacity: 0; } 70% { transform: translateY(-10px); } 100% { transform: translateY(0); opacity: 1; } }
@@ -157,22 +153,16 @@
         @keyframes cartBounce { 0% { transform: scale(1); } 40% { transform: scale(1.4) rotate(-10deg); } 80% { transform: scale(0.9); } 100% { transform: scale(1); } }
         @keyframes floatPulse { 0% { transform: translateY(0); box-shadow: 0 10px 25px rgba(255, 118, 117, 0.4); } 50% { transform: translateY(-6px); box-shadow: 0 15px 35px rgba(255, 118, 117, 0.6); } 100% { transform: translateY(0); box-shadow: 0 10px 25px rgba(255, 118, 117, 0.4); } }
         
-        /* FLYING ITEM */
-        .fly-item { 
-            position: fixed; z-index: 9999; width: 60px; height: 60px; border-radius: 50%; 
-            object-fit: cover; border: 3px solid white; pointer-events: none; 
-            transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1); 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
+        .fly-item { position: fixed; z-index: 9999; width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 3px solid white; pointer-events: none; transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
 
-        /* RIPPLE JS CSS */
+        /* RIPPLE */
         .ripple { position: absolute; border-radius: 50%; transform: scale(0); animation: ripple 0.6s linear; background: rgba(255, 255, 255, 0.4); pointer-events: none; }
         @keyframes ripple { to { transform: scale(4); opacity: 0; } }
 
         .slider-container { height: 50px; background: #e0e0e0; border-radius: 25px; position: relative; overflow: hidden; margin-top: 15px; transition: 0.3s; }
         .slider-container.active { background: var(--accent); transform: scale(1.02); }
         .slider-thumb { width: 42px; height: 42px; background: white; border-radius: 50%; position: absolute; top: 4px; left: 4px; display: flex; justify-content: center; align-items: center; color: var(--primary); font-weight: bold; cursor: grab; z-index: 2; transition: transform 0.1s, background 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-        .toast { position: fixed; bottom: 85px; left: 50%; transform: translate(-50%, 40px); background: #2d3436; color: white; padding: 12px 24px; border-radius: 50px; opacity: 0; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; z-index: 6000; font-size: 14px; font-weight: 600; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .toast { position: fixed; bottom: 85px; left: 50%; transform: translate(-50%, 40px); background: #2d3436; color: white; padding: 12px 24px; border-radius: 50px; opacity: 0; transition: 0.4s; pointer-events: none; z-index: 6000; font-size: 14px; font-weight: 600; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
         .toast.show { opacity: 1; transform: translate(-50%, 0); }
     </style>
 </head>
@@ -180,9 +170,8 @@
 
 <div id="loader" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9000;display:flex;justify-content:center;align-items:center; flex-direction:column;">
     <div style="width:50px;height:50px;border:5px solid #f3f3f3;border-top:5px solid #6c5ce7;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
-    <p style="margin-top:20px; font-weight:700; color:#6c5ce7; letter-spacing:1px; animation:pulse 1s infinite;">LOADING...</p>
 </div>
-<style>@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}} @keyframes pulse{50%{opacity:0.5}}</style>
+<style>@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>
 
 <div id="toast" class="toast">Success</div>
 
@@ -219,7 +208,7 @@
             <h3 style="margin:0; font-size:18px;">Business Panel 🛡️</h3>
             <div style="display:flex; justify-content:space-between; margin-top:15px;">
                 <div>Total Products<br><b style="font-size:22px;" id="adm-prod-count">0</b></div>
-                <div style="text-align:right;">Store Status<br><b style="font-size:22px; color:#55efc4;">Active</b></div>
+                <div style="text-align:right;">Status<br><b style="font-size:22px; color:#55efc4;">Active</b></div>
             </div>
             <button class="btn-small ripple-btn" style="background:rgba(255,255,255,0.25); width:100%; margin-top:15px; color:white;" onclick="showOrders()">View Order History</button>
         </div>
@@ -237,7 +226,7 @@
     <div class="fab ripple-btn" id="admin-fab" style="display:none;" onclick="openAddModal()">+</div>
     
     <div class="parchi-fab ripple-btn" onclick="document.getElementById('parchiInput').click()">📷</div>
-    <input type="file" id="parchiInput" hidden accept="image/*" onchange="handleParchiUpload()">
+    <input type="file" id="parchiInput" hidden accept="image/*" capture="environment" onchange="handleParchiUpload()">
 
     <div class="cart-bar" id="cart-bar" style="display:none;">
         <div><div style="font-size:11px; opacity:0.7;">TOTAL</div><div style="font-size:20px; font-weight:800;">₹<span id="cart-total">0</span></div></div>
@@ -248,7 +237,7 @@
 <div id="parchi-modal" class="overlay">
     <div class="modal-box">
         <h3>Parchi Order 📝</h3>
-        <p style="font-size:12px; color:gray; margin-bottom:10px;">Send handwritten list photo to Raju.</p>
+        <p style="font-size:12px; color:gray; margin-bottom:10px;">Photo click karke bhejein.</p>
         <img id="parchiPreview" src="" style="width:100%; height:200px; object-fit:contain; background:#f5f5f5; border-radius:10px; margin-bottom:15px;">
         <button id="sendParchiBtn" class="btn-small ripple-btn" style="width:100%; padding:15px; font-size:16px;" onclick="sendParchi()">Send to Raju 🚀</button>
         <button onclick="document.getElementById('parchi-modal').style.display='none'" style="margin-top:10px; background:none; border:none; color:var(--text); width:100%;">Cancel</button>
@@ -295,7 +284,6 @@
 <div id="history-modal" class="overlay"><div class="modal-box"><h3>Order History</h3><div id="history-list"></div><button class="btn-small ripple-btn" style="width:100%; margin-top:15px; background:#333;" onclick="document.getElementById('history-modal').style.display='none'">Close</button></div></div>
 
 <script>
-    // --- RIPPLE EFFECT ---
     document.addEventListener('click', function(e) {
         if (e.target.classList.contains('ripple-btn') || e.target.closest('.ripple-btn')) {
             const btn = e.target.classList.contains('ripple-btn') ? e.target : e.target.closest('.ripple-btn');
@@ -324,7 +312,6 @@
     window.onload = function() {
         if(localStorage.getItem('theme')==='dark') document.body.classList.add('dark-mode');
         const u = localStorage.getItem('raju_user');
-        
         const urlParams = new URLSearchParams(window.location.search);
         if(urlParams.get('order')) showBillMode();
         else if(urlParams.get('parchi')) showParchiMode();
@@ -373,18 +360,16 @@
         const g = document.getElementById('grid'); g.innerHTML = '';
         const term = document.getElementById('search').value.toLowerCase();
         const filtered = products.filter(p => (activeCat==='All'||p.cat===activeCat) && p.name.toLowerCase().includes(term));
-        if(filtered.length === 0) { g.innerHTML = `<div class="empty-state"><div class="empty-icon">🍞</div><h3>No Products Found</h3></div>`; return; }
+        if(filtered.length === 0) { g.innerHTML = `<div class="empty-state" style="grid-column:1/-1;text-align:center;padding:20px;opacity:0.6;font-size:20px;">🍞<br>No items found</div>`; return; }
         
         filtered.forEach((p, index) => {
             const q = cart[p.id]||0;
             const btn = q===0 ? `<button class="btn-small ripple-btn" onclick="updateQty('${p.id}',1)">ADD</button>` : `<div class="qty-compact"><button class="qty-btn-c" onclick="updateQty('${p.id}',-1)">−</button><span style="font-size:12px; font-weight:700; min-width:15px; text-align:center;">${q}</span><button class="qty-btn-c" onclick="updateQty('${p.id}',1)">+</button></div>`;
             const delBtn = isAdmin ? `<div style="position:absolute;top:5px;right:5px;background:rgba(255,255,255,0.8);padding:4px;border-radius:50%;font-size:10px;cursor:pointer;" onclick="delProd('${p.id}')">🗑️</div>` : '';
-            // Added animation-delay for staggered entry
             g.innerHTML += `<div class="card" style="animation: cardEntry 0.5s ease backwards ${index * 0.05}s;">${delBtn}<div class="card-img"><img id="img-${p.id}" src="${p.img}" loading="lazy" onerror="this.src='https://via.placeholder.com/150'"></div><div style="font-weight:700; font-size:14px; line-height:1.2;">${p.name}</div><div style="font-size:11px;color:gray; margin-bottom:5px;">${p.unit}</div><div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-weight:800;color:var(--primary);">₹${p.price}</span>${btn}</div></div>`;
         });
     }
 
-    // FLY TO CART ANIMATION
     function flyToCart(id) {
         const img = document.getElementById(`img-${id}`);
         const cartIcon = document.getElementById('header-cart');
