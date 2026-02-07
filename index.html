@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Raju Kirana (Parchi Order)</title>
+    <title>Raju Kirana (Animated Pro)</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6c5ce7">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -14,89 +14,186 @@
     <style>
         :root { 
             --primary: #6c5ce7; --secondary: #a29bfe; --accent: #00b894;
-            --bg: #dfe6e9; --text: #2d3436; --card-bg: rgba(255, 255, 255, 0.96); 
-            --glass: blur(12px) saturate(180%); --radius: 18px;
+            --bg: #dfe6e9; --text: #2d3436; --card-bg: rgba(255, 255, 255, 0.95); 
+            --glass: blur(16px) saturate(180%); --radius: 20px;
         }
         body.dark-mode { 
             --bg: #0f0c29; --text: #dfe6e9; --card-bg: rgba(30, 30, 30, 0.9); 
             --primary: #8e44ad;
         }
-        body { font-family: 'Outfit', sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 120px; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Outfit', sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 120px; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
         
-        /* HEADER */
-        .header { position: sticky; top: 0; z-index: 1000; padding: 15px 20px 10px; background: rgba(255,255,255,0.92); backdrop-filter: blur(15px); box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
-        .dark-mode .header { background: rgba(15, 12, 41, 0.95); }
+        /* HEADER ANIMATION */
+        .header { 
+            position: sticky; top: 0; z-index: 1000; padding: 15px 20px 10px; 
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(15px); 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); 
+            animation: slideDown 0.6s ease-out;
+        }
+        .dark-mode .header { background: rgba(15, 12, 41, 0.9); }
         
         .top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .brand { font-size: 22px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; }
+        .brand { font-size: 24px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; animation: fadeIn 1s ease; }
         
-        /* ICONS */
-        .icon-btn { width: 34px; height: 34px; border-radius: 50%; background: rgba(0,0,0,0.05); display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.2s; font-size: 16px; }
-        .icon-btn:active { transform: scale(0.9); }
-        .cart-icon-box { position: relative; margin: 0 8px; cursor: pointer; padding: 5px; }
-        .cart-badge { position: absolute; top: -2px; right: -5px; background: #ff4757; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; display: none; justify-content: center; align-items: center; font-weight: bold; border: 2px solid white; }
-
-        /* BUTTONS */
-        .btn-small { background: var(--text); color: var(--bg); border: none; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .qty-compact { display: flex; align-items: center; background: var(--primary); color: white; border-radius: 8px; height: 28px; padding: 0 4px; }
-        .qty-btn-c { width: 24px; height: 100%; background: transparent; border: none; color: white; font-weight: bold; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-
-        /* PARCHI FAB (New) */
-        .parchi-fab { position: fixed; bottom: 90px; left: 20px; background: #ff7675; color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 26px; box-shadow: 0 10px 25px rgba(255, 118, 117, 0.4); z-index: 2000; cursor: pointer; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 118, 117, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 118, 117, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 118, 117, 0); } }
-
-        /* TOGGLE & GRID */
-        .del-toggle-box { background: rgba(0,0,0,0.05); padding: 4px; border-radius: 12px; display: flex; margin-bottom: 15px; }
-        .del-opt { flex: 1; padding: 10px; text-align: center; font-size: 13px; font-weight: 700; border-radius: 10px; cursor: pointer; opacity: 0.6; transition: 0.3s; }
-        .del-opt.selected { background: white; color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.1); opacity: 1; }
-        .dark-mode .del-opt.selected { background: #444; color: white; }
-
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 10px 15px; }
-        .card { background: var(--card-bg); border-radius: 18px; padding: 10px; position: relative; animation: fadeInUp 0.4s; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.04); }
-        .card-img { height: 120px; background: rgba(0,0,0,0.03); border-radius: 14px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 8px; }
-        .card img { max-width: 90%; max-height: 90%; object-fit: contain; transition: 0.3s; }
+        /* ICONS & RIPPLE */
+        .icon-btn { 
+            width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,0.05); 
+            display: flex; justify-content: center; align-items: center; cursor: pointer; 
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            position: relative; overflow: hidden;
+        }
+        .icon-btn:active { transform: scale(0.8); }
+        .icon-btn:hover { background: rgba(108, 92, 231, 0.1); transform: rotate(10deg); }
         
-        .search-box { width: 100%; padding: 12px 15px; border-radius: 12px; background: rgba(0,0,0,0.05); border: none; outline: none; color: var(--text); margin-bottom: 10px; font-family: inherit; font-size: 15px; }
-        .cat-row { display: flex; gap: 8px; overflow-x: auto; padding: 0 15px 10px; scrollbar-width: none; }
-        .cat-btn { background: var(--card-bg); padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; color: var(--text); border: 1px solid rgba(0,0,0,0.05); opacity: 0.7; white-space: nowrap; }
-        .cat-btn.active { background: var(--primary); color: white; opacity: 1; border-color: transparent; }
+        .cart-icon-box { position: relative; margin: 0 10px; cursor: pointer; padding: 5px; transition: 0.3s; }
+        .cart-icon-box.bump { animation: cartBounce 0.5s ease; }
         
-        .cart-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: #2d3436; color: white; padding: 12px 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 15px 40px rgba(0,0,0,0.3); z-index: 3000; animation: slideUp 0.3s; }
-        .fab { position: fixed; bottom: 90px; right: 20px; background: var(--text); color: var(--bg); width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 26px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 2000; cursor: pointer; }
-        
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(6px); }
-        .modal-box { background: var(--bg); color: var(--text); padding: 25px; width: 88%; max-width: 360px; border-radius: 24px; max-height: 85vh; overflow-y: auto; animation: popIn 0.3s; box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
-        .inp { width: 100%; padding: 14px; margin: 8px 0; border: none; border-radius: 12px; background: rgba(0,0,0,0.05); color: var(--text); font-family: inherit; font-weight: 600; }
-        .admin-dash { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(108, 92, 231, 0.3); }
-        
-        .empty-state { grid-column: 1 / -1; text-align: center; padding: 40px 20px; opacity: 0.7; }
-        .empty-icon { font-size: 50px; margin-bottom: 10px; filter: grayscale(1); }
+        .cart-badge { 
+            position: absolute; top: -5px; right: -8px; background: #ff4757; color: white; 
+            border-radius: 50%; width: 20px; height: 20px; font-size: 11px; display: none; 
+            justify-content: center; align-items: center; font-weight: bold; border: 2px solid white; 
+            animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
 
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        /* BUTTONS WITH RIPPLE */
+        .btn-small { 
+            background: var(--text); color: var(--bg); border: none; padding: 8px 16px; 
+            border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; 
+            transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: relative; overflow: hidden;
+        }
+        .btn-small:active { transform: scale(0.95); }
+        
+        .qty-compact { 
+            display: flex; align-items: center; background: var(--primary); color: white; 
+            border-radius: 10px; height: 32px; padding: 0 4px; box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+            animation: popIn 0.3s backwards;
+        }
+        .qty-btn-c { width: 28px; height: 100%; background: transparent; border: none; color: white; font-weight: bold; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .qty-btn-c:active { opacity: 0.5; }
 
-        .slider-container { height: 50px; background: #e0e0e0; border-radius: 25px; position: relative; overflow: hidden; margin-top: 15px; }
-        .slider-container.active { background: var(--accent); }
+        /* PARCHI FAB (Pulse) */
+        .parchi-fab { 
+            position: fixed; bottom: 100px; left: 20px; background: #ff7675; color: white; 
+            width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; 
+            align-items: center; font-size: 28px; box-shadow: 0 10px 25px rgba(255, 118, 117, 0.4); 
+            z-index: 2000; cursor: pointer; animation: floatPulse 3s infinite ease-in-out;
+            transition: 0.3s;
+        }
+        .parchi-fab:active { transform: scale(0.9); }
+
+        /* GRID & CARDS */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 10px 15px; }
+        .card { 
+            background: var(--card-bg); border-radius: 20px; padding: 12px; position: relative; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid rgba(255,255,255,0.5);
+            transition: all 0.3s ease;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+        
+        .card-img { 
+            height: 125px; background: rgba(0,0,0,0.03); border-radius: 16px; display: flex; 
+            align-items: center; justify-content: center; overflow: hidden; margin-bottom: 10px; 
+            transition: 0.3s;
+        }
+        .card img { max-width: 90%; max-height: 90%; object-fit: contain; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .card:hover img { transform: scale(1.1) rotate(2deg); }
+        
+        /* CATEGORIES */
+        .cat-row { display: flex; gap: 10px; overflow-x: auto; padding: 5px 15px 15px; scrollbar-width: none; }
+        .cat-btn { 
+            background: var(--card-bg); padding: 8px 18px; border-radius: 25px; font-weight: 600; 
+            font-size: 13px; color: var(--text); border: 1px solid rgba(0,0,0,0.05); opacity: 0.7; 
+            white-space: nowrap; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .cat-btn.active { 
+            background: var(--primary); color: white; opacity: 1; border-color: transparent; 
+            transform: scale(1.05); box-shadow: 0 8px 20px rgba(108, 92, 231, 0.3);
+        }
+        
+        /* BOTTOM BAR */
+        .cart-bar { 
+            position: fixed; bottom: 25px; left: 15px; right: 15px; background: #2d3436; color: white; 
+            padding: 12px 25px; border-radius: 22px; display: flex; justify-content: space-between; 
+            align-items: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3); z-index: 3000; 
+            animation: slideUpBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .fab { 
+            position: fixed; bottom: 100px; right: 20px; background: var(--text); color: var(--bg); 
+            width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; 
+            align-items: center; font-size: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+            z-index: 2000; cursor: pointer; transition: 0.3s; animation: popIn 0.5s 1s backwards;
+        }
+        
+        /* MODALS */
+        .overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); 
+            z-index: 5000; display: none; justify-content: center; align-items: center; 
+            backdrop-filter: blur(8px); animation: fadeIn 0.3s;
+        }
+        .modal-box { 
+            background: var(--bg); color: var(--text); padding: 25px; width: 88%; max-width: 360px; 
+            border-radius: 28px; max-height: 85vh; overflow-y: auto; 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5); 
+            animation: modalSpring 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        /* SEARCH & INPUTS */
+        .search-box { 
+            width: 100%; padding: 14px 18px; border-radius: 14px; background: rgba(0,0,0,0.05); 
+            border: 2px solid transparent; outline: none; color: var(--text); margin-bottom: 10px; 
+            font-family: inherit; font-size: 15px; transition: 0.3s;
+        }
+        .search-box:focus { background: white; border-color: var(--primary); box-shadow: 0 5px 15px rgba(108, 92, 231, 0.1); }
+        .inp { width: 100%; padding: 15px; margin: 8px 0; border: none; border-radius: 14px; background: rgba(0,0,0,0.05); color: var(--text); font-family: inherit; font-weight: 600; transition:0.3s; }
+        .inp:focus { background: rgba(255,255,255,0.8); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+
+        /* ANIMATIONS KEYFRAMES */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideUpBounce { 0% { transform: translateY(100%); opacity: 0; } 70% { transform: translateY(-10px); } 100% { transform: translateY(0); opacity: 1; } }
+        @keyframes modalSpring { 0% { transform: scale(0.7) translateY(20px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
+        @keyframes popIn { 0% { transform: scale(0); } 80% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        @keyframes cardEntry { from { opacity: 0; transform: translateY(30px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes cartBounce { 0% { transform: scale(1); } 40% { transform: scale(1.4) rotate(-10deg); } 80% { transform: scale(0.9); } 100% { transform: scale(1); } }
+        @keyframes floatPulse { 0% { transform: translateY(0); box-shadow: 0 10px 25px rgba(255, 118, 117, 0.4); } 50% { transform: translateY(-6px); box-shadow: 0 15px 35px rgba(255, 118, 117, 0.6); } 100% { transform: translateY(0); box-shadow: 0 10px 25px rgba(255, 118, 117, 0.4); } }
+        
+        /* FLYING ITEM */
+        .fly-item { 
+            position: fixed; z-index: 9999; width: 60px; height: 60px; border-radius: 50%; 
+            object-fit: cover; border: 3px solid white; pointer-events: none; 
+            transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* RIPPLE JS CSS */
+        .ripple { position: absolute; border-radius: 50%; transform: scale(0); animation: ripple 0.6s linear; background: rgba(255, 255, 255, 0.4); pointer-events: none; }
+        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+
+        .slider-container { height: 50px; background: #e0e0e0; border-radius: 25px; position: relative; overflow: hidden; margin-top: 15px; transition: 0.3s; }
+        .slider-container.active { background: var(--accent); transform: scale(1.02); }
         .slider-thumb { width: 42px; height: 42px; background: white; border-radius: 50%; position: absolute; top: 4px; left: 4px; display: flex; justify-content: center; align-items: center; color: var(--primary); font-weight: bold; cursor: grab; z-index: 2; transition: transform 0.1s, background 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-        .toast { position: fixed; bottom: 85px; left: 50%; transform: translate(-50%, 20px); background: #2d3436; color: white; padding: 12px 24px; border-radius: 50px; opacity: 0; transition: 0.3s; pointer-events: none; z-index: 6000; font-size: 14px; font-weight: 600; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .toast { position: fixed; bottom: 85px; left: 50%; transform: translate(-50%, 40px); background: #2d3436; color: white; padding: 12px 24px; border-radius: 50px; opacity: 0; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; z-index: 6000; font-size: 14px; font-weight: 600; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
         .toast.show { opacity: 1; transform: translate(-50%, 0); }
     </style>
 </head>
 <body>
 
-<div id="loader" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9000;display:flex;justify-content:center;align-items:center;"><div style="width:40px;height:40px;border:4px solid #f3f3f3;border-top:4px solid #6c5ce7;border-radius:50%;animation:spin 1s linear infinite;"></div></div>
-<style>@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>
+<div id="loader" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9000;display:flex;justify-content:center;align-items:center; flex-direction:column;">
+    <div style="width:50px;height:50px;border:5px solid #f3f3f3;border-top:5px solid #6c5ce7;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+    <p style="margin-top:20px; font-weight:700; color:#6c5ce7; letter-spacing:1px; animation:pulse 1s infinite;">LOADING...</p>
+</div>
+<style>@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}} @keyframes pulse{50%{opacity:0.5}}</style>
+
 <div id="toast" class="toast">Success</div>
 
 <div id="login-view" class="overlay" style="display: flex; background: var(--primary);">
     <div class="modal-box glass" style="background: rgba(255,255,255,0.98); text-align:center;">
-        <div style="font-size:50px; margin-bottom:10px;">🛍️</div>
+        <div style="font-size:60px; margin-bottom:10px; animation: cartBounce 1s infinite;">🛍️</div>
         <h2 style="color:var(--primary); margin:0 0 5px;">Raju Kirana</h2>
         <p style="margin-bottom:20px; font-size:13px; color:#777;">Aapki Apni Digital Dukan</p>
         <input type="text" id="loginName" class="inp" placeholder="Enter Your Name">
         <input type="tel" id="loginPhone" class="inp" placeholder="Mobile Number">
-        <button class="btn-small" style="width:100%; padding:15px; font-size:16px; margin-top:10px;" onclick="handleLogin()">Login to Shop</button>
+        <button class="btn-small ripple-btn" style="width:100%; padding:15px; font-size:16px; margin-top:10px;" onclick="handleLogin()">Login to Shop</button>
     </div>
 </div>
 
@@ -105,46 +202,46 @@
         <div class="top-row">
             <div class="brand">🛍️ Raju Kirana</div>
             <div style="display:flex; align-items:center;">
-                <div class="icon-btn" onclick="shareApp()" style="margin-right:8px;" title="Share App">📤</div>
-                <div class="cart-icon-box" onclick="openBillPreview()">
+                <div class="icon-btn ripple-btn" onclick="shareApp()" style="margin-right:8px;" title="Share App">📤</div>
+                <div class="cart-icon-box" id="header-cart" onclick="openBillPreview()">
                     <span style="font-size:24px;">🛒</span>
                     <div id="cart-badge" class="cart-badge">0</div>
                 </div>
-                <div class="icon-btn" onclick="toggleTheme()" style="margin-right:8px;">🌓</div>
+                <div class="icon-btn ripple-btn" onclick="toggleTheme()" style="margin-right:8px;">🌓</div>
                 <div onclick="handleLogout()" style="padding:8px 12px; background:rgba(0,0,0,0.05); border-radius:18px; font-size:11px; font-weight:700; cursor:pointer;">EXIT</div>
             </div>
         </div>
         <input type="text" id="search" class="search-box" placeholder="Search atta, dal, rice..." onkeyup="render()">
     </div>
 
-    <div id="admin-panel" style="display:none; padding:0 15px;">
+    <div id="admin-panel" style="display:none; padding:0 15px; animation: fadeIn 1s;">
         <div class="admin-dash">
             <h3 style="margin:0; font-size:18px;">Business Panel 🛡️</h3>
             <div style="display:flex; justify-content:space-between; margin-top:15px;">
                 <div>Total Products<br><b style="font-size:22px;" id="adm-prod-count">0</b></div>
-                <div style="text-align:right;">Status<br><b style="font-size:22px; color:#55efc4;">Active</b></div>
+                <div style="text-align:right;">Store Status<br><b style="font-size:22px; color:#55efc4;">Active</b></div>
             </div>
-            <button class="btn-small" style="background:rgba(255,255,255,0.25); width:100%; margin-top:15px; color:white;" onclick="showOrders()">View Order History</button>
+            <button class="btn-small ripple-btn" style="background:rgba(255,255,255,0.25); width:100%; margin-top:15px; color:white;" onclick="showOrders()">View Order History</button>
         </div>
     </div>
 
     <div class="cat-row">
-        <button class="cat-btn active" onclick="filter('All', this)">All</button>
-        <button class="cat-btn" onclick="filter('Rashan', this)">Rashan</button>
-        <button class="cat-btn" onclick="filter('Snacks', this)">Snacks</button>
-        <button class="cat-btn" onclick="filter('Offers', this)">Offers</button>
+        <button class="cat-btn active ripple-btn" onclick="filter('All', this)">All</button>
+        <button class="cat-btn ripple-btn" onclick="filter('Rashan', this)">Rashan</button>
+        <button class="cat-btn ripple-btn" onclick="filter('Snacks', this)">Snacks</button>
+        <button class="cat-btn ripple-btn" onclick="filter('Offers', this)">Offers</button>
     </div>
 
     <div class="grid" id="grid"></div>
     
-    <div class="fab" id="admin-fab" style="display:none;" onclick="openAddModal()">+</div>
+    <div class="fab ripple-btn" id="admin-fab" style="display:none;" onclick="openAddModal()">+</div>
     
-    <div class="parchi-fab" onclick="document.getElementById('parchiInput').click()">📷</div>
+    <div class="parchi-fab ripple-btn" onclick="document.getElementById('parchiInput').click()">📷</div>
     <input type="file" id="parchiInput" hidden accept="image/*" onchange="handleParchiUpload()">
 
     <div class="cart-bar" id="cart-bar" style="display:none;">
         <div><div style="font-size:11px; opacity:0.7;">TOTAL</div><div style="font-size:20px; font-weight:800;">₹<span id="cart-total">0</span></div></div>
-        <div onclick="openBillPreview()" style="background:white; color:black; padding:10px 24px; border-radius:25px; font-weight:700; font-size:14px; cursor:pointer;">Checkout ➜</div>
+        <div onclick="openBillPreview()" class="ripple-btn" style="background:white; color:black; padding:10px 24px; border-radius:25px; font-weight:700; font-size:14px; cursor:pointer;">Checkout ➜</div>
     </div>
 </div>
 
@@ -153,7 +250,7 @@
         <h3>Parchi Order 📝</h3>
         <p style="font-size:12px; color:gray; margin-bottom:10px;">Send handwritten list photo to Raju.</p>
         <img id="parchiPreview" src="" style="width:100%; height:200px; object-fit:contain; background:#f5f5f5; border-radius:10px; margin-bottom:15px;">
-        <button id="sendParchiBtn" class="btn-small" style="width:100%; padding:15px; font-size:16px;" onclick="sendParchi()">Send to Raju 🚀</button>
+        <button id="sendParchiBtn" class="btn-small ripple-btn" style="width:100%; padding:15px; font-size:16px;" onclick="sendParchi()">Send to Raju 🚀</button>
         <button onclick="document.getElementById('parchi-modal').style.display='none'" style="margin-top:10px; background:none; border:none; color:var(--text); width:100%;">Cancel</button>
     </div>
 </div>
@@ -170,7 +267,7 @@
             <input type="number" id="pPrice" class="inp" placeholder="Price (₹)">
         </div>
         <select id="pCat" class="inp"><option>Rashan</option><option>Snacks</option><option>Offers</option></select>
-        <button id="saveBtn" class="btn-small" style="width:100%; font-size:16px; padding:15px; margin-top:10px;" onclick="saveProduct()">Save Product</button>
+        <button id="saveBtn" class="btn-small ripple-btn" style="width:100%; font-size:16px; padding:15px; margin-top:10px;" onclick="saveProduct()">Save Product</button>
         <button onclick="document.getElementById('add-modal').style.display='none'" style="margin-top:10px; background:none; border:none; color:var(--text); width:100%; font-weight:600;">Cancel</button>
     </div>
 </div>
@@ -195,17 +292,28 @@
     </div>
 </div>
 
-<div id="history-modal" class="overlay"><div class="modal-box"><h3>Order History</h3><div id="history-list"></div><button class="btn-small" style="width:100%; margin-top:15px; background:#333;" onclick="document.getElementById('history-modal').style.display='none'">Close</button></div></div>
+<div id="history-modal" class="overlay"><div class="modal-box"><h3>Order History</h3><div id="history-list"></div><button class="btn-small ripple-btn" style="width:100%; margin-top:15px; background:#333;" onclick="document.getElementById('history-modal').style.display='none'">Close</button></div></div>
 
 <script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyAYKEYZZVtq9e8k9LemxxSBEDU9oie7vjI",
-        authDomain: "raju-kirana.firebaseapp.com",
-        projectId: "raju-kirana",
-        storageBucket: "raju-kirana.firebasestorage.app",
-        messagingSenderId: "9931410245",
-        appId: "1:9931410245:web:97e3237c29a85c06e84c2c"
-    };
+    // --- RIPPLE EFFECT ---
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('ripple-btn') || e.target.closest('.ripple-btn')) {
+            const btn = e.target.classList.contains('ripple-btn') ? e.target : e.target.closest('.ripple-btn');
+            const circle = document.createElement('span');
+            const diameter = Math.max(btn.clientWidth, btn.clientHeight);
+            const radius = diameter / 2;
+            const rect = btn.getBoundingClientRect();
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${e.clientX - rect.left - radius}px`;
+            circle.style.top = `${e.clientY - rect.top - radius}px`;
+            circle.classList.add('ripple');
+            const ripple = btn.getElementsByClassName('ripple')[0];
+            if (ripple) { ripple.remove(); }
+            btn.appendChild(circle);
+        }
+    });
+
+    const firebaseConfig = { apiKey: "AIzaSyAYKEYZZVtq9e8k9LemxxSBEDU9oie7vjI", authDomain: "raju-kirana.firebaseapp.com", projectId: "raju-kirana", storageBucket: "raju-kirana.firebasestorage.app", messagingSenderId: "9931410245", appId: "1:9931410245:web:97e3237c29a85c06e84c2c" };
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
@@ -266,15 +374,37 @@
         const term = document.getElementById('search').value.toLowerCase();
         const filtered = products.filter(p => (activeCat==='All'||p.cat===activeCat) && p.name.toLowerCase().includes(term));
         if(filtered.length === 0) { g.innerHTML = `<div class="empty-state"><div class="empty-icon">🍞</div><h3>No Products Found</h3></div>`; return; }
-        filtered.forEach(p => {
+        
+        filtered.forEach((p, index) => {
             const q = cart[p.id]||0;
-            const btn = q===0 ? `<button class="btn-small" onclick="updateQty('${p.id}',1)">ADD</button>` : `<div class="qty-compact"><button class="qty-btn-c" onclick="updateQty('${p.id}',-1)">−</button><span style="font-size:12px; font-weight:700; min-width:15px; text-align:center;">${q}</span><button class="qty-btn-c" onclick="updateQty('${p.id}',1)">+</button></div>`;
+            const btn = q===0 ? `<button class="btn-small ripple-btn" onclick="updateQty('${p.id}',1)">ADD</button>` : `<div class="qty-compact"><button class="qty-btn-c" onclick="updateQty('${p.id}',-1)">−</button><span style="font-size:12px; font-weight:700; min-width:15px; text-align:center;">${q}</span><button class="qty-btn-c" onclick="updateQty('${p.id}',1)">+</button></div>`;
             const delBtn = isAdmin ? `<div style="position:absolute;top:5px;right:5px;background:rgba(255,255,255,0.8);padding:4px;border-radius:50%;font-size:10px;cursor:pointer;" onclick="delProd('${p.id}')">🗑️</div>` : '';
-            g.innerHTML += `<div class="card">${delBtn}<div class="card-img"><img src="${p.img}" loading="lazy" onerror="this.src='https://via.placeholder.com/150'"></div><div style="font-weight:700; font-size:14px; line-height:1.2;">${p.name}</div><div style="font-size:11px;color:gray; margin-bottom:5px;">${p.unit}</div><div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-weight:800;color:var(--primary);">₹${p.price}</span>${btn}</div></div>`;
+            // Added animation-delay for staggered entry
+            g.innerHTML += `<div class="card" style="animation: cardEntry 0.5s ease backwards ${index * 0.05}s;">${delBtn}<div class="card-img"><img id="img-${p.id}" src="${p.img}" loading="lazy" onerror="this.src='https://via.placeholder.com/150'"></div><div style="font-weight:700; font-size:14px; line-height:1.2;">${p.name}</div><div style="font-size:11px;color:gray; margin-bottom:5px;">${p.unit}</div><div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-weight:800;color:var(--primary);">₹${p.price}</span>${btn}</div></div>`;
         });
     }
 
-    function updateQty(id, chg) { if(!cart[id]) cart[id]=0; cart[id]+=chg; if(cart[id]<=0) delete cart[id]; render(); updateFooter(); }
+    // FLY TO CART ANIMATION
+    function flyToCart(id) {
+        const img = document.getElementById(`img-${id}`);
+        const cartIcon = document.getElementById('header-cart');
+        if (img && cartIcon) {
+            const iRect = img.getBoundingClientRect();
+            const cRect = cartIcon.getBoundingClientRect();
+            const c = img.cloneNode();
+            c.classList.add('fly-item');
+            c.style.top = `${iRect.top}px`; c.style.left = `${iRect.left}px`; c.style.width = `${iRect.width}px`;
+            document.body.appendChild(c);
+            setTimeout(() => { c.style.top = `${cRect.top}px`; c.style.left = `${cRect.left}px`; c.style.width = '20px'; c.style.height = '20px'; c.style.opacity = '0'; }, 50);
+            setTimeout(() => { c.remove(); cartIcon.classList.add('bump'); setTimeout(()=>cartIcon.classList.remove('bump'), 500); }, 750);
+        }
+    }
+
+    function updateQty(id, chg) { 
+        if(chg > 0) flyToCart(id);
+        if(!cart[id]) cart[id]=0; cart[id]+=chg; if(cart[id]<=0) delete cart[id]; 
+        render(); updateFooter(); 
+    }
     
     function updateFooter() {
         let t = 0; let c = 0; for(let id in cart) { t += products.find(x=>x.id==id).price * cart[id]; c += cart[id]; }
@@ -305,7 +435,6 @@
         }
     }
 
-    // --- PARCHI LOGIC ---
     function handleParchiUpload() {
         const f = document.getElementById('parchiInput').files[0];
         if(f) {
@@ -348,7 +477,6 @@
         });
     }
 
-    // --- PRODUCT UPLOAD ---
     function handleImageUpload() {
         const f = document.getElementById('fileInput').files[0];
         if(f) {
