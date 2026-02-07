@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Raju Kirana (Cart Edition)</title>
+    <title>Raju Kirana (Fast & Shareable)</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6c5ce7">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -14,74 +14,70 @@
     <style>
         :root { 
             --primary: #6c5ce7; --secondary: #a29bfe; --accent: #00b894;
-            --bg: #dfe6e9; --text: #2d3436; --card-bg: rgba(255, 255, 255, 0.9); 
-            --glass: blur(12px) saturate(180%); --radius: 20px;
+            --bg: #dfe6e9; --text: #2d3436; --card-bg: rgba(255, 255, 255, 0.96); 
+            --glass: blur(12px) saturate(180%); --radius: 18px;
         }
         body.dark-mode { 
-            --bg: #0f0c29; --text: #dfe6e9; --card-bg: rgba(30, 30, 30, 0.85); 
+            --bg: #0f0c29; --text: #dfe6e9; --card-bg: rgba(30, 30, 30, 0.9); 
             --primary: #8e44ad;
         }
-        body { font-family: 'Outfit', sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 120px; transition: 0.4s; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Outfit', sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 120px; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
         
-        /* HEADER & CART ICON */
-        .header { position: sticky; top: 0; z-index: 1000; padding: 15px 20px 10px; background: rgba(255,255,255,0.9); backdrop-filter: blur(15px); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        /* HEADER */
+        .header { position: sticky; top: 0; z-index: 1000; padding: 15px 20px 10px; background: rgba(255,255,255,0.92); backdrop-filter: blur(15px); box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
         .dark-mode .header { background: rgba(15, 12, 41, 0.95); }
         
-        .top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .brand { font-size: 22px; font-weight: 800; color: var(--primary); }
+        .top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .brand { font-size: 22px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; }
         
-        /* CART ICON STYLES */
-        .cart-icon-box { position: relative; margin-right: 15px; cursor: pointer; transition: 0.2s; padding: 5px; }
-        .cart-icon-box:active { transform: scale(0.9); }
-        .cart-badge { 
-            position: absolute; top: -5px; right: -8px; 
-            background: #ff4757; color: white; border-radius: 50%; 
-            width: 18px; height: 18px; font-size: 10px; 
-            display: none; justify-content: center; align-items: center; 
-            font-weight: bold; border: 2px solid white; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2); animation: popIn 0.3s;
-        }
-        .dark-mode .cart-badge { border: 2px solid #333; }
+        /* ICONS & BUTTONS */
+        .icon-btn { width: 34px; height: 34px; border-radius: 50%; background: rgba(0,0,0,0.05); display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.2s; font-size: 16px; }
+        .icon-btn:active { transform: scale(0.9); }
+        
+        .cart-icon-box { position: relative; margin: 0 8px; cursor: pointer; padding: 5px; }
+        .cart-badge { position: absolute; top: -2px; right: -5px; background: #ff4757; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; display: none; justify-content: center; align-items: center; font-weight: bold; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
-        /* COMPACT BUTTONS */
         .btn-small { background: var(--text); color: var(--bg); border: none; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .qty-compact { display: flex; align-items: center; background: var(--primary); color: white; border-radius: 8px; height: 28px; padding: 0 4px; box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3); }
-        .qty-btn-c { width: 24px; height: 100%; background: transparent; border: none; color: white; font-weight: bold; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .qty-compact { display: flex; align-items: center; background: var(--primary); color: white; border-radius: 8px; height: 28px; padding: 0 4px; }
+        .qty-btn-c { width: 24px; height: 100%; background: transparent; border: none; color: white; font-weight: bold; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        /* DELIVERY TOGGLE */
-        .del-toggle-box { background: rgba(0,0,0,0.05); padding: 5px; border-radius: 15px; display: flex; margin-bottom: 15px; }
-        .del-opt { flex: 1; padding: 10px; text-align: center; font-size: 13px; font-weight: 700; border-radius: 12px; cursor: pointer; transition: 0.3s; opacity: 0.6; }
-        .del-opt.selected { background: white; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1); opacity: 1; }
-        .dark-mode .del-opt.selected { background: #333; color: white; }
+        /* TOGGLE & GRID */
+        .del-toggle-box { background: rgba(0,0,0,0.05); padding: 4px; border-radius: 12px; display: flex; margin-bottom: 15px; }
+        .del-opt { flex: 1; padding: 10px; text-align: center; font-size: 13px; font-weight: 700; border-radius: 10px; cursor: pointer; opacity: 0.6; transition: 0.3s; }
+        .del-opt.selected { background: white; color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.1); opacity: 1; }
+        .dark-mode .del-opt.selected { background: #444; color: white; }
 
-        /* GRID & UI */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 10px 15px; }
-        .card { background: var(--card-bg); border-radius: 18px; padding: 10px; position: relative; animation: fadeInUp 0.5s; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
-        .card-img { height: 120px; background: rgba(0,0,0,0.03); border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 8px; }
-        .card img { max-width: 90%; max-height: 90%; object-fit: contain; }
+        .card { background: var(--card-bg); border-radius: 18px; padding: 10px; position: relative; animation: fadeInUp 0.4s; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.04); }
+        .card-img { height: 120px; background: rgba(0,0,0,0.03); border-radius: 14px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 8px; }
+        .card img { max-width: 90%; max-height: 90%; object-fit: contain; transition: 0.3s; }
         
-        .search-box { width: 100%; padding: 12px 15px; border-radius: 12px; background: rgba(0,0,0,0.05); border: none; outline: none; color: var(--text); margin-bottom: 10px; }
-        .cat-row { display: flex; gap: 8px; overflow-x: auto; padding: 5px 15px; scrollbar-width: none; }
-        .cat-btn { background: var(--card-bg); padding: 6px 16px; border-radius: 30px; font-weight: 600; font-size: 12px; color: var(--text); border: 1px solid rgba(0,0,0,0.05); opacity: 0.7; white-space: nowrap; }
-        .cat-btn.active { background: var(--primary); color: white; opacity: 1; border-color: transparent; }
+        /* UI HELPERS */
+        .search-box { width: 100%; padding: 12px 15px; border-radius: 12px; background: rgba(0,0,0,0.05); border: none; outline: none; color: var(--text); margin-bottom: 10px; font-family: inherit; font-size: 15px; }
+        .cat-row { display: flex; gap: 8px; overflow-x: auto; padding: 0 15px 10px; scrollbar-width: none; }
+        .cat-btn { background: var(--card-bg); padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; color: var(--text); border: 1px solid rgba(0,0,0,0.05); opacity: 0.7; white-space: nowrap; }
+        .cat-btn.active { background: var(--primary); color: white; opacity: 1; border-color: transparent; box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3); }
         
-        .cart-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: #2d3436; color: white; padding: 10px 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); z-index: 3000; animation: slideUp 0.3s; }
-        .fab { position: fixed; bottom: 90px; right: 20px; background: var(--text); color: var(--bg); width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 2000; cursor: pointer; }
+        .cart-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: #2d3436; color: white; padding: 12px 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 15px 40px rgba(0,0,0,0.3); z-index: 3000; animation: slideUp 0.3s; }
+        .fab { position: fixed; bottom: 90px; right: 20px; background: var(--text); color: var(--bg); width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 26px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 2000; cursor: pointer; }
         
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
-        .modal-box { background: var(--bg); color: var(--text); padding: 25px; width: 90%; max-width: 360px; border-radius: 25px; max-height: 85vh; overflow-y: auto; animation: popIn 0.3s; }
-        .inp { width: 100%; padding: 12px; margin: 8px 0; border: none; border-radius: 10px; background: rgba(0,0,0,0.05); color: var(--text); font-family: inherit; font-weight: 600; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(6px); }
+        .modal-box { background: var(--bg); color: var(--text); padding: 25px; width: 88%; max-width: 360px; border-radius: 24px; max-height: 85vh; overflow-y: auto; animation: popIn 0.3s; box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
+        .inp { width: 100%; padding: 14px; margin: 8px 0; border: none; border-radius: 12px; background: rgba(0,0,0,0.05); color: var(--text); font-family: inherit; font-weight: 600; }
         .admin-dash { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(108, 92, 231, 0.3); }
+        
+        /* EMPTY STATE CSS */
+        .empty-state { grid-column: 1 / -1; text-align: center; padding: 40px 20px; opacity: 0.7; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .empty-icon { font-size: 50px; margin-bottom: 10px; filter: grayscale(1); }
 
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        /* Slider */
         .slider-container { height: 50px; background: #e0e0e0; border-radius: 25px; position: relative; overflow: hidden; margin-top: 15px; }
         .slider-container.active { background: var(--accent); }
-        .slider-thumb { width: 42px; height: 42px; background: white; border-radius: 50%; position: absolute; top: 4px; left: 4px; display: flex; justify-content: center; align-items: center; color: var(--primary); font-weight: bold; cursor: grab; z-index: 2; transition: transform 0.1s, background 0.3s; }
-        .toast { position: fixed; bottom: 80px; left: 50%; transform: translate(-50%, 20px); background: #333; color: white; padding: 10px 20px; border-radius: 50px; opacity: 0; transition: 0.3s; pointer-events: none; z-index: 6000; font-size: 13px; width: max-content; }
+        .slider-thumb { width: 42px; height: 42px; background: white; border-radius: 50%; position: absolute; top: 4px; left: 4px; display: flex; justify-content: center; align-items: center; color: var(--primary); font-weight: bold; cursor: grab; z-index: 2; transition: transform 0.1s, background 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .toast { position: fixed; bottom: 85px; left: 50%; transform: translate(-50%, 20px); background: #2d3436; color: white; padding: 12px 24px; border-radius: 50px; opacity: 0; transition: 0.3s; pointer-events: none; z-index: 6000; font-size: 14px; font-weight: 600; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
         .toast.show { opacity: 1; transform: translate(-50%, 0); }
     </style>
 </head>
@@ -92,13 +88,13 @@
 <div id="toast" class="toast">Success</div>
 
 <div id="login-view" class="overlay" style="display: flex; background: var(--primary);">
-    <div class="modal-box glass" style="background: rgba(255,255,255,0.95); text-align:center;">
+    <div class="modal-box glass" style="background: rgba(255,255,255,0.98); text-align:center;">
         <div style="font-size:50px; margin-bottom:10px;">🛍️</div>
         <h2 style="color:var(--primary); margin:0 0 5px;">Raju Kirana</h2>
-        <p style="margin-bottom:20px; font-size:12px; color:#777;">Gao ki Apni Dukan</p>
-        <input type="text" id="loginName" class="inp" placeholder="Your Name">
+        <p style="margin-bottom:20px; font-size:13px; color:#777;">Aapki Apni Digital Dukan</p>
+        <input type="text" id="loginName" class="inp" placeholder="Enter Your Name">
         <input type="tel" id="loginPhone" class="inp" placeholder="Mobile Number">
-        <button class="btn-small" style="width:100%; padding:14px; font-size:16px; margin-top:10px;" onclick="handleLogin()">Login Now</button>
+        <button class="btn-small" style="width:100%; padding:15px; font-size:16px; margin-top:10px;" onclick="handleLogin()">Login to Shop</button>
     </div>
 </div>
 
@@ -106,27 +102,29 @@
     <div class="header">
         <div class="top-row">
             <div class="brand">🛍️ Raju Kirana</div>
-            <div style="display:flex; align-items:center; gap:10px;">
+            <div style="display:flex; align-items:center;">
+                <div class="icon-btn" onclick="shareApp()" style="margin-right:8px;" title="Share App">📤</div>
+                
                 <div class="cart-icon-box" onclick="openBillPreview()">
-                    <span style="font-size:22px;">🛒</span>
+                    <span style="font-size:24px;">🛒</span>
                     <div id="cart-badge" class="cart-badge">0</div>
                 </div>
 
-                <div onclick="toggleTheme()" style="padding:8px; background:rgba(0,0,0,0.05); border-radius:50%; cursor:pointer;">🌓</div>
-                <div onclick="handleLogout()" style="padding:8px 12px; background:rgba(0,0,0,0.05); border-radius:20px; font-size:11px; font-weight:700; cursor:pointer;">EXIT</div>
+                <div class="icon-btn" onclick="toggleTheme()" style="margin-right:8px;">🌓</div>
+                <div onclick="handleLogout()" style="padding:8px 12px; background:rgba(0,0,0,0.05); border-radius:18px; font-size:11px; font-weight:700; cursor:pointer;">EXIT</div>
             </div>
         </div>
-        <input type="text" id="search" class="search-box" placeholder="Search..." onkeyup="render()">
+        <input type="text" id="search" class="search-box" placeholder="Search atta, dal, rice..." onkeyup="render()">
     </div>
 
     <div id="admin-panel" style="display:none; padding:0 15px;">
         <div class="admin-dash">
-            <h3 style="margin:0;">Business Dashboard 📈</h3>
-            <div style="display:flex; justify-content:space-between; margin-top:10px;">
-                <div>Products<br><b style="font-size:20px;" id="adm-prod-count">0</b></div>
-                <div style="text-align:right;">Recent<br><b style="font-size:20px;" id="adm-order-count">Active</b></div>
+            <h3 style="margin:0; font-size:18px;">Business Panel 🛡️</h3>
+            <div style="display:flex; justify-content:space-between; margin-top:15px;">
+                <div>Total Products<br><b style="font-size:22px;" id="adm-prod-count">0</b></div>
+                <div style="text-align:right;">Store Status<br><b style="font-size:22px; color:#55efc4;">Active</b></div>
             </div>
-            <button class="btn-small" style="background:rgba(255,255,255,0.2); width:100%; margin-top:15px; color:white;" onclick="showOrders()">View History</button>
+            <button class="btn-small" style="background:rgba(255,255,255,0.25); width:100%; margin-top:15px; color:white;" onclick="showOrders()">View Order History</button>
         </div>
     </div>
 
@@ -142,8 +140,8 @@
     <div class="fab" id="admin-fab" style="display:none;" onclick="openAddModal()">+</div>
 
     <div class="cart-bar" id="cart-bar" style="display:none;">
-        <div><div style="font-size:10px; opacity:0.7;">TOTAL</div><div style="font-size:18px; font-weight:800;">₹<span id="cart-total">0</span></div></div>
-        <div onclick="openBillPreview()" style="background:white; color:black; padding:8px 20px; border-radius:20px; font-weight:700; font-size:14px; cursor:pointer;">View Bill ➜</div>
+        <div><div style="font-size:11px; opacity:0.7;">TOTAL</div><div style="font-size:20px; font-weight:800;">₹<span id="cart-total">0</span></div></div>
+        <div onclick="openBillPreview()" style="background:white; color:black; padding:10px 24px; border-radius:25px; font-weight:700; font-size:14px; cursor:pointer;">Checkout ➜</div>
     </div>
 </div>
 
@@ -151,49 +149,49 @@
     <div class="modal-box">
         <h3>Add Product</h3>
         <input type="file" id="fileInput" hidden onchange="handleImageUpload()">
-        <div onclick="document.getElementById('fileInput').click()" style="border:2px dashed var(--primary); padding:15px; text-align:center; border-radius:15px; margin-bottom:10px; cursor:pointer; color:var(--primary);">📸 Upload Photo</div>
-        <img id="imgPreview" src="" style="display:none; width:100%; height:100px; object-fit:contain; margin-bottom:10px;">
-        <input type="text" id="pName" class="inp" placeholder="Name">
+        <div onclick="document.getElementById('fileInput').click()" style="border:2px dashed var(--primary); padding:20px; text-align:center; border-radius:15px; margin-bottom:15px; cursor:pointer; color:var(--primary); background:rgba(108, 92, 231, 0.05);">📸 Upload Photo</div>
+        <img id="imgPreview" src="" style="display:none; width:100%; height:120px; object-fit:contain; margin-bottom:15px; border-radius:10px;">
+        <input type="text" id="pName" class="inp" placeholder="Product Name">
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <input type="text" id="pUnit" class="inp" placeholder="Unit (1kg)">
-            <input type="number" id="pPrice" class="inp" placeholder="Price">
+            <input type="text" id="pUnit" class="inp" placeholder="Unit (e.g. 1kg)">
+            <input type="number" id="pPrice" class="inp" placeholder="Price (₹)">
         </div>
         <select id="pCat" class="inp"><option>Rashan</option><option>Snacks</option><option>Offers</option></select>
-        <button id="saveBtn" class="btn-small" style="width:100%; font-size:15px; padding:12px;" onclick="saveProduct()">Save Product</button>
-        <button onclick="document.getElementById('add-modal').style.display='none'" style="margin-top:10px; background:none; border:none; color:var(--text); width:100%;">Cancel</button>
+        <button id="saveBtn" class="btn-small" style="width:100%; font-size:16px; padding:15px; margin-top:10px;" onclick="saveProduct()">Save Product</button>
+        <button onclick="document.getElementById('add-modal').style.display='none'" style="margin-top:10px; background:none; border:none; color:var(--text); width:100%; font-weight:600;">Cancel</button>
     </div>
 </div>
 
 <div id="bill-modal" class="overlay">
     <div class="modal-box">
-        <h2 style="margin:0 0 15px;">Invoice 🧾</h2>
+        <h2 style="margin:0 0 20px;">Invoice 🧾</h2>
         
         <div class="del-toggle-box">
             <div id="opt-del" class="del-opt selected" onclick="toggleDeliveryMode('delivery')">🚚 Home Delivery</div>
             <div id="opt-pick" class="del-opt" onclick="toggleDeliveryMode('pickup')">🏬 Self Pickup</div>
         </div>
 
-        <div style="background:white; color:#333; padding:15px; border-radius:15px; box-shadow:0 5px 15px rgba(0,0,0,0.05); margin-bottom:15px;">
-            <div id="bill-list" style="max-height:20vh; overflow-y:auto; border-bottom:1px solid #eee; margin-bottom:10px;"></div>
-            <div style="display:flex; justify-content:space-between; font-size:14px;"><span>Item Total</span><span>₹<span id="b-item-total">0</span></span></div>
-            <div style="display:flex; justify-content:space-between; font-size:14px; color:var(--primary);"><span>Delivery Charge</span><span id="b-delivery">₹0</span></div>
-            <div style="display:flex; justify-content:space-between; font-weight:800; font-size:18px; margin-top:10px; padding-top:10px; border-top:2px dashed #ccc;"><span>To Pay</span><span>₹<span id="b-grand-total">0</span></span></div>
+        <div style="background:white; color:#333; padding:20px; border-radius:18px; box-shadow:0 5px 20px rgba(0,0,0,0.05); margin-bottom:20px;">
+            <div id="bill-list" style="max-height:25vh; overflow-y:auto; border-bottom:1px solid #eee; margin-bottom:10px;"></div>
+            <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:5px;"><span>Items Total</span><span>₹<span id="b-item-total">0</span></span></div>
+            <div style="display:flex; justify-content:space-between; font-size:14px; color:var(--primary); margin-bottom:10px;"><span>Delivery Fee</span><span id="b-delivery">₹0</span></div>
+            <div style="display:flex; justify-content:space-between; font-weight:800; font-size:20px; padding-top:10px; border-top:2px dashed #ccc;"><span>Payable</span><span>₹<span id="b-grand-total">0</span></span></div>
         </div>
 
         <div id="addr-section">
-            <textarea id="deliveryAddr" class="inp" rows="2" placeholder="📍 Village Name / Landmark"></textarea>
+            <textarea id="deliveryAddr" class="inp" rows="2" placeholder="📍 Enter Village Name / Landmark"></textarea>
         </div>
-        <div id="pickup-msg" style="display:none; text-align:center; color:green; font-weight:600; font-size:13px; margin-bottom:10px;">✅ You will pick up from Raju Kirana Store.</div>
+        <div id="pickup-msg" style="display:none; text-align:center; color:green; font-weight:700; font-size:14px; margin-bottom:10px; background:#e0ffe0; padding:10px; border-radius:10px;">✅ You will pick up from Shop</div>
 
         <div class="slider-container" id="sliderContainer">
             <div class="slider-thumb" id="sliderThumb">➜</div>
-            <div id="sliderText" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:12px; font-weight:700; color:#777; pointer-events:none;">SLIDE TO ORDER >></div>
+            <div id="sliderText" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:12px; font-weight:700; color:#777; pointer-events:none;">SLIDE TO CONFIRM ORDER</div>
         </div>
-        <button onclick="document.getElementById('bill-modal').style.display='none'" style="margin-top:15px; background:none; border:none; color:var(--text); width:100%;">Close</button>
+        <button onclick="document.getElementById('bill-modal').style.display='none'" style="margin-top:15px; background:none; border:none; color:var(--text); width:100%; font-weight:600;">Close</button>
     </div>
 </div>
 
-<div id="history-modal" class="overlay"><div class="modal-box"><h3>All Orders</h3><div id="history-list"></div><button class="btn-small" style="width:100%; margin-top:10px; background:#333;" onclick="document.getElementById('history-modal').style.display='none'">Close</button></div></div>
+<div id="history-modal" class="overlay"><div class="modal-box"><h3>Order History</h3><div id="history-list"></div><button class="btn-small" style="width:100%; margin-top:15px; background:#333;" onclick="document.getElementById('history-modal').style.display='none'">Close</button></div></div>
 
 <script>
     const firebaseConfig = {
@@ -209,6 +207,7 @@
 
     let products = [], cart = {}, user = null, isAdmin = false, activeCat = 'All';
     let tempImgBase64 = "", isPickupMode = false;
+    const ADMIN_PIN = "1234";
 
     window.onload = function() {
         if(localStorage.getItem('theme')==='dark') document.body.classList.add('dark-mode');
@@ -226,11 +225,39 @@
     function showToast(msg) { const t = document.getElementById('toast'); t.innerText=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
 
     function handleLogin() {
-        const n = document.getElementById('loginName').value, p = document.getElementById('loginPhone').value;
-        if(n && p) { user = {name:n, phone:p}; localStorage.setItem('raju_user', JSON.stringify(user)); location.reload(); }
+        const n = document.getElementById('loginName').value.trim();
+        const p = document.getElementById('loginPhone').value.trim();
+        
+        if(!n || !p) { showToast("Fill all details!"); return; }
+        
+        if(n === "Admin" && p === "6392") {
+            const pin = prompt("Enter Admin PIN:");
+            if(pin !== ADMIN_PIN) { showToast("Wrong PIN!"); return; }
+        } else if (p.length !== 10) { showToast("Invalid Mobile Number"); return; }
+
+        user = {name:n, phone:p}; 
+        localStorage.setItem('raju_user', JSON.stringify(user)); 
+        location.reload();
     }
+
     function handleLogout() { localStorage.removeItem('raju_user'); location.reload(); }
     function toggleTheme() { document.body.classList.toggle('dark-mode'); localStorage.setItem('theme', document.body.classList.contains('dark-mode')?'dark':'light'); }
+
+    // --- SHARE FUNCTION ---
+    function shareApp() {
+        const shareData = {
+            title: 'Raju Kirana Store',
+            text: 'Order fresh rashan from Raju Kirana! Home delivery available.',
+            url: window.location.href.split('?')[0]
+        };
+        if (navigator.share) {
+            navigator.share(shareData).catch(console.error);
+        } else {
+            // Fallback for desktop/unsupported browsers
+            const waUrl = `https://wa.me/?text=${encodeURIComponent(shareData.text + " " + shareData.url)}`;
+            window.open(waUrl, '_blank');
+        }
+    }
 
     function showApp() {
         document.getElementById('login-view').style.display = 'none';
@@ -242,7 +269,7 @@
         db.collection("products").onSnapshot(snap => {
             products = []; snap.forEach(d => products.push({id:d.id, ...d.data()}));
             render(); 
-            if(isAdmin) updateAdminStats();
+            if(isAdmin) document.getElementById('adm-prod-count').innerText = products.length;
             document.getElementById('loader').style.display='none';
         });
     }
@@ -250,14 +277,29 @@
     function render() {
         const g = document.getElementById('grid'); g.innerHTML = '';
         const term = document.getElementById('search').value.toLowerCase();
-        products.filter(p => (activeCat==='All'||p.cat===activeCat) && p.name.toLowerCase().includes(term)).forEach(p => {
+        const filtered = products.filter(p => (activeCat==='All'||p.cat===activeCat) && p.name.toLowerCase().includes(term));
+        
+        // --- EMPTY STATE ---
+        if(filtered.length === 0) {
+            g.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">🍞</div>
+                    <h3>No Products Found</h3>
+                    <p>Try searching for 'Dal', 'Rice' or check other categories.</p>
+                </div>
+            `;
+            return;
+        }
+
+        filtered.forEach(p => {
             const q = cart[p.id]||0;
             const btn = q===0 ? `<button class="btn-small" onclick="updateQty('${p.id}',1)">ADD</button>` : 
             `<div class="qty-compact"><button class="qty-btn-c" onclick="updateQty('${p.id}',-1)">−</button><span style="font-size:12px; font-weight:700; min-width:15px; text-align:center;">${q}</span><button class="qty-btn-c" onclick="updateQty('${p.id}',1)">+</button></div>`;
             
             const delBtn = isAdmin ? `<div style="position:absolute;top:5px;right:5px;background:rgba(255,255,255,0.8);padding:4px;border-radius:50%;font-size:10px;cursor:pointer;" onclick="delProd('${p.id}')">🗑️</div>` : '';
 
-            g.innerHTML += `<div class="card">${delBtn}<div class="card-img"><img src="${p.img}" onerror="this.src='https://via.placeholder.com/150'"></div><div style="font-weight:700; font-size:14px; line-height:1.2;">${p.name}</div><div style="font-size:11px;color:gray; margin-bottom:5px;">${p.unit}</div><div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-weight:800;color:var(--primary);">₹${p.price}</span>${btn}</div></div>`;
+            // --- LAZY LOADING ADDED HERE ---
+            g.innerHTML += `<div class="card">${delBtn}<div class="card-img"><img src="${p.img}" loading="lazy" onerror="this.src='https://via.placeholder.com/150'"></div><div style="font-weight:700; font-size:14px; line-height:1.2;">${p.name}</div><div style="font-size:11px;color:gray; margin-bottom:5px;">${p.unit}</div><div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-weight:800;color:var(--primary);">₹${p.price}</span>${btn}</div></div>`;
         });
     }
 
@@ -268,29 +310,21 @@
     
     function updateFooter() {
         let t = 0; let c = 0; 
-        for(let id in cart) { 
-            t += products.find(x=>x.id==id).price * cart[id]; 
-            c += cart[id]; 
-        }
+        for(let id in cart) { t += products.find(x=>x.id==id).price * cart[id]; c += cart[id]; }
         document.getElementById('cart-total').innerText = t;
         document.getElementById('cart-bar').style.display = t>0 ? 'flex' : 'none';
         
-        // UPDATE HEADER BADGE
         const badge = document.getElementById('cart-badge');
-        if(c > 0) {
-            badge.innerText = c;
-            badge.style.display = 'flex';
-        } else {
-            badge.style.display = 'none';
-        }
+        if(c > 0) { badge.innerText = c; badge.style.display = 'flex'; } else { badge.style.display = 'none'; }
     }
 
     function openBillPreview() {
+        if(Object.keys(cart).length === 0) { showToast("Cart is Empty!"); return; }
         const l = document.getElementById('bill-list'); l.innerHTML = '';
         let t = 0;
         for(let id in cart) {
             const p = products.find(x=>x.id==id), cost = p.price*cart[id]; t+=cost;
-            l.innerHTML += `<div style="display:flex;justify-content:space-between;padding:5px 0;font-size:13px;"><span>${p.name} x${cart[id]}</span><span>₹${cost}</span></div>`;
+            l.innerHTML += `<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;"><span>${p.name} x${cart[id]}</span><span>₹${cost}</span></div>`;
         }
         document.getElementById('b-item-total').innerText = t;
         toggleDeliveryMode('delivery');
@@ -322,10 +356,6 @@
         }
     }
 
-    function updateAdminStats() {
-        document.getElementById('adm-prod-count').innerText = products.length;
-    }
-
     function handleImageUpload() {
         const f = document.getElementById('fileInput').files[0];
         if(f) {
@@ -346,21 +376,27 @@
     }
 
     function saveProduct() {
-        const btn = document.getElementById('saveBtn');
         const n = document.getElementById('pName').value, u = document.getElementById('pUnit').value, p = document.getElementById('pPrice').value;
         const img = tempImgBase64 || "https://via.placeholder.com/150";
         if(n && p) {
-            btn.innerText="Saving..."; btn.disabled=true;
+            document.getElementById('saveBtn').innerText="Saving...";
             db.collection("products").add({name:n, unit:u, price:parseInt(p), cat:document.getElementById('pCat').value, img:img, createdAt:firebase.firestore.FieldValue.serverTimestamp()})
             .then(()=>{ 
                 document.getElementById('add-modal').style.display='none'; showToast("Product Saved!");
-                btn.innerText="Save Product"; btn.disabled=false; 
+                document.getElementById('saveBtn').innerText="Save Product";
                 document.getElementById('pName').value=''; tempImgBase64=""; document.getElementById('imgPreview').style.display='none';
             });
         }
     }
     
-    function delProd(id) { if(confirm("Delete?")) db.collection("products").doc(id).delete(); }
+    function delProd(id) { 
+        if(confirm("Delete this product?")) {
+            const pin = prompt("Admin PIN:");
+            if(pin === ADMIN_PIN) db.collection("products").doc(id).delete();
+            else showToast("Incorrect PIN");
+        } 
+    }
+    
     function openAddModal() { document.getElementById('add-modal').style.display='flex'; }
     function filter(c, b) { activeCat=c; document.querySelectorAll('.cat-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); render(); }
     
@@ -386,27 +422,27 @@
         const t = document.getElementById('sliderThumb');
         t.classList.add('ok'); t.innerHTML='✔'; t.style.left='auto'; t.style.right='5px';
         document.getElementById('sliderContainer').classList.add('active');
-        document.getElementById('sliderText').innerText="CONFIRMED!";
+        document.getElementById('sliderText').innerText="ORDER CONFIRMED!";
         document.getElementById('sliderText').style.color="white";
-        setTimeout(sendOrder, 500);
+        setTimeout(sendOrder, 600);
     }
     
     function resetSlider() {
         const t = document.getElementById('sliderThumb');
         t.classList.remove('ok'); t.innerHTML='➜'; t.style.transform='translateX(0)'; t.style.right='auto'; t.style.left='5px';
         document.getElementById('sliderContainer').classList.remove('active');
-        document.getElementById('sliderText').innerText="SLIDE TO ORDER >>";
+        document.getElementById('sliderText').innerText="SLIDE TO CONFIRM";
         document.getElementById('sliderText').style.color="#777";
     }
 
     function sendOrder() {
         const total = document.getElementById('b-grand-total').innerText;
-        let addr = isPickupMode ? "Self Pickup (Shop se lenge)" : (document.getElementById('deliveryAddr').value ? document.getElementById('deliveryAddr').value + " (Home Delivery)" : "Home Delivery (No Address Given)");
+        let addr = isPickupMode ? "Self Pickup (Dukan se lenge)" : (document.getElementById('deliveryAddr').value ? document.getElementById('deliveryAddr').value + " (Delivery)" : "Delivery (No Address)");
         const items = []; for(let id in cart) items.push({n:products.find(x=>x.id==id).name, q:cart[id]});
         const ord = {c:user.name, p:user.phone, addr:addr, t:total, i:items, date:new Date().toLocaleString()};
         db.collection("orders").add(ord).then(()=>{
             const link = window.location.href.split('?')[0]+'?order='+btoa(JSON.stringify(ord));
-            const msg = `*New Order: ₹${total}*\n👤 ${user.name}\n📋 Type: ${isPickupMode ? 'SELF PICKUP' : 'DELIVERY'}\n📍 Addr: ${addr}\n🛒 Items: ${items.length}\n🧾 Bill: ${link}`;
+            const msg = `*New Order: ₹${total}*\n👤 ${user.name}\n📋 ${isPickupMode?'PICKUP':'DELIVERY'}\n📍 ${addr}\n🛒 Items: ${items.length}\n🧾 Bill: ${link}`;
             window.open(`https://wa.me/6392728836?text=${encodeURIComponent(msg)}`, '_blank');
             cart={}; render(); updateFooter(); document.getElementById('bill-modal').style.display='none';
         });
