@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Raju Kirana (Premium UI)</title>
+    <title>Raju Kirana (Admin Pro)</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6c5ce7">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -29,7 +29,7 @@
         .top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .brand { font-size: 24px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; animation: fadeIn 1s ease; }
         
-        /* ICONS & RIPPLE */
+        /* ICONS & UI */
         .icon-btn { width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,0.05); display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
         .icon-btn:active { transform: scale(0.8); }
         .cart-icon-box { position: relative; margin: 0 10px; cursor: pointer; padding: 5px; transition: 0.3s; }
@@ -46,37 +46,10 @@
         .parchi-fab { position: fixed; bottom: 100px; left: 20px; background: #ff7675; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 28px; box-shadow: 0 10px 25px rgba(255, 118, 117, 0.4); z-index: 2000; cursor: pointer; animation: floatPulse 3s infinite ease-in-out; transition: 0.3s; }
         .parchi-fab:active { transform: scale(0.9); }
 
-        /* PREMIUM DELIVERY TOGGLE (NEW DESIGN) */
-        .del-toggle-box { 
-            background: rgba(0,0,0,0.06); 
-            padding: 5px; 
-            border-radius: 30px; 
-            display: flex; 
-            margin-bottom: 20px; 
-            position: relative;
-            border: 1px solid rgba(0,0,0,0.05);
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
-        }
-        .del-opt { 
-            flex: 1; 
-            padding: 12px; 
-            text-align: center; 
-            font-size: 14px; 
-            font-weight: 700; 
-            border-radius: 25px; 
-            cursor: pointer; 
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            opacity: 0.6; 
-            color: var(--text);
-            display: flex; align-items: center; justify-content: center; gap: 6px;
-        }
-        .del-opt.selected { 
-            background: var(--primary); 
-            color: white; 
-            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.4); 
-            opacity: 1; 
-            transform: scale(1.05);
-        }
+        /* DELIVERY TOGGLE */
+        .del-toggle-box { background: rgba(0,0,0,0.06); padding: 5px; border-radius: 30px; display: flex; margin-bottom: 20px; position: relative; border: 1px solid rgba(0,0,0,0.05); box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); }
+        .del-opt { flex: 1; padding: 12px; text-align: center; font-size: 14px; font-weight: 700; border-radius: 25px; cursor: pointer; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0.6; color: var(--text); display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .del-opt.selected { background: var(--primary); color: white; box-shadow: 0 8px 20px rgba(108, 92, 231, 0.4); opacity: 1; transform: scale(1.05); }
         .dark-mode .del-opt.selected { background: var(--primary); color: white; }
 
         /* GRID & CARDS */
@@ -87,12 +60,25 @@
         .card img { max-width: 90%; max-height: 90%; object-fit: contain; transition: 0.5s; }
         .card:hover img { transform: scale(1.1) rotate(2deg); }
         
-        /* CATEGORIES */
+        /* ADMIN PREMIUM DASHBOARD */
+        .admin-dash { background: linear-gradient(135deg, #2d3436, #000000); color: white; padding: 25px; border-radius: 25px; margin-bottom: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); position: relative; overflow: hidden; }
+        .admin-dash::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%); pointer-events: none; }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .stat-card { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 15px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .stat-val { font-size: 24px; font-weight: 800; display: block; margin-bottom: 5px; color: #fab1a0; }
+        .stat-label { font-size: 12px; opacity: 0.7; letter-spacing: 1px; text-transform: uppercase; }
+
+        /* ORDER HISTORY CARDS */
+        .order-card { background: white; padding: 15px; border-radius: 15px; margin-bottom: 15px; border-left: 5px solid var(--primary); box-shadow: 0 5px 15px rgba(0,0,0,0.05); position: relative; }
+        .dark-mode .order-card { background: #1e1e1e; }
+        .order-header { display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dashed #eee; }
+        .badge-type { background: #fab1a0; color: #2d3436; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; }
+        .btn-view-bill { background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; margin-top: 10px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 5px; }
+
+        /* CATEGORIES & BOTTOM BAR */
         .cat-row { display: flex; gap: 10px; overflow-x: auto; padding: 5px 15px 15px; scrollbar-width: none; }
         .cat-btn { background: var(--card-bg); padding: 8px 18px; border-radius: 25px; font-weight: 600; font-size: 13px; color: var(--text); border: 1px solid rgba(0,0,0,0.05); opacity: 0.7; white-space: nowrap; transition: 0.3s; }
         .cat-btn.active { background: var(--primary); color: white; opacity: 1; border-color: transparent; transform: scale(1.05); box-shadow: 0 8px 20px rgba(108, 92, 231, 0.3); }
-        
-        /* BOTTOM BAR */
         .cart-bar { position: fixed; bottom: 25px; left: 15px; right: 15px; background: #2d3436; color: white; padding: 12px 25px; border-radius: 22px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3); z-index: 3000; animation: slideUpBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
         .fab { position: fixed; bottom: 100px; right: 20px; background: var(--text); color: var(--bg); width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 2000; cursor: pointer; transition: 0.3s; animation: popIn 0.5s 1s backwards; }
         
@@ -104,6 +90,10 @@
         .search-box:focus { background: white; border-color: var(--primary); }
         .inp { width: 100%; padding: 15px; margin: 8px 0; border: none; border-radius: 14px; background: rgba(0,0,0,0.05); color: var(--text); font-family: inherit; font-weight: 600; transition:0.3s; }
         
+        /* INVOICE PAPER STYLE */
+        .invoice-paper-view { background: white; color: black; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 20px; border: 1px solid #eee; position: relative; }
+        .invoice-paper-view::before { content: ''; position: absolute; top: -5px; left: 0; right: 0; height: 10px; background: radial-gradient(circle, transparent 0.25em, white 0.25em); background-size: 0.5em 0.5em; transform: rotate(180deg); }
+
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes slideUpBounce { 0% { transform: translateY(100%); opacity: 0; } 70% { transform: translateY(-10px); } 100% { transform: translateY(0); opacity: 1; } }
@@ -162,12 +152,21 @@
 
     <div id="admin-panel" style="display:none; padding:0 15px; animation: fadeIn 1s;">
         <div class="admin-dash">
-            <h3 style="margin:0; font-size:18px;">Business Panel 🛡️</h3>
-            <div style="display:flex; justify-content:space-between; margin-top:15px;">
-                <div>Total Products<br><b style="font-size:22px;" id="adm-prod-count">0</b></div>
-                <div style="text-align:right;">Status<br><b style="font-size:22px; color:#55efc4;">Active</b></div>
+            <h3 style="margin:0; font-size:20px;">Owner Dashboard 🛡️</h3>
+            <div style="font-size:12px; opacity:0.7;">Welcome back, Admin</div>
+            
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <span class="stat-val" id="adm-sales">₹0</span>
+                    <span class="stat-label">Total Sales</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-val" id="adm-orders">0</span>
+                    <span class="stat-label">Orders</span>
+                </div>
             </div>
-            <button class="btn-small ripple-btn" style="background:rgba(255,255,255,0.25); width:100%; margin-top:15px; color:white;" onclick="showOrders()">View Order History</button>
+
+            <button class="btn-small ripple-btn" style="background:white; color:black; width:100%; margin-top:20px; padding:12px; font-weight:800;" onclick="showOrders()">View Order History & Bills ➜</button>
         </div>
     </div>
 
@@ -221,12 +220,10 @@
 <div id="bill-modal" class="overlay">
     <div class="modal-box">
         <h2 style="margin:0 0 20px;">Invoice 🧾</h2>
-        
         <div class="del-toggle-box">
             <div id="opt-del" class="del-opt selected" onclick="toggleDeliveryMode('delivery')">🚚 Delivery</div>
             <div id="opt-pick" class="del-opt" onclick="toggleDeliveryMode('pickup')">🏬 Pickup</div>
         </div>
-
         <div style="background:white; color:#333; padding:20px; border-radius:18px; box-shadow:0 5px 20px rgba(0,0,0,0.05); margin-bottom:20px;">
             <div id="bill-list" style="max-height:25vh; overflow-y:auto; border-bottom:1px solid #eee; margin-bottom:10px;"></div>
             <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:5px;"><span>Items Total</span><span>₹<span id="b-item-total">0</span></span></div>
@@ -240,7 +237,23 @@
     </div>
 </div>
 
-<div id="history-modal" class="overlay"><div class="modal-box"><h3>Order History</h3><div id="history-list"></div><button class="btn-small ripple-btn" style="width:100%; margin-top:15px; background:#333;" onclick="document.getElementById('history-modal').style.display='none'">Close</button></div></div>
+<div id="history-modal" class="overlay">
+    <div class="modal-box" style="width:95%;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3>📋 All Orders</h3>
+            <button class="icon-btn" onclick="document.getElementById('history-modal').style.display='none'">✕</button>
+        </div>
+        <div id="history-list" style="margin-top:15px;"></div>
+    </div>
+</div>
+
+<div id="invoice-view-modal" class="overlay">
+    <div class="modal-box">
+        <div class="invoice-paper-view" id="final-invoice-content">
+            </div>
+        <button class="btn-small ripple-btn" style="width:100%; background:#333; margin-top:10px;" onclick="document.getElementById('invoice-view-modal').style.display='none'">Close Viewer</button>
+    </div>
+</div>
 
 <script>
     document.addEventListener('click', function(e) {
@@ -306,11 +319,14 @@
     function showApp() {
         document.getElementById('login-view').style.display = 'none';
         document.getElementById('app-view').style.display = 'block';
-        if(isAdmin) { document.getElementById('admin-fab').style.display='flex'; document.getElementById('admin-panel').style.display='block'; }
+        if(isAdmin) { 
+            document.getElementById('admin-fab').style.display='flex'; 
+            document.getElementById('admin-panel').style.display='block';
+            updateAdminStats(); // Initial stats
+        }
         db.collection("products").onSnapshot(snap => {
             products = []; snap.forEach(d => products.push({id:d.id, ...d.data()}));
             render(); 
-            if(isAdmin) document.getElementById('adm-prod-count').innerText = products.length;
             document.getElementById('loader').style.display='none';
         });
     }
@@ -493,18 +509,73 @@
         });
     }
 
+    // --- ADMIN STATS & HISTORY ---
+    function updateAdminStats() {
+        db.collection("orders").get().then(snap => {
+            let totalSales = 0;
+            snap.forEach(doc => {
+                const d = doc.data();
+                if(d.t) totalSales += parseInt(d.t);
+            });
+            document.getElementById('adm-sales').innerText = "₹" + totalSales;
+            document.getElementById('adm-orders').innerText = snap.size;
+        });
+    }
+
     function showOrders() {
-        const h = document.getElementById('history-list'); h.innerHTML='Loading...';
+        const h = document.getElementById('history-list'); h.innerHTML='<div class="spinner"></div>';
         document.getElementById('history-modal').style.display='flex';
-        db.collection("orders").orderBy("date","desc").limit(20).get().then(s=>{
-            h.innerHTML=''; s.forEach(d=>{ const v=d.data(); 
+        db.collection("orders").orderBy("date","desc").limit(30).get().then(s=>{
+            h.innerHTML=''; 
+            s.forEach(doc => { 
+                const v = doc.data(); 
+                const orderJson = JSON.stringify(v).replace(/"/g, '&quot;'); // Escape for HTML attribute
+                
                 if(v.type === 'parchi') {
-                    h.innerHTML+=`<div style="padding:10px;border-bottom:1px solid #eee;">📸 <b>Parchi Order</b><br>${v.date.split(',')[0]} - ${v.c}<br><a href="?parchi=${d.id}">View Photo</a></div>`;
+                    h.innerHTML += `<div class="order-card"><div class="order-header"><span>📸 <b>Parchi Order</b></span><span>${v.date.split(',')[0]}</span></div><div>${v.c} | ${v.p}</div><a href="?parchi=${doc.id}" target="_blank" style="display:block;margin-top:10px;color:var(--primary);font-weight:700;">View Photo >></a></div>`;
                 } else {
-                    h.innerHTML+=`<div style="padding:10px;border-bottom:1px solid #eee;"><b>₹${v.t}</b> - ${v.date.split(',')[0]}<br><span style="font-size:12px; color:gray;">${v.addr}</span></div>`; 
+                    h.innerHTML += `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <span class="badge-type">${v.addr.includes('Pickup')?'PICKUP':'DELIVERY'}</span>
+                            <span style="font-size:12px;">${v.date.split(',')[0]}</span>
+                        </div>
+                        <div style="font-weight:700; font-size:16px;">${v.c}</div>
+                        <div style="font-size:13px; color:gray;">${v.addr}</div>
+                        <div style="margin-top:8px; font-weight:800; color:var(--success);">Total: ₹${v.t}</div>
+                        <button class="btn-view-bill ripple-btn" onclick='viewInvoice(${orderJson})'>📄 View Invoice</button>
+                    </div>`; 
                 }
             });
         });
+    }
+
+    function viewInvoice(d) {
+        let itemsHtml = '';
+        if(d.i && d.i.length > 0) {
+            d.i.forEach(item => {
+                itemsHtml += `<div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #eee;"><span>${item.n} x${item.q}</span><span>-</span></div>`;
+            });
+        }
+        
+        const html = `
+            <h2 style="text-align:center; color:#6c5ce7; margin-top:0;">Raju Kirana Invoice</h2>
+            <p style="text-align:center; font-size:13px; color:#555;">Date: ${d.date}</p>
+            <div style="margin:20px 0; border-top:2px dashed #ddd; border-bottom:2px dashed #ddd; padding:15px 0;">
+                <p><b>Customer:</b> ${d.c}</p>
+                <p><b>Mobile:</b> ${d.p}</p>
+                <p><b>Address:</b> ${d.addr}</p>
+            </div>
+            <div style="margin-bottom:20px;">
+                <h4 style="margin:0 0 10px;">Items</h4>
+                ${itemsHtml || '<i>Items detail not available</i>'}
+            </div>
+            <div style="text-align:right; font-size:22px; font-weight:800; color:#2d3436;">
+                Total: ₹${d.t}
+            </div>
+        `;
+        document.getElementById('final-invoice-content').innerHTML = html;
+        document.getElementById('invoice-view-modal').style.display = 'flex';
     }
 
     function showBillMode() {
